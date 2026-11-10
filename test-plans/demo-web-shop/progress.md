@@ -47,3 +47,4 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | Date | Decision | Scenarios |
 | --- | --- | --- |
 | 2026-11-06 | **Approved** by the user at the scenario review gate (after reviewing in Excel); no scenarios added | 70 (DWS-001 to DWS-070), recorded in scenarios.json `approval` |
+| 2026-11-10 | User asked to install what DWS-070 needs. DWS-070 changed from Manual to Automated (axe scan, report-only, Chromium only). **Done:** `@axe-core/playwright` 4.14.0 installed, tsc OK, run `2026-11-10_14-03-26` passed (9 axe rules violated, 2 critical), synced, approval re-recorded (70), R-32 closed, Delivery Report addendum, workbook rebuilt. Node 20.11.1 is blocked by Defender (TvmWarn); use Node 26.13.0 from fnm (`%APPDATA%\fnm\node-versions\v26.13.0\installation`) | DWS-070 |

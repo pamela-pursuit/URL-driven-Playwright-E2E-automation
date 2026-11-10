@@ -1,5 +1,6 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { Locator } from '@playwright/test';
-import { expect, recordObservation, reportOnly, test } from '../../fixtures/demo-web-shop.fixture';
+import { chromiumOnly, expect, recordObservation, reportOnly, test } from '../../fixtures/demo-web-shop.fixture';
 import { LISTING, MAX_TABS_TO_EMAIL, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -8,7 +9,7 @@ import { LISTING, MAX_TABS_TO_EMAIL, PRODUCTS } from '../../test-data/demo-web-s
 test.use({ trace: 'off' });
 
 // Report-only (D4, R-31): findings are recorded as `a11y-gap` annotations and do not fail CI
-// until a WCAG target is agreed. DWS-070 (axe scan) is Manual: @axe-core/playwright is not installed.
+// until a WCAG target is agreed. DWS-070 runs an axe scan and records violations the same way.
 // Used only by DWS-068's single visibility check.
 const QUICK = { timeout: 2_000 };
 // A single attempt: Playwright checks once before a 1 ms timeout expires (probe r1).
@@ -74,6 +75,48 @@ test.describe('Accessibility (report-only)', () => {
       await reportName('Terms of service checkbox has an accessible name', cartPage.termsCheckbox);
       await reportName('Coupon input has an accessible name', cartPage.couponInput);
       await reportName('Gift card input has an accessible name', cartPage.giftCardInput);
+    });
+  });
+
+  test.describe('Axe scan', () => {
+    chromiumOnly('Chromium only: one axe scan per run produces the report; keyboard and accessible-name checks run on all browsers (DWS-068, DWS-069)');
+
+    // Report-only (D4, R-31): each violation becomes an `a11y-axe` annotation and the full axe
+    // results are attached as JSON. The test fails only if a page does not load or axe cannot run.
+    test('[DWS-070] Automated axe scan of key pages', async ({ page, homePage, loginPage, categoryPage, productPage, cartPage }) => {
+      const scan = async (name: string) => {
+        const results = await new AxeBuilder({ page }).analyze();
+        await test.info().attach(`axe-${name}.json`, {
+          body: JSON.stringify({ url: results.url, violations: results.violations, incomplete: results.incomplete }, null, 2),
+          contentType: 'application/json'
+        });
+        for (const v of results.violations) {
+          recordObservation('a11y-axe', `${name}: ${v.id} (${v.impact ?? 'unknown'}) on ${v.nodes.length} element(s): ${v.help}`);
+        }
+        recordObservation('a11y-axe-summary', `${name}: ${results.violations.length} violation rule(s), ${results.passes.length} passed rule(s)`);
+      };
+
+      await test.step('Home', async () => {
+        await homePage.open();
+        await scan('home');
+      });
+      await test.step('Login', async () => {
+        await loginPage.open();
+        await scan('login');
+      });
+      await test.step('Category listing', async () => {
+        await categoryPage.open(LISTING.slug);
+        await scan('category');
+      });
+      await test.step('Product', async () => {
+        await productPage.open(PRODUCTS.computingAndInternet.path);
+        await scan('product');
+      });
+      await test.step('Cart with one item', async () => {
+        await productPage.addToCart();
+        await cartPage.open();
+        await scan('cart');
+      });
     });
   });
 });

@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-10
+
+### Added
+
+- `@axe-core/playwright` dev dependency and an automated, report-only axe
+  scan for demo-web-shop (DWS-070, Chromium only): Home, Login, Books
+  listing, a product page and the cart. Violations are recorded as
+  `a11y-axe` annotations with the full results attached as JSON; they do not
+  fail CI until a WCAG target is agreed (R-31).
+
+### Changed
+
+- Improved the Not Executed workbook reasons with readable labeled lines for
+  coverage decisions, automation blockers, and execution failures.
+
 ## 2026-11-06
 
 ### Added

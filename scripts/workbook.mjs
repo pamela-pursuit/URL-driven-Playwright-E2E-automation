@@ -673,6 +673,27 @@ const NOT_EXECUTED_FILL = {
   'Never run (should have run)': COLORS.Failed
 };
 
+function readableReason(reason, category) {
+  const value = String(reason ?? '').trim();
+  if (!value) return 'Reason not recorded.';
+
+  if (category === 'Out of scope by design') {
+    const match = value.match(/^([^:]+):\s*(.*)$/s);
+    if (match) return `Coverage: ${match[1].trim()}\nReason: ${match[2].trim()}`;
+    return `Coverage decision: ${value}`;
+  }
+
+  if (category === 'Not automated') {
+    const match = value.match(/^([^:]+):\s*(.*)$/s);
+    if (match) return `Status: ${match[1].trim()}\nDetails: ${match[2].trim()}`;
+    return `Status: ${value}`;
+  }
+
+  return value
+    .replace(/\.\s+(?=[A-Z])/g, '.\n')
+    .replace(/;\s+(?=[A-Z])/g, ';\n');
+}
+
 // Every (scenario, browser) pair that is not an executed Passed result, with category, reason and action.
 function notExecutedRows(data, scope) {
   const rows = [];
@@ -686,7 +707,7 @@ function notExecutedRows(data, scope) {
           ...base,
           category: 'Not automated',
           detail: s.automationStatus,
-          reason: s.failureNotes || '(no reason recorded)',
+          reason: readableReason(s.failureNotes, 'Not automated'),
           coverage: 'None',
           action: s.automationStatus === 'Blocked' ? 'Remove the blocker described in the reason, then automate'
             : s.automationStatus === 'Manual' ? 'Run manually, or automate once the missing dependency is approved'
@@ -698,7 +719,7 @@ function notExecutedRows(data, scope) {
           ...base,
           category: 'Out of scope by design',
           detail: `Runs on ${coverage.join(', ')} only`,
-          reason: s.scopeReason || '(no scopeReason recorded)',
+          reason: readableReason(s.scopeReason, 'Out of scope by design'),
           coverage: `Runs on ${coverage.join(', ')}`,
           action: 'None: intentional, not a failure'
         });
@@ -714,7 +735,10 @@ function notExecutedRows(data, scope) {
           ...base,
           category,
           detail: r ? `${status} on ${r.runAt}` : 'No result recorded',
-          reason: r?.error || (r ? 'Skipped although the browser is in this scenario\'s coverage' : 'Not executed in any synced run'),
+          reason: readableReason(
+            r?.error || (r ? 'Skipped although the browser is in this scenario\'s coverage' : 'Not executed in any synced run'),
+            category
+          ),
           coverage: '',
           action: !r ? 'Run the suite and sync the workbook'
             : status === 'Failed' ? 'Investigate the failure (screenshot link in "Execution Results")'
