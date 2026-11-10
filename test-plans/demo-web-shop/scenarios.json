@@ -2202,7 +2202,7 @@
       "type": "Defect",
       "description": "/customer/downloadableproducts did not render within 20 s or 45 s (possible defect).",
       "impact": "Medium",
-      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report. Logged as DEF-005 on 2026-11-10 (see \"Defects\"). Reproduced 2026-11-10 (3 of 3, HTTP 200 but no content); DEF-005 status New. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-005 is open.",
+      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report. Logged as DEF-005 on 2026-11-10 (see \"Defects\"). Reproduced 2026-11-10 (3 of 3, HTTP 200 but no content); DEF-005 status New. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-005 is open. 2026-11-10: the page actually ends on the site error page (/errorpage.htm) after about 30 s.",
       "scenarios": [
         "DWS-066"
       ],
@@ -2772,7 +2772,7 @@
     {
       "id": "DEF-005",
       "riskRef": "R-05",
-      "title": "Downloadable products page never finishes loading for a signed-in customer",
+      "title": "Downloadable products page fails with the site error page after about 30 s (signed-in customer)",
       "severity": "Medium",
       "status": "New",
       "category": "Functional",
@@ -2785,12 +2785,12 @@
         "Open My account and select \"Downloadable products\" (/customer/downloadableproducts)",
         "Wait for the page to load"
       ],
-      "expected": "The page loads with its heading and the customer's downloadable products, or a message that there are none, within normal page load time.",
-      "actual": "Reproduced 2026-11-10 (Chromium, signed in): /customer/downloadableproducts returned HTTP 200 but rendered no page heading in 3 of 3 attempts (waited 47 to 90 s). In the same session /customer/orders loaded in about 2 s each time. Discovery on 2026-11-05 saw the same: no heading within 20 s (twice) or 45 s (once). Re-verified 2026-11-10 (run 2026-11-10_16-05-39, Chromium): still no heading within 30 s.",
+      "expected": "The page loads with its heading and the customer's downloadable products, or a message that there are none, within normal page load time (other My account pages load in about 2 s).",
+      "actual": "Checked in detail 2026-11-10 (Chromium, signed in): the server takes about 30 s, then the browser is sent to /errorpage.htm, a generic page titled \"Error\" (\"... If you continue to receive this message, please try again in a little while. Thank you for your patience.\"). That error page returns HTTP 200, which is why earlier checks saw 200 but no heading. No account navigation or page content is shown. Reproduced every time: discovery 2026-11-05 (3 of 3), re-probe 2026-11-10 (3 of 3), DWS-066 runs 2026-11-10_15-39-16 and 2026-11-10_16-05-39. /customer/orders loads in about 2 s in the same session.",
       "expectedBasis": "Recommendation: the page is linked from My account, so it should load like the other account pages. Expected content is not specified (requirements.md).",
       "evidence": [
         {
-          "label": "Re-probe 2026-11-10 (3 of 3 attempts, results recorded here; no screenshot: signed-in pages show the account email)"
+          "label": "Probe 2026-11-10: HTTP 200 after 30.6 s; final page /errorpage.htm, title \"Error\" (no screenshot: signed-in pages show the account email)"
         },
         {
           "label": "discovery.md sections 3 and 4.11",
@@ -2799,7 +2799,7 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Report to the site owner. Keep DWS-066 Blocked until the page loads.",
+      "nextAction": "None (defects are tracked in this workbook only). DWS-066 fails while the page errors.",
       "failingScenario": "DWS-066"
     },
     {
