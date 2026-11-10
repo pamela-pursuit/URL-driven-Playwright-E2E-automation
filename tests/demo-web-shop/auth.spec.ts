@@ -21,15 +21,17 @@ test.describe('Authentication', () => {
     });
   });
 
-  test('[DWS-003] Unknown email is rejected', async ({ loginPage, header, page }) => {
+  test('[DWS-003] Unknown email is rejected without revealing that the account does not exist', async ({ loginPage, header, page }) => {
     await loginPage.open();
     const outcome = await loginPage.signIn(unknownEmail(), wrongLoginValue());
 
     expect(outcome).toBe('rejected');
     await expect(page).toHaveURL(/\/login$/);
     await expect(loginPage.errorSummary).toContainText(MESSAGES.loginFailed);
-    await expect(loginPage.errorSummary).toContainText(MESSAGES.noCustomerAccount);
     await expect(header.loginLink).toBeVisible();
+    // Known defect DEF-002: fails while the summary says "No customer account found" (account enumeration).
+    await expect(loginPage.errorSummary, 'DEF-002: the message does not reveal whether the email is registered')
+      .not.toContainText(MESSAGES.noCustomerAccount, { timeout: 2_000 });
   });
 
   test('[DWS-004] Login with both fields empty shows the server summary', async ({ loginPage, page }) => {

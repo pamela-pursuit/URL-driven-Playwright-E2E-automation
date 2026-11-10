@@ -32,8 +32,7 @@ test.describe('Guest cart', () => {
       await expect(header.cartLink).toHaveText('Shopping cart (0)');
     });
 
-    test('[DWS-042] Quantity 0 or -1 on update silently removes the row', async ({ cartPage, productPage, header }) => {
-      test.info().annotations.push({ type: 'discrepancy', description: 'R-11: an invalid quantity silently removes the row with no warning' });
+    test('[DWS-042] Quantity 0 removes the row; quantity -1 is rejected', async ({ cartPage, productPage, header }) => {
       await test.step('Quantity 0', async () => {
         await cartPage.setQuantity(product.name, '0');
         await cartPage.updateCart();
@@ -48,9 +47,9 @@ test.describe('Guest cart', () => {
         await cartPage.open();
         await cartPage.setQuantity(product.name, INVALID.negativeQty);
         await cartPage.updateCart();
-        await expect(cartPage.rows).toHaveCount(0);
-        await expect(cartPage.content).toHaveText(MESSAGES.cartEmpty);
-        await expect(header.cartLink).toHaveText('Shopping cart (0)');
+        // Known defect DEF-006: fails while -1 silently removes the item.
+        await expect(cartPage.row(product.name), 'DEF-006: quantity -1 is rejected, the item stays in the cart')
+          .toBeVisible({ timeout: 2_000 });
       });
     });
 
@@ -69,18 +68,22 @@ test.describe('Guest cart', () => {
       await expect(cartPage.totalValue('Total:')).toHaveText(totalBefore);
     });
 
-    test('[DWS-045] Invalid gift card code shows the coupon message', async ({ cartPage }) => {
-      test.info().annotations.push({ type: 'discrepancy', description: 'R-12: the gift card error reuses the coupon text' });
+    test('[DWS-045] Invalid gift card code shows a gift card message, not the coupon message', async ({ cartPage }) => {
       await cartPage.applyGiftCard(INVALID.giftCard);
 
-      await expect(cartPage.giftCardMessage).toHaveText(MESSAGES.couponInvalid);
+      await expect(cartPage.giftCardMessage).toBeVisible();
+      // Known defect DEF-004: fails while the gift card error reuses the coupon text.
+      await expect(cartPage.giftCardMessage, 'DEF-004: gift card error is not the coupon text')
+        .not.toHaveText(MESSAGES.couponInvalid, { timeout: 2_000 });
     });
 
-    test('[DWS-047] Estimate shipping lists shipping options', async ({ cartPage }) => {
-      test.info().annotations.push({ type: 'discrepancy', description: 'R-13: estimate shows Ground (0.00); checkout charges Ground (10.00) for Health Book' });
+    test('[DWS-047] Estimate shipping shows the Ground price that checkout charges', async ({ cartPage }) => {
       await cartPage.estimateShipping({ country: ESTIMATE_SHIPPING.country, zip: ESTIMATE_SHIPPING.zip });
 
-      await expect(cartPage.shippingOptionNames).toHaveText([...ESTIMATE_SHIPPING.options]);
+      await expect(cartPage.shippingOptionNames).toHaveCount(ESTIMATE_SHIPPING.options.length);
+      // Known defect DEF-001: fails while the estimate shows "Ground (0.00)".
+      await expect(cartPage.shippingOptionNames.first(), 'DEF-001: estimate matches the checkout Ground price')
+        .toHaveText(ESTIMATE_SHIPPING.checkoutGround, { timeout: 2_000 });
     });
 
     test('[DWS-048] Guest cart persists after a page refresh', async ({ cartPage, header }) => {

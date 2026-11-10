@@ -21,6 +21,15 @@
 - Re-checks: DEF-005 reproduced (status New); DEF-003 lowered to Low (http
   redirects 301 to https, no HSTS); DEF-013 Rejected (Email has autofocus).
 
+### Changed
+
+- demo-web-shop tests behind open defects now check the correct behaviour
+  and fail while the defect is open (user decision): DWS-003, 014, 042,
+  045, 047, 055, 056, and DWS-066 newly automated (Chromium only). 22 of
+  185 tests fail by design. Defects get a `failingScenario`; the Defects
+  sheet shows a "Test Result" column, and the Not Executed sheet labels
+  these failures "Known defect DEF-xxx" instead of "Investigate".
+
 ### Removed
 
 - demo-web-shop accessibility testing (user decision D6: out of scope for

@@ -201,6 +201,9 @@ async function validate(app, data) {
     if (d.status && !DEFECT_STATUSES.includes(d.status)) errors.push(`${where}: status must be one of ${DEFECT_STATUSES.join(', ')}`);
     if (d.riskRef && !riskIds.has(d.riskRef)) errors.push(`${where}: riskRef ${d.riskRef} is not in the risk register`);
     for (const sid of d.scenarios ?? []) if (!ids.has(sid)) errors.push(`${where}: unknown scenario ${sid}`);
+    if (d.failingScenario && !(d.scenarios ?? []).includes(d.failingScenario)) {
+      errors.push(`${where}: failingScenario ${d.failingScenario} must be one of its scenarios`);
+    }
   }
 
   const titles = await collectTestTitles(paths(app).tests);
@@ -761,6 +764,8 @@ function notExecutedRows(data, scope) {
           ),
           coverage: '',
           action: !r ? 'Run the suite and sync the workbook'
+            : status === 'Failed' && knownDefects(data, s.id).length
+              ? `Known defect ${knownDefects(data, s.id).join(', ')}: the test checks the correct behaviour and fails until the site is fixed (see "Defects")`
             : status === 'Failed' ? 'Investigate the failure (screenshot link in "Execution Results")'
               : status === 'Flaky' ? 'Investigate the instability; it passed only on retry'
                 : 'Check why it was skipped (see the run\'s summary.md "Not run in this run")'
@@ -869,6 +874,19 @@ function addNotExecutedSheet(wb, data, scope) {
   return ws;
 }
 
+// Open defects whose failing check lives in this scenario (defect.failingScenario).
+function knownDefects(data, scenarioId) {
+  const closed = new Set(['Fixed', 'Verified', 'Closed', 'Rejected']);
+  return (data.defects ?? []).filter((d) => d.failingScenario === scenarioId && !closed.has(d.status)).map((d) => d.id);
+}
+
+// "DWS-047: Failed" for the scenario holding the defect's check, or why there is none.
+function testResult(data, defect) {
+  if (!defect.failingScenario) return 'No automated check';
+  const s = data.scenarios.find((x) => x.id === defect.failingScenario);
+  return s ? `${s.id}: ${s.executionStatus ?? 'Not Run'}` : `${defect.failingScenario}: not in catalogue`;
+}
+
 // "3 open (1 High, 2 Medium); 0 closed", counted from data.defects.
 function defectSummary(defects) {
   if (!defects.length) return 'None logged (see "Defects")';
@@ -887,23 +905,26 @@ function addDefectsSheet(wb, app, data) {
   }
   const workbookDir = path.dirname(paths(app).workbook);
   addTable(ws, [
-    'Defect ID', 'Title', 'Severity', 'Status', 'Category', 'Risk Ref', 'Related Scenarios', 'Environment',
+    'Defect ID', 'Title', 'Severity', 'Status', 'Category', 'Risk Ref', 'Related Scenarios', 'Test Result', 'Environment',
     'Steps to Reproduce', 'Expected Result', 'Actual Result', 'Basis for Expected Result', 'Evidence',
     'Found On', 'Reported To', 'Next Action'
   ], data.defects.map((d) => [
-    d.id, d.title, d.severity, d.status, d.category ?? '', d.riskRef ?? '', (d.scenarios ?? []).join(', '), d.environment ?? '',
+    d.id, d.title, d.severity, d.status, d.category ?? '', d.riskRef ?? '', (d.scenarios ?? []).join(', '), testResult(data, d),
+    d.environment ?? '',
     d.steps.map((step, i) => `${i + 1}. ${step}`).join('\n'), d.expected, d.actual, d.expectedBasis ?? '',
     (d.evidence ?? []).map((e) => e.label).join('\n'),
     d.foundOn ?? '', d.reportedTo ?? '', d.nextAction ?? ''
-  ]), [11, 36, 10, 14, 14, 9, 18, 30, 52, 40, 44, 36, 30, 12, 22, 36]);
+  ]), [11, 36, 10, 14, 14, 9, 18, 26, 30, 52, 40, 44, 36, 30, 12, 22, 36]);
   ws.eachRow((row, i) => {
     if (i === 1) return;
     tint(row.getCell(3));
+    const status = data.scenarios.find((s) => s.id === data.defects[i - 2].failingScenario)?.executionStatus;
+    if (status && COLORS[status]) row.getCell(8).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: COLORS[status] } };
     // A cell holds one hyperlink: link the first screenshot; every label stays listed in the cell text.
     const first = (data.defects[i - 2].evidence ?? []).find((e) => e.path);
     if (first) {
-      row.getCell(13).value = { text: row.getCell(13).value, hyperlink: path.relative(workbookDir, first.path).replaceAll('\\', '/') };
-      row.getCell(13).font = { color: { argb: 'FF0563C1' }, underline: true };
+      row.getCell(14).value = { text: row.getCell(14).value, hyperlink: path.relative(workbookDir, first.path).replaceAll('\\', '/') };
+      row.getCell(14).font = { color: { argb: 'FF0563C1' }, underline: true };
     }
   });
   ws.dataValidations?.add?.(`C2:C${data.defects.length + 1}`, { type: 'list', allowBlank: false, formulae: [`"${DEFECT_SEVERITIES.join(',')}"`] });

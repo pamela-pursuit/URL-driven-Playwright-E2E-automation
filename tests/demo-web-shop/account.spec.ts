@@ -1,4 +1,4 @@
-import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
+import { chromiumOnly, expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
 import { ACCOUNT_NAVIGATION, HEADINGS, MESSAGES } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -7,7 +7,6 @@ import { ACCOUNT_NAVIGATION, HEADINGS, MESSAGES } from '../../test-data/demo-web
 test.use({ trace: 'off' });
 
 // Read-only: no form on these pages is ever submitted (requirements section 6).
-// DWS-066 (Downloadable products) has no test: Blocked, the page never renders (R-05).
 test.describe('My account', () => {
   test('[DWS-063] Customer info and account navigation are shown read-only', async ({ signedIn, accountPage, existingUser, page }) => {
     await signedIn.header.openAccount();
@@ -59,5 +58,18 @@ test.describe('My account', () => {
     await expect(accountPage.newPassword).toBeVisible();
     await expect(accountPage.confirmNewPassword).toBeVisible();
     await expect(accountPage.changePasswordButton).toBeVisible();
+  });
+});
+
+test.describe('Downloadable products', () => {
+  chromiumOnly('Chromium only: known defect DEF-005 (the page never renders); one browser shows it without three 30 s waits');
+
+  test('[DWS-066] Downloadable products page loads', async ({ signedIn, accountPage }) => {
+    void signedIn;
+    test.setTimeout(90_000);
+    await accountPage.goto('downloadableproducts');
+
+    // Known defect DEF-005: fails while the page returns 200 but never renders (R-05).
+    await expect(accountPage.heading, 'DEF-005: the Downloadable products page shows its heading').toBeVisible({ timeout: 30_000 });
   });
 });

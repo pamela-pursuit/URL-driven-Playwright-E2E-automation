@@ -35,8 +35,10 @@ test.describe('Wishlist', () => {
     await expect(wishlistPage.rowUnitPrice(product.name)).toHaveText(formatPrice(product.price));
     await expect(wishlistPage.rowQuantityInput(product.name)).toHaveValue('1');
     await expect(wishlistPage.shareInfo).toContainText(MESSAGES.wishlistShare);
-    // R-15: the URL is currently http; only the /wishlist/<guid> path is asserted.
     expect(await wishlistPage.shareUrl()).toMatch(/^\/wishlist\/[0-9a-f-]{36}$/i);
+    // Known defect DEF-003: soft, so the removal below still runs; fails while the share URL is http.
+    await expect.soft(wishlistPage.shareInfo, 'DEF-003: the share URL uses https')
+      .toContainText(/https:\/\/\S+\/wishlist\//i, { timeout: 2_000 });
 
     await wishlistPage.removeProduct(product.name);
     await expect(wishlistPage.content).toHaveText(MESSAGES.wishlistEmpty);
@@ -55,6 +57,11 @@ test.describe('Wishlist', () => {
     await cartPage.open();
     await expect(cartPage.row(product.name)).toBeVisible();
     await expect(header.cartLink).toHaveText(`Shopping cart (${cartBefore + 1})`);
+    // Known defect DEF-008: soft, so the R-27 check below still runs; fails while thumbnails have no size.
+    await expect.soft(cartPage.rowImage(product.name), 'DEF-008: the row thumbnail has a width (no layout shift)')
+      .toHaveAttribute('width', /\d+/, { timeout: 2_000 });
+    await expect.soft(cartPage.rowImage(product.name), 'DEF-008: the row thumbnail has a height (no layout shift)')
+      .toHaveAttribute('height', /\d+/, { timeout: 2_000 });
 
     // R-27: whether the item leaves the wishlist is recorded, not asserted.
     await wishlistPage.open();

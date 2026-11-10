@@ -1,5 +1,5 @@
 import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
-import { ACCOUNT_SECTIONS_PROTECTED, HEADINGS, MESSAGES } from '../../test-data/demo-web-shop.data';
+import { ACCOUNT_SECTIONS_PROTECTED, HEADINGS } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
 // (fillAccountValue); a trace would still record evaluate arguments and signed-in DOM snapshots,
@@ -31,12 +31,11 @@ test.describe('Authorization', () => {
     });
   });
 
-  test('[DWS-014] Back-in-stock subscriptions page is reachable by a guest', async ({ accountPage, page }) => {
-    test.info().annotations.push({ type: 'possible-defect', description: 'R-21: /customer/backinstocksubscriptions renders for a guest (no login redirect)' });
+  test('[DWS-014] Guest is redirected to login from the back-in-stock subscriptions page', async ({ accountPage, page }) => {
     await accountPage.goto('backinstocksubscriptions');
 
-    await expect(page).toHaveURL(/\/customer\/backinstocksubscriptions$/);
-    await expect(accountPage.heading).toHaveText(HEADINGS.backInStock);
-    await expect(accountPage.pageBody).toContainText(MESSAGES.backInStockNone);
+    // Known defect DEF-007: fails while the page renders for a guest instead of redirecting like DWS-013.
+    await expect(page, 'DEF-007: guest is redirected to login like the other /customer/* pages')
+      .toHaveURL(/\/login\?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions$/i, { timeout: 5_000 });
   });
 });
