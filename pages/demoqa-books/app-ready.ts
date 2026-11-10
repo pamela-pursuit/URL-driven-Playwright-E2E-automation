@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, type Frame, type Locator, type Page, type Response } from '@playwright/test';
 
 /** First data on a page (rows visible after about 2.3 s, discovery F1). */
 export const READY_MS = 15_000;
@@ -7,8 +7,41 @@ export const LOGIN_REDIRECT_MS = 15_000;
 export const ALERT_MS = 15_000;
 
 /**
+ * Runs a navigation and waits for the first matching response sent AFTER the main frame committed
+ * the new document, so a late response of the previous page is never taken. `read` runs as soon as
+ * the response arrives (before any later navigation can discard its body).
+ */
+export async function responseAfterNavigation<R>(
+  page: Page,
+  predicate: (response: Response) => boolean,
+  navigate: () => Promise<unknown>,
+  read: (response: Response) => Promise<R> | R,
+  timeout: number = READY_MS
+): Promise<R> {
+  let armed = false;
+  const onNavigated = (frame: Frame) => {
+    if (frame === page.mainFrame()) {
+      armed = true;
+    }
+  };
+  page.on('framenavigated', onNavigated);
+  try {
+    const [value] = await Promise.all([
+      page.waitForResponse((response) => armed && predicate(response), { timeout }).then(read),
+      navigate()
+    ]);
+    return value;
+  } finally {
+    page.off('framenavigated', onNavigated);
+  }
+}
+
+/**
  * K7 / R-01: waits until React has attached its props to the anchor control. Probe P1 found
  * `__reactProps$<id>` on the search box, login button, register button and detail back button.
+ * /register is ready only once its invisible reCAPTCHA v3 token exists as well (the token lands
+ * about 1 to 3 s after hydration and its arrival clears every field and is-invalid mark); see
+ * DemoqaRegisterPage.waitForReady().
  */
 export async function waitForHydration(anchor: Locator): Promise<void> {
   await anchor.waitFor({ timeout: READY_MS });

@@ -1,7 +1,7 @@
 import type { Locator, Page, Response } from '@playwright/test';
 import { API } from '../../test-data/demoqa-books.data';
 import { DemoqaAlerts } from './alerts';
-import { documentScrollWidth, fillAndConfirm, READY_MS, waitForHydration } from './app-ready';
+import { documentScrollWidth, fillAndConfirm, responseAfterNavigation, waitForHydration } from './app-ready';
 import { DemoqaBookDetailPage } from './book-detail.page';
 import { DemoqaBooksTable } from './books-table.page';
 import { DemoqaSessionBar } from './session-bar.page';
@@ -25,20 +25,28 @@ export class DemoqaBooksPage {
 
   /** Returns the document response (DQB-001 asserts status and no redirect). */
   async open(): Promise<Response> {
-    const booksLoaded = this.page.waitForResponse(API.booksList, { timeout: READY_MS });
-    const response = await this.page.goto('books', { waitUntil: 'domcontentloaded' });
-    await booksLoaded;
+    const navigation: { document: Response | null } = { document: null };
+    await responseAfterNavigation(
+      this.page,
+      API.booksList,
+      async () => {
+        navigation.document = await this.page.goto('books', { waitUntil: 'domcontentloaded' });
+      },
+      () => undefined
+    );
     await this.waitForReady();
-    if (!response) {
+    if (!navigation.document) {
       throw new Error('Navigation to /books returned no response');
     }
-    return response;
+    return navigation.document;
   }
 
-  /** DQB-021: the list request is routed to fail, so no row wait. */
+  /**
+   * DQB-021: the list request is routed to fail, so no row or search-box wait here (the spec
+   * asserts what is shown; the app currently crashes to a blank page, DEF-001).
+   */
   async openExpectingNoRows(): Promise<void> {
     await this.page.goto('books', { waitUntil: 'domcontentloaded' });
-    await waitForHydration(this.searchBox);
   }
 
   async search(term: string): Promise<void> {
@@ -50,9 +58,12 @@ export class DemoqaBooksPage {
   }
 
   async reload(): Promise<void> {
-    const booksLoaded = this.page.waitForResponse(API.booksList, { timeout: READY_MS });
-    await this.page.reload({ waitUntil: 'domcontentloaded' });
-    await booksLoaded;
+    await responseAfterNavigation(
+      this.page,
+      API.booksList,
+      () => this.page.reload({ waitUntil: 'domcontentloaded' }),
+      () => undefined
+    );
     await this.waitForReady();
   }
 

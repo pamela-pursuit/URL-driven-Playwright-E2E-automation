@@ -36,6 +36,11 @@ export interface AccountSession {
   apply(context: BrowserContext): Promise<void>;
   /** UI login again and replace the cached cookies. */
   refresh(): Promise<void>;
+  /**
+   * Replaces the cached cookies with this context's demoqa.com session cookies. Call after any
+   * other UI login: a new login revokes the previous token (P3), so the old cache is dead.
+   */
+  adopt(context: BrowserContext): Promise<void>;
   logins(): number;
 }
 
@@ -156,6 +161,13 @@ function rejectedMessage(role: Role): string {
   return `${role} sign-in was rejected. Check the credential with: node scripts/credentials.mjs check --app ${APP}`;
 }
 
+/** The four demoqa.com session cookies of a context (kept in memory only, never logged). */
+async function sessionCookiesOf(context: BrowserContext): Promise<Cookie[]> {
+  return (await context.cookies()).filter(
+    (cookie) => DEMOQA_HOST.test(cookie.domain.replace(/^\./, '')) && (SESSION_COOKIES as readonly string[]).includes(cookie.name)
+  );
+}
+
 /** UI login in the given page's context; returns once /profile shows the signed-in state. */
 async function signInThroughUi(
   loginPage: DemoqaLoginPage,
@@ -254,9 +266,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
           const page = await context.newPage();
           await signInThroughUi(new DemoqaLoginPage(page), new DemoqaProfilePage(page), browserAccount, breaker);
           logins += 1;
-          cached = (await context.cookies()).filter(
-            (cookie) => DEMOQA_HOST.test(cookie.domain.replace(/^\./, '')) && (SESSION_COOKIES as readonly string[]).includes(cookie.name)
-          );
+          cached = await sessionCookiesOf(context);
         } finally {
           await context.close();
         }
@@ -269,6 +279,11 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
           await context.addCookies(cached ?? []);
         },
         refresh: login,
+        adopt: async (context) => {
+          const cookies = await sessionCookiesOf(context);
+          // Without a token the next apply() signs in again instead of adding an empty session.
+          cached = cookies.some((cookie) => cookie.name === 'token') ? cookies : null;
+        },
         logins: () => logins
       });
       cached = null;
@@ -357,18 +372,20 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     });
   },
 
-  // No logout on teardown: the context is discarded, and logging out is client-side only (probe P3).
+  // A new login revokes the previous token (P3); Logout is client-side only (the token stays valid),
+  // so no logout on teardown: the context is discarded. The session is judged by the
+  // GET /Account/v1/User status (openSession), never by a visible Logout button.
   signedIn: [
     async ({ account, accountSession, context, profilePage }, use, testInfo) => {
       await accountSession.apply(context);
-      await profilePage.goto();
-      if (!(await profilePage.isSignedIn())) {
-        testInfo.annotations.push({ type: 'session-refreshed', description: `${account.role} cached session was not accepted` });
+      let state = await profilePage.openSession();
+      if (state !== 'signed-in') {
+        testInfo.annotations.push({ type: 'session-refreshed', description: `${account.role}: ${state}` });
         await accountSession.refresh();
         await accountSession.apply(context);
-        await profilePage.goto();
-        if (!(await profilePage.isSignedIn())) {
-          throw new Error(`${account.role} session could not be established`);
+        state = await profilePage.openSession();
+        if (state !== 'signed-in') {
+          throw new Error(`${account.role} session could not be established (${state})`);
         }
       }
       await use({ account });
@@ -376,9 +393,11 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     { timeout: 60_000 }
   ],
 
-  freshLogin: async ({ account, loginPage, profilePage, loginCircuitBreaker }, use) => {
+  // A new login revokes the previous token (P3): the cached worker session is replaced with this one.
+  freshLogin: async ({ account, accountSession, context, loginPage, profilePage, loginCircuitBreaker }, use) => {
     await use(async () => {
       await signInThroughUi(loginPage, profilePage, account, loginCircuitBreaker);
+      await accountSession.adopt(context);
       return profilePage;
     });
   },
@@ -387,22 +406,23 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
   ownedBooks: [
     async ({ account, accountSession, context, profilePage, bookDetailPage }, use, testInfo) => {
       const claimed: OwnBook[] = [];
+      // Leaves /profile loaded with its collection rows final (openSession waits for them).
       const ensureSignedIn = async () => {
-        await profilePage.goto();
-        if (await profilePage.isSignedIn()) {
+        let state = await profilePage.openSession();
+        if (state === 'signed-in') {
           return;
         }
         await accountSession.apply(context);
-        await profilePage.goto();
-        if (await profilePage.isSignedIn()) {
+        state = await profilePage.openSession();
+        if (state === 'signed-in') {
           return;
         }
-        testInfo.annotations.push({ type: 'session-refreshed', description: `${account.role} cached session was not accepted` });
+        testInfo.annotations.push({ type: 'session-refreshed', description: `${account.role}: ${state}` });
         await accountSession.refresh();
         await accountSession.apply(context);
-        await profilePage.goto();
-        if (!(await profilePage.isSignedIn())) {
-          throw new Error(`${account.role} session could not be established for collection cleanup`);
+        state = await profilePage.openSession();
+        if (state !== 'signed-in') {
+          throw new Error(`${account.role} session could not be established for collection cleanup (${state})`);
         }
       };
       const remove = async (book: OwnBook, phase: string) => {
@@ -417,7 +437,6 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
             throw new Error(`"${book.title}" is not one of the suite's own books`);
           }
           await ensureSignedIn();
-          await profilePage.openSignedIn();
           await remove(book, 'setup');
           if (!claimed.some((own) => own.isbn === book.isbn)) {
             claimed.push(book);
@@ -435,7 +454,6 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
         return;
       }
       await ensureSignedIn();
-      await profilePage.openSignedIn();
       for (const book of claimed) {
         await remove(book, 'teardown');
       }
@@ -477,7 +495,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     await page.unrouteAll({ behavior: 'ignoreErrors' });
   },
 
-  pageErrors: async ({ page }, use) => {
+  pageErrors: async ({ page }, use, testInfo) => {
     const errors: string[] = [];
     let markIndex = 0;
     page.on('pageerror', (error) => errors.push(error.message));
@@ -487,6 +505,10 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
       },
       sinceMark: () => errors.slice(markIndex)
     });
+    // Evidence for a failed test (e.g. DEF-001): uncaught page errors since the mark. App errors only.
+    if (testInfo.status !== testInfo.expectedStatus && errors.length > markIndex) {
+      testInfo.annotations.push({ type: 'page-errors', description: errors.slice(markIndex).join(' | ') });
+    }
   }
 });
 

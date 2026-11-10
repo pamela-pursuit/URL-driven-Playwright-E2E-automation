@@ -38,6 +38,9 @@ test.describe('Register form validation', () => {
     await expect(registerPage.userName).toHaveValue(form.userName);
     await expect(registerPage.password).toHaveValue(form.password);
     await expect(page).toHaveURL(REGISTER_URL);
-    recordObservation('R-26', `Register request sent with an unsolved reCAPTCHA; body keys: ${bodyKeys.join(', ')}`);
+    recordObservation(
+      'R-26',
+      `Register request sent after the automatic reCAPTCHA v3 token; body keys: ${bodyKeys.join(', ')} (no captcha token sent to the server)`
+    );
   });
 });

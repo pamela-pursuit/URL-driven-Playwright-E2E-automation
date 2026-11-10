@@ -219,9 +219,11 @@ test.describe('Book Store list, search, sort and detail', () => {
     await expect(detail.fieldValue('website')).not.toBeEmpty();
   });
 
-  test('[DQB-019] Back To Book Store returns to the list', async ({ bookDetailPage, page }) => {
-    await bookDetailPage.open(BOOKS.gitPocketGuide.isbn);
-    const list = await bookDetailPage.backToBookStore();
+  // "Back To Book Store" is a history-back control, so the detail page is reached from the list.
+  test('[DQB-019] Back To Book Store returns to the list', async ({ booksPage, page }) => {
+    await booksPage.open();
+    const detail = await booksPage.openBook(GIT_POCKET_GUIDE_DETAIL.title);
+    const list = await detail.backToBookStore();
 
     await expect(page).toHaveURL(BOOKS_URL);
     await expect(list.table.titleLinks).toHaveText(CATALOGUE_TITLES);
@@ -240,16 +242,26 @@ test.describe('Book Store list, search, sort and detail', () => {
     recordObservation('R-22', 'Unknown ISBN shows empty fields and no user-facing error (current behaviour asserted)');
   });
 
-  test('[DQB-021] Book list when the books service fails', async ({ booksApi, booksPage, alerts }) => {
+  test('[DQB-021] Book list when the books service fails', async ({ booksApi, booksPage, alerts, pageErrors }) => {
     const { fired } = await booksApi.failListWith(500);
+    pageErrors.mark();
 
     await booksPage.openExpectingNoRows();
     await fired;
 
+    // Fails while DEF-001 is open (the app renders a blank page); the pageErrors fixture then
+    // annotates the uncaught errors seen since the mark.
+    await expect(
+      booksPage.searchBox,
+      'DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500'
+    ).toBeVisible({ timeout: 10_000 });
     await expect(booksPage.table.titleLinks).toHaveCount(0);
-    await expect(booksPage.searchBox).toBeVisible();
-    // R-30: the failure behaviour is not specified; what is shown is recorded, not asserted.
+
     const pagerText = await booksPage.table.pageInfo.allInnerTexts();
-    recordObservation('R-30', `Pager text: ${pagerText.join(' | ') || '(none)'}; native alerts: ${alerts.unexpected().join(' | ') || '(none)'}`);
+    const errors = pageErrors.sinceMark();
+    recordObservation(
+      'R-30',
+      `Pager text: ${pagerText.join(' | ') || '(none)'}; native alerts: ${alerts.unexpected().join(' | ') || '(none)'}; page errors: ${errors.join(' | ') || '(none)'}`
+    );
   });
 });

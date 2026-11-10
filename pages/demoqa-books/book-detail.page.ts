@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { API } from '../../test-data/demoqa-books.data';
 import { DemoqaAlerts } from './alerts';
-import { READY_MS, waitForHydration } from './app-ready';
+import { READY_MS, responseAfterNavigation, waitForHydration } from './app-ready';
 import { DemoqaBooksPage } from './books.page';
 import { DemoqaSessionBar } from './session-bar.page';
 
@@ -51,20 +51,26 @@ export class DemoqaBookDetailPage {
   }
 
   async open(isbn: string): Promise<void> {
-    const bookLoaded = this.page.waitForResponse(API.bookByIsbn(isbn), { timeout: READY_MS });
-    await this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' });
-    await bookLoaded;
+    await responseAfterNavigation(
+      this.page,
+      API.bookByIsbn(isbn),
+      () => this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' }),
+      () => undefined
+    );
     await this.waitForBook();
   }
 
   /** DQB-020: returns the status of the book request; values stay empty, so no value wait. */
   async openUnknown(isbn: string): Promise<number> {
-    const bookLoaded = this.page.waitForResponse(API.bookByIsbn(isbn), { timeout: READY_MS });
-    await this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' });
-    const response = await bookLoaded;
+    const status = await responseAfterNavigation(
+      this.page,
+      API.bookByIsbn(isbn),
+      () => this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' }),
+      (response) => response.status()
+    );
     await this.wrapper('title').waitFor();
     await this.backButton.waitFor();
-    return response.status();
+    return status;
   }
 
   /** Ready when the Title value has text and the back button is hydrated. */

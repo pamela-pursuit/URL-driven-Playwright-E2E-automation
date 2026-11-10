@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { API, STRONG_PASSWORD_RULE } from '../../test-data/demoqa-books.data';
 import { DemoqaAlerts } from './alerts';
 import { clickUntilInvalid, fillAndConfirm, READY_MS, waitForHydration } from './app-ready';
@@ -23,6 +23,7 @@ export class DemoqaRegisterPage {
   readonly errorMessage: Locator;
   readonly invalidInputs: Locator;
   readonly inputs: readonly Locator[];
+  private readonly captchaToken: Locator;
 
   constructor(private readonly page: Page) {
     DemoqaAlerts.for(page);
@@ -39,6 +40,8 @@ export class DemoqaRegisterPage {
     // The client marks fields with class is-invalid; no text message exists.
     this.invalidInputs = page.locator('input.is-invalid');
     this.inputs = [this.firstName, this.lastName, this.userName, this.password];
+    // Hidden textarea written by the invisible reCAPTCHA v3 widget; no role, label or test id exists.
+    this.captchaToken = page.locator('textarea[name="g-recaptcha-response"]');
   }
 
   async open(): Promise<this> {
@@ -47,9 +50,20 @@ export class DemoqaRegisterPage {
     return this;
   }
 
+  /**
+   * R-01: hydrated AND the invisible reCAPTCHA v3 token issued. Before the token a filled submit
+   * shows "Please verify reCaptcha to register!" and sends nothing, and the token's arrival clears
+   * all four fields and every is-invalid mark. Only a boolean leaves the page (never the token).
+   */
   async waitForReady(): Promise<void> {
     await this.heading.waitFor({ timeout: READY_MS });
     await waitForHydration(this.registerButton);
+    await expect
+      .poll(() => this.captchaToken.evaluate((textarea) => (textarea as HTMLTextAreaElement).value.length > 0), {
+        message: 'reCAPTCHA v3 token issued (form submittable)',
+        timeout: READY_MS
+      })
+      .toBe(true);
   }
 
   async submitEmpty(): Promise<void> {
@@ -72,6 +86,10 @@ export class DemoqaRegisterPage {
     // R-07 guard: never submit a value that satisfies the server rule (that could create an account).
     if (STRONG_PASSWORD_RULE.test(await this.password.inputValue())) {
       throw new Error('R-07: refusing to submit a password that satisfies the server rule');
+    }
+    // A late reCAPTCHA callback clears every field; prove the form is still filled right before the click.
+    for (const input of this.inputs) {
+      await expect(input, 'register field still filled before submit').not.toHaveValue('');
     }
     const [response] = await Promise.all([
       this.page.waitForResponse(API.createUser, { timeout: READY_MS }),

@@ -1,10 +1,12 @@
 import { expect, type Locator, type Page, type Response } from '@playwright/test';
 import { API, MESSAGES, OWN_BOOK_ISBNS, type OwnBook } from '../../test-data/demoqa-books.data';
 import { DemoqaAlerts } from './alerts';
-import { LOGIN_REDIRECT_MS, READY_MS, waitForHydration } from './app-ready';
+import { LOGIN_REDIRECT_MS, READY_MS, responseAfterNavigation, waitForHydration } from './app-ready';
 import { DemoqaBooksTable } from './books-table.page';
 import { DemoqaLoginPage } from './login.page';
 import { DemoqaRegisterPage } from './register.page';
+
+const DEMOQA_HOST = /(^|\.)demoqa\.com$/;
 
 /**
  * /profile. "Delete Account" and "Delete All Books" are exposed for visibility checks only; no
@@ -20,6 +22,8 @@ export class DemoqaProfilePage {
   readonly deleteAllBooksButton: Locator;
   readonly searchBox: Locator;
   readonly signedOutMessage: Locator;
+  /** Shown instead of the profile when the token was revoked by a newer login (probe fi-session). */
+  readonly notAuthorizedMessage: Locator;
   readonly deleteDialog: Locator;
   readonly deleteDialogTitle: Locator;
   readonly deleteDialogBody: Locator;
@@ -42,6 +46,7 @@ export class DemoqaProfilePage {
     this.deleteAllBooksButton = page.getByRole('button', { name: 'Delete All Books', exact: true }).filter({ visible: true });
     this.searchBox = page.getByPlaceholder('Type to search');
     this.signedOutMessage = page.getByText(/^Currently you are not logged into the Book Store application/);
+    this.notAuthorizedMessage = page.getByText('User not authorized!', { exact: true });
     this.deleteDialog = page.getByRole('dialog');
     this.deleteDialogTitle = this.deleteDialog.getByText(MESSAGES.deleteDialogTitle, { exact: true });
     this.deleteDialogBody = this.deleteDialog.getByText(MESSAGES.deleteDialogBody, { exact: true });
@@ -59,7 +64,7 @@ export class DemoqaProfilePage {
     return this.page.locator(`#delete-record-${isbn}`);
   }
 
-  /** Raw navigation for guest checks and session detection; waits for either profile state. */
+  /** Raw navigation for guest checks (DQB-023/032/033/044); waits for either profile state. */
   async goto(): Promise<Response> {
     const response = await this.page.goto('profile', { waitUntil: 'domcontentloaded' });
     await this.signedOutMessage.or(this.logoutButton).first().waitFor({ timeout: READY_MS });
@@ -69,23 +74,40 @@ export class DemoqaProfilePage {
     return response;
   }
 
-  /** Call after goto(): true when the signed-in profile is shown. */
-  async isSignedIn(): Promise<boolean> {
-    return this.logoutButton.isVisible();
+  /**
+   * Session detection for fixtures. "Logout visible" is not proof of a valid session (it renders
+   * before GET /Account/v1/User answers, and a newer login revokes the token: 401 and
+   * "User not authorized!"), so the state is decided by the User response status.
+   */
+  async openSession(): Promise<'signed-in' | 'signed-out' | 'not-authorized'> {
+    const hasToken = (await this.page.context().cookies()).some(
+      (cookie) => cookie.name === 'token' && DEMOQA_HOST.test(cookie.domain.replace(/^\./, ''))
+    );
+    if (!hasToken) {
+      await this.page.goto('profile', { waitUntil: 'domcontentloaded' });
+      await this.signedOutMessage.waitFor({ timeout: READY_MS });
+      return 'signed-out';
+    }
+    const user = await this.navigateForUser(() => this.page.goto('profile', { waitUntil: 'domcontentloaded' }));
+    if (user.status === 401) {
+      await this.notAuthorizedMessage.waitFor({ timeout: READY_MS });
+      return 'not-authorized';
+    }
+    if (user.status !== 200) {
+      throw new Error(`Unexpected profile state: GET /Account/v1/User returned ${user.status}`);
+    }
+    await this.waitForCollection(user.books);
+    return 'signed-in';
   }
 
   /** Signed-in profile with its collection rows final (they come from GET /Account/v1/User/<id>). */
   async openSignedIn(): Promise<this> {
-    const userLoaded = this.page.waitForResponse(API.accountUser, { timeout: LOGIN_REDIRECT_MS });
-    await this.page.goto('profile', { waitUntil: 'domcontentloaded' });
-    await this.waitForCollection(await userLoaded);
+    await this.expectSignedIn(await this.navigateForUser(() => this.page.goto('profile', { waitUntil: 'domcontentloaded' })));
     return this;
   }
 
   async reload(): Promise<void> {
-    const userLoaded = this.page.waitForResponse(API.accountUser, { timeout: LOGIN_REDIRECT_MS });
-    await this.page.reload({ waitUntil: 'domcontentloaded' });
-    await this.waitForCollection(await userLoaded);
+    await this.expectSignedIn(await this.navigateForUser(() => this.page.reload({ waitUntil: 'domcontentloaded' })));
   }
 
   /** After an in-app login redirect: the signed-in state without another navigation. */
@@ -179,17 +201,45 @@ export class DemoqaProfilePage {
     return target;
   }
 
-  /** Waits until the rendered rows match the collection in the user response. */
-  private async waitForCollection(userResponse: Response): Promise<void> {
+  /**
+   * Navigates and returns the status and collection size of the first GET /Account/v1/User/<id>
+   * sent by the NEW document (a late response of the previous page is ignored). The body is read
+   * as soon as the response arrives, before a later navigation can discard it.
+   */
+  private async navigateForUser(navigate: () => Promise<unknown>): Promise<{ status: number; books: number | null }> {
+    return responseAfterNavigation(
+      this.page,
+      API.accountUser,
+      navigate,
+      async (response) => {
+        const status = response.status();
+        if (status !== 200) {
+          return { status, books: null };
+        }
+        const body: unknown = await response.json();
+        const books = body && typeof body === 'object' ? (body as { books?: unknown }).books : undefined;
+        return { status, books: Array.isArray(books) ? books.length : null };
+      },
+      LOGIN_REDIRECT_MS
+    );
+  }
+
+  private async expectSignedIn(user: { status: number; books: number | null }): Promise<void> {
+    if (user.status !== 200) {
+      throw new Error(`Profile is not signed in: GET /Account/v1/User returned ${user.status}`);
+    }
+    await this.waitForCollection(user.books);
+  }
+
+  /** Waits until the rendered rows match the collection size from the user response. */
+  private async waitForCollection(books: number | null): Promise<void> {
     await this.booksHeading.waitFor({ timeout: READY_MS });
     await this.userNameValue.waitFor({ timeout: READY_MS });
     await waitForHydration(this.logoutButton);
-    const body: unknown = await userResponse.json();
-    const books = body && typeof body === 'object' ? (body as { books?: unknown }).books : undefined;
-    if (Array.isArray(books)) {
+    if (books !== null) {
       await expect
         .poll(() => this.table.bookRows.count(), { message: 'Profile rows match the collection', timeout: READY_MS })
-        .toBe(books.length);
+        .toBe(books);
     }
   }
 }
