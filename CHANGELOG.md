@@ -18,6 +18,14 @@
   status New, and DEF-005 to DEF-013, status Needs confirmation: R-05,
   R-11, R-21, R-36, and the accessibility findings from DWS-068 to DWS-070
   (pending a WCAG target, R-31).
+- Re-checks: DEF-005 reproduced (status New); DEF-003 lowered to Low (http
+  redirects 301 to https, no HSTS); DEF-013 Rejected (Email has autofocus).
+
+### Fixed
+
+- DWS-068: `tabToEmail` returns 0 when the Email field already has focus
+  after load, instead of Tabbing through the page. Headless Firefox left the
+  page for the browser UI and the test reported a false accessibility gap.
 
 ### Changed
 

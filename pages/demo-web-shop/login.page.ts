@@ -58,9 +58,16 @@ export class DemoWebShopLoginPage {
 
   /**
    * DWS-068: presses Tab from the start of the page until the Email field has focus.
-   * Returns the number of presses, or null when the field was not reached within `maxTabs`.
+   * Returns the number of presses (0 when Email already has focus after load: it has
+   * `autofocus`), or null when the field was not reached within `maxTabs`.
+   * Pressing Tab from an autofocused Email walks the whole page; in headless Firefox focus then
+   * leaves the page for the browser UI and never returns, which was misreported as a gap (DEF-013).
    */
   async tabToEmail(maxTabs: number): Promise<number | null> {
+    await this.page.waitForLoadState('load');
+    if (await isFocused(this.emailInput)) {
+      return 0;
+    }
     for (let presses = 1; presses <= maxTabs; presses++) {
       await this.page.keyboard.press('Tab');
       if (await isFocused(this.emailInput)) {
