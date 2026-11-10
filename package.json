@@ -15,7 +15,6 @@
     "credentials": "node scripts/credentials.mjs"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.49.1",
     "@types/node": "^26.6.6",
     "exceljs": "^4.4.0",

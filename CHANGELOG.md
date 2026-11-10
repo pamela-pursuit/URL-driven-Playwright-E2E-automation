@@ -21,9 +21,18 @@
 - Re-checks: DEF-005 reproduced (status New); DEF-003 lowered to Low (http
   redirects 301 to https, no HSTS); DEF-013 Rejected (Email has autofocus).
 
+### Removed
+
+- demo-web-shop accessibility testing (user decision D6: out of scope for
+  the demo site): `accessibility.spec.ts` (DWS-068 to DWS-070), the
+  `@axe-core/playwright` dependency, `reportOnly`, the keyboard sign-in
+  mode and its login-page helpers, and two home-page locators. The
+  catalogue has 67 scenarios; a full run executes 184 tests. The
+  axe scan entry under "Added" above was superseded the same day.
+
 ### Fixed
 
-- DWS-068: `tabToEmail` returns 0 when the Email field already has focus
+- DWS-068 (since removed): `tabToEmail` returns 0 when the Email field already has focus
   after load, instead of Tabbing through the page. Headless Firefox left the
   page for the browser UI and the test reported a false accessibility gap.
 

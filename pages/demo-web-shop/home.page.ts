@@ -8,16 +8,11 @@ export class DemoWebShopHomePage {
   readonly header: DemoWebShopHeader;
   readonly notification: DemoWebShopNotificationBar;
   readonly heading: Locator;
-  // No accessible name (discovery 4.10); used only by the DWS-069 report.
-  readonly newsletterEmail: Locator;
-  readonly htmlRoot: Locator;
 
   constructor(private readonly page: Page) {
     this.header = new DemoWebShopHeader(page);
     this.notification = new DemoWebShopNotificationBar(page);
     this.heading = page.getByRole('heading', { level: 1 });
-    this.newsletterEmail = page.locator('#newsletter-email');
-    this.htmlRoot = page.locator('html');
   }
 
   /** Exact title-link name, so "Build your own computer" does not match "Build your own cheap computer". */

@@ -56,51 +56,6 @@ export class DemoWebShopLoginPage {
     return this.waitForOutcome();
   }
 
-  /**
-   * DWS-068: presses Tab from the start of the page until the Email field has focus.
-   * Returns the number of presses (0 when Email already has focus after load: it has
-   * `autofocus`), or null when the field was not reached within `maxTabs`.
-   * Pressing Tab from an autofocused Email walks the whole page; in headless Firefox focus then
-   * leaves the page for the browser UI and never returns, which was misreported as a gap (DEF-013).
-   */
-  async tabToEmail(maxTabs: number): Promise<number | null> {
-    await this.page.waitForLoadState('load');
-    if (await isFocused(this.emailInput)) {
-      return 0;
-    }
-    for (let presses = 1; presses <= maxTabs; presses++) {
-      await this.page.keyboard.press('Tab');
-      if (await isFocused(this.emailInput)) {
-        return presses;
-      }
-    }
-    return null;
-  }
-
-  /** Focuses the Email field programmatically (used only when Tab could not reach it). */
-  async focusEmail(): Promise<void> {
-    await this.emailInput.focus();
-  }
-
-  /**
-   * DWS-068: enters the email into the focused Email field, presses Tab, enters the password
-   * and presses Enter. The values are set with fillAccountValue rather than typed key by key,
-   * so they never appear in report step titles (P9); focus order and Enter-to-submit are still
-   * exercised. If Tab does not land on Password, Password is focused directly so the password
-   * is never entered into another field, and that is reported.
-   */
-  async signInWithKeyboardFromEmail(
-    email: string,
-    password: string
-  ): Promise<{ outcome: SignInOutcome; tabReachedPassword: boolean }> {
-    await fillAccountValue(this.emailInput, email);
-    await this.page.keyboard.press('Tab');
-    const tabReachedPassword = await isFocused(this.passwordInput);
-    await fillAccountValue(this.passwordInput, password);
-    await this.page.keyboard.press('Enter');
-    return { outcome: await this.waitForOutcome(), tabReachedPassword };
-  }
-
   async submitEmpty(): Promise<void> {
     await navigateBy(this.page, () => this.loginButton.click());
     await this.errorSummary.waitFor();
@@ -129,8 +84,4 @@ export class DemoWebShopLoginPage {
     }
     return 'invalid-field';
   }
-}
-
-async function isFocused(locator: Locator): Promise<boolean> {
-  return locator.evaluate((element) => element === document.activeElement);
 }

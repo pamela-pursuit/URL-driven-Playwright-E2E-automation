@@ -3,6 +3,11 @@
 Implementation blueprint for the Playwright TypeScript suite covering
 `test-plans/demo-web-shop/scenarios.json` (DWS-001 to DWS-070).
 
+> **Update 2026-11-10 (user decision D6):** accessibility is out of scope. DWS-068 to DWS-070,
+> `accessibility.spec.ts`, `reportOnly`, the keyboard sign-in mode (`tabToEmail`, `focusEmail`,
+> `signInWithKeyboardFromEmail`, `MAX_TABS_TO_EMAIL`) and the home-page `newsletterEmail` and
+> `htmlRoot` locators were removed. Their entries below are kept for history and marked *(removed)*.
+
 Inputs: `discovery.md` (section 4 for exact texts and synchronisation, section 5 for
 verified locators), `scenarios.json`, `requirements.md` section 8, `intake.md` D1 to D5,
 `.claude/skills/qa-playwright/{pom,locators,credentials,reporting}.md`,
@@ -72,7 +77,7 @@ tests/demo-web-shop/
   checkout-cod.spec.ts        DWS-061
   account.spec.ts             DWS-063..065   (DWS-066 Blocked: no test)
   responsive.spec.ts          DWS-067
-  accessibility.spec.ts       DWS-068, 069   (DWS-070 Manual: no test)
+  accessibility.spec.ts       (removed 2026-11-10, D6)
 ```
 
 Import rules:
@@ -687,9 +692,9 @@ the details argument (`{ tag: [...] }`), never in the title.
 | DWS-065 | account.spec.ts | `[DWS-065] Change password form fields are present` | signedIn; never submitted |
 | DWS-066 | (none) | No test. **Blocked** (R-05): the page never renders. A comment in account.spec.ts references it. | |
 | DWS-067 | responsive.spec.ts | `[DWS-067] Mobile layout shows the category menu at 375x812` | `test.use` viewport and `hasTouch`; `isMobile` false on Firefox (P8) |
-| DWS-068 | accessibility.spec.ts | `[DWS-068] Keyboard-only sign-in` | existingUser; report-only; records `tabsToEmail` |
-| DWS-069 | accessibility.spec.ts | `[DWS-069] Known accessibility gaps are reported` | `reportOnly` checks (html lang, home h1, unnamed controls via `toHaveAccessibleName`) |
-| DWS-070 | (none) | No test. **Manual**: `@axe-core/playwright` is not installed (R-32). | |
+| DWS-068 *(removed, D6)* | accessibility.spec.ts | `[DWS-068] Keyboard-only sign-in` | existingUser; report-only; records `tabsToEmail` |
+| DWS-069 *(removed, D6)* | accessibility.spec.ts | `[DWS-069] Known accessibility gaps are reported` | `reportOnly` checks (html lang, home h1, unnamed controls via `toHaveAccessibleName`) |
+| DWS-070 *(removed, D6)* | (none) | No test. **Manual**: `@axe-core/playwright` is not installed (R-32). | |
 
 Totals: **68 automated tests** and 2 not automated. Chromium-only: DWS-002, 049, 050, 051, 052,
 057 and 061. All others run on all three browsers.

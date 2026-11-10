@@ -20,7 +20,6 @@ import { DemoWebShopWishlistPage } from '../pages/demo-web-shop/wishlist.page';
 import {
   ADD_TO_CART_URL,
   GUEST_ADDRESS,
-  MAX_TABS_TO_EMAIL,
   PROTECTED_ACCOUNT_ITEMS,
   RESERVED_TEST_PRODUCTS,
   THIRD_PARTY_BLOCKLIST,
@@ -48,15 +47,6 @@ export interface AccountCartCleaner {
 export interface SignInOptions {
   /** 'login-page' (default) opens /login first; 'current-page' uses the login form already shown (ReturnUrl redirect). */
   from?: 'login-page' | 'current-page';
-  /** DWS-068: keyboard-only sign-in starting from the top of the page. */
-  keyboard?: boolean;
-}
-
-export interface SignInReport {
-  /** Keyboard mode: Tab presses to reach Email, or null when it was not reached within MAX_TABS_TO_EMAIL. */
-  tabsToEmail?: number | null;
-  /** Keyboard mode: whether one Tab from Email reached Password. */
-  tabReachedPassword?: boolean;
 }
 
 export interface LoginCircuitBreaker {
@@ -91,7 +81,7 @@ type Fixtures = {
   orderPage: DemoWebShopOrderPage;
   accountPage: DemoWebShopAccountPage;
   loginCircuitBreaker: LoginCircuitBreaker;
-  signInAsExistingUser: (options?: SignInOptions) => Promise<SignInReport>;
+  signInAsExistingUser: (options?: SignInOptions) => Promise<void>;
   signedIn: { header: DemoWebShopHeader };
   accountCartCleaner: AccountCartCleaner;
   uniqueGuest: GuestCustomer;
@@ -165,22 +155,10 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
       if (options.from !== 'current-page') {
         await loginPage.open();
       }
-      const report: SignInReport = {};
       // Values are filled without step titles (fillAccountValue, P9); the boxed step points errors here.
       const outcome = await test.step(
         'Sign in as existingUser',
-        async () => {
-          if (options.keyboard) {
-            report.tabsToEmail = await loginPage.tabToEmail(MAX_TABS_TO_EMAIL);
-            if (report.tabsToEmail === null) {
-              await loginPage.focusEmail();
-            }
-            const result = await loginPage.signInWithKeyboardFromEmail(existingUser.email, existingUser.password);
-            report.tabReachedPassword = result.tabReachedPassword;
-            return result.outcome;
-          }
-          return loginPage.signIn(existingUser.email, existingUser.password);
-        },
+        async () => loginPage.signIn(existingUser.email, existingUser.password),
         { box: true }
       );
       if (outcome === 'rejected') {
@@ -193,7 +171,6 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
         throw new Error(`existingUser sign-in did not complete (outcome: ${outcome})`);
       }
       await header.logoutLink.waitFor();
-      return report;
     });
   },
 
@@ -280,20 +257,4 @@ export function chromiumOnly(reason = 'Chromium only (D2): mutates the shared ac
 /** Annotation for first-run observations. Never pass account values. */
 export function recordObservation(type: string, description: string): void {
   test.info().annotations.push({ type, description });
-}
-
-/**
- * Report-only check (D4, R-31): an assertion failure (an error carrying `matcherResult`) is
- * recorded as an `a11y-gap` annotation and does not fail the test. Any other error (strict mode
- * violation, closed page, timeout of an action) is rethrown. Used only in accessibility.spec.ts.
- */
-export async function reportOnly(description: string, check: () => Promise<void>): Promise<void> {
-  try {
-    await check();
-  } catch (error) {
-    if (!(error instanceof Error) || !('matcherResult' in error)) {
-      throw error;
-    }
-    recordObservation('a11y-gap', `${description}: ${error.message.split('\n')[0]}`);
-  }
 }

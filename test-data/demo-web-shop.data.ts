@@ -213,9 +213,6 @@ export const ADD_TO_CART_URL = {
   catalog: /\/addproducttocart\/catalog\/\d+\/1\/\d+(?:[/?#]|$)/
 } as const;
 
-/** DWS-068: Tab presses tried before the email field counts as unreachable (probe: 54 on Chromium). */
-export const MAX_TABS_TO_EMAIL = 100;
-
 export function uniqueSuffix(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
