@@ -2660,13 +2660,13 @@
       "type": "Ambiguity",
       "description": "No WCAG target level specified; accessibility is report-only (D4).",
       "impact": "Low",
-      "mitigation": "Ask for a target (e.g. WCAG 2.1 AA) before gating. Logged as DEF-009, DEF-010, DEF-011, DEF-012 on 2026-11-10 (see \"Defects\").",
+      "mitigation": "Ask for a target (e.g. WCAG 2.1 AA) before gating. Logged as DEF-009, DEF-010, DEF-011, DEF-012 on 2026-11-10 (see \"Defects\"). Closed 2026-11-10: accessibility is out of scope for this demo site (user decision D6); no WCAG target will be set.",
       "scenarios": [
         "DWS-068",
         "DWS-069",
         "DWS-070"
       ],
-      "status": "Open"
+      "status": "Closed"
     },
     {
       "id": "R-32",
@@ -2981,7 +2981,7 @@
       "riskRef": "R-31",
       "title": "Form fields and dropdowns have no accessible name (screen readers cannot identify them)",
       "severity": "High",
-      "status": "Needs confirmation",
+      "status": "Closed",
       "category": "Accessibility",
       "scenarios": [
         "DWS-069",
@@ -3007,14 +3007,14 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only."
     },
     {
       "id": "DEF-010",
       "riskRef": "R-31",
       "title": "Pages do not declare a language (<html> has no lang attribute)",
       "severity": "Medium",
-      "status": "Needs confirmation",
+      "status": "Closed",
       "category": "Accessibility",
       "scenarios": [
         "DWS-069",
@@ -3040,14 +3040,14 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only."
     },
     {
       "id": "DEF-011",
       "riskRef": "R-31",
       "title": "Home page image links have no text alternative",
       "severity": "Medium",
-      "status": "Needs confirmation",
+      "status": "Closed",
       "category": "Accessibility",
       "scenarios": [
         "DWS-070"
@@ -3068,14 +3068,14 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported yet",
-      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only."
     },
     {
       "id": "DEF-012",
       "riskRef": "R-31",
       "title": "Page structure: no main landmark, content outside landmarks, no h1 on the home page, heading order, empty table header",
       "severity": "Low",
-      "status": "Needs confirmation",
+      "status": "Closed",
       "category": "Accessibility",
       "scenarios": [
         "DWS-069",
@@ -3096,7 +3096,7 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported yet",
-      "nextAction": "Agree a WCAG target (R-31); then decide which of these to report."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only."
     },
     {
       "id": "DEF-013",
