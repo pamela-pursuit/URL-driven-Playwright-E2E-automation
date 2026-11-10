@@ -77,13 +77,12 @@ test.describe('Guest cart', () => {
         .not.toHaveText(MESSAGES.couponInvalid, { timeout: 2_000 });
     });
 
-    test('[DWS-047] Estimate shipping shows the Ground price that checkout charges', async ({ cartPage }) => {
+    test('[DWS-047] Estimate shipping lists shipping options', async ({ cartPage }) => {
       await cartPage.estimateShipping({ country: ESTIMATE_SHIPPING.country, zip: ESTIMATE_SHIPPING.zip });
 
-      await expect(cartPage.shippingOptionNames).toHaveCount(ESTIMATE_SHIPPING.options.length);
-      // Known defect DEF-001: fails while the estimate shows "Ground (0.00)".
-      await expect(cartPage.shippingOptionNames.first(), 'DEF-001: estimate matches the checkout Ground price')
-        .toHaveText(ESTIMATE_SHIPPING.checkoutGround, { timeout: 2_000 });
+      // "Computing and Internet" has free shipping (its product page says so), so every option is 0.00.
+      // Health Book, which has no free shipping, estimates Ground (10.00), matching checkout (DEF-001 Rejected).
+      await expect(cartPage.shippingOptionNames).toHaveText([...ESTIMATE_SHIPPING.options]);
     });
 
     test('[DWS-048] Guest cart persists after a page refresh', async ({ cartPage, header }) => {

@@ -29,6 +29,10 @@
   185 tests fail by design. Defects get a `failingScenario`; the Defects
   sheet shows a "Test Result" column, and the Not Executed sheet labels
   these failures "Known defect DEF-xxx" instead of "Investigate".
+- DEF-001 Rejected and R-13 closed (raised by the user): the estimate used
+  "Computing and Internet", which has free shipping, while checkout used
+  Health Book; for the same product they agree. DWS-047 asserts the 0.00
+  options again and passes. A full run now has 19 failures by design.
 
 ### Removed
 

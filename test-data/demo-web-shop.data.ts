@@ -169,9 +169,8 @@ export const HEALTH_BOOK_COD_ORDER = {
 export const ESTIMATE_SHIPPING = {
   country: 'United States',
   zip: '10001',
-  options: ['Ground (0.00)', 'Next Day Air (0.00)', '2nd Day Air (0.00)', 'In-Store Pickup (0.00)'],
-  /** DEF-001: what checkout charges for Ground to the same address (discovery 4.12); the estimate should match. */
-  checkoutGround: 'Ground (10.00)'
+  /** For "Computing and Internet", which has free shipping; Health Book estimates Ground (10.00). */
+  options: ['Ground (0.00)', 'Next Day Air (0.00)', '2nd Day Air (0.00)', 'In-Store Pickup (0.00)']
 } as const;
 
 export const ACCOUNT_SECTIONS_PROTECTED = [
