@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-11
+
+### Added
+
+- demoqa-books E2E suite for https://demoqa.com/books (Book Store): 48
+  scenarios, 144 tests on Chromium, Firefox and WebKit, one account per
+  browser (`existingUser`, `firefoxUser`, `webkitUser`). Final result 141/144;
+  the 3 failures are DQB-021, which fails by design while defect DEF-001 is
+  open. Defects DEF-001 to DEF-004 are in the workbook's Defects sheet;
+  Delivery Report verdict: Ready with limitations.
+- Account values are masked in every signed-in browser context (screenshots,
+  videos and failure ARIA snapshots), including the worker login context.
+
 ## 2026-11-10
 
 ### Added

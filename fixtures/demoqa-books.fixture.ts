@@ -254,11 +254,20 @@ async function hideAccountValuesForSnapshot(context: BrowserContext): Promise<vo
     if (page.isClosed()) {
       continue;
     }
-    await page.evaluate((selector: string) => {
-      const style = document.createElement('style');
-      style.textContent = `${selector} { visibility: hidden !important; }`;
-      (document.head ?? document.documentElement).appendChild(style);
-    }, ARIA_HIDDEN_SELECTOR);
+    // A page mid-navigation can reject evaluate. Record it instead of failing teardown, so the checks
+    // that follow (blocked DELETEs) still run; the CSS mask from maskAccountValues stays in place.
+    try {
+      await page.evaluate((selector: string) => {
+        const style = document.createElement('style');
+        style.textContent = `${selector} { visibility: hidden !important; }`;
+        (document.head ?? document.documentElement).appendChild(style);
+      }, ARIA_HIDDEN_SELECTOR);
+    } catch (error) {
+      base.info().annotations.push({
+        type: 'snapshot-mask',
+        description: `could not hide account fields before the snapshot: ${(error as Error).message.split('\n')[0]}`
+      });
+    }
   }
 }
 
@@ -351,10 +360,16 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
           cached = await sessionCookiesOf(context);
         } finally {
           // screenshot: 'on' captures a context's pages when it closes; leave nothing signed in on screen.
-          if (page) {
-            await page.goto('about:blank');
+          // A failure here must not hide the original error or skip closing the context.
+          try {
+            if (page && !page.isClosed()) {
+              await page.goto('about:blank');
+            }
+          } catch (error) {
+            console.warn(`${browserAccount.role} login context: could not blank the page before closing (${(error as Error).message.split('\n')[0]}); the CSS mask still applies`);
+          } finally {
+            await context.close();
           }
-          await context.close();
         }
       };
       await use({

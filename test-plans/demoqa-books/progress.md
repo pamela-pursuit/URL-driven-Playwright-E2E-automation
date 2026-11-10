@@ -16,8 +16,8 @@ Node: the default Node 20.11.1 is blocked by Defender. Prefix commands with
 | 2b | Scenario review gate (user approval) | Done: approved in advance by the user (recorded 2026-11-10 with `approve`, 48 scenarios); user reviews the list later in the workbook | approval in scenarios.json |
 | 3a | Architecture | Done: 144 tests (48 x 3); guest pass --workers=3, account pass (@account, 42 tests) --workers=1; DQB-026 the only wrong password per account | architecture.md |
 | 3b | Implementation | Done (2026-11-11): 48 automated, 144 listed (102 guest, 42 @account); tsc OK; validate 0 errors; Chromium smoke 3 passed (run 2026-11-10_18-41-28); leak check clean | pages/demoqa-books/, tests/demoqa-books/, fixtures/demoqa-books.fixture.ts, test-data/demoqa-books.data.ts |
-| 4 | Run confirmation, execution, failure fixes | In progress (run authorised in advance by the user) | artifacts/demoqa-books/runs/, html-reports/ |
-| 5 | Quality review, delivery report, commit and push | Not started | Delivery Report sheet |
+| 4 | Run confirmation, execution, failure fixes | Done: final 141/144 (DQB-021 x3 = DEF-001 by design); 1 fix iteration | artifacts/demoqa-books/runs/, html-reports/ |
+| 5 | Quality review, delivery report, commit and push | Done (2026-11-11): re-review Ready; Delivery Report: Ready with limitations | Delivery Report sheet |
 
 ## Scope
 
@@ -64,3 +64,19 @@ Chromium account probably still holds suite books "Speaking JavaScript" and "Des
 - Local artifacts redacted (git-ignored only, never committed): 12 text files and 55 screenshots removed, 5 kept-report zips rebuilt; all 113 remaining text files in demoqa-books runs contain no account values.
 - Verification: guest subset 2026-11-10_19-49-03 (17/18; firefox DQB-041 first-load timeout, passed on re-run 19-51-31); account 2026-11-10_19-57-32 39/39.
 - Final full run on current code started (Pass A guest, Pass B account without DQB-026). DQB-026 evidence remains run 1 (passed x3); the fixture changes since then only affect masking of artifacts, not login behaviour.
+
+## Final runs and re-review (2026-11-11)
+
+| Run | Scope | Result |
+| --- | --- | --- |
+| 2026-11-10_20-05-48 | Guest, all 3 browsers, --workers=3 | 99 passed, 3 failed (DQB-021 x3 = DEF-001, by design) |
+| 2026-11-10_20-10-19 | @account without DQB-026, --workers=1 | 39 passed |
+| 2026-11-10_20-21-35 | Chromium DQB-024/031/034 after the teardown hardening | 3 passed |
+| 2026-11-10_18-50-36 | DQB-026 (only evidence; one wrong password per account) | passed on all 3 browsers |
+
+- Quality re-review: **Ready** (no Blockers or Majors). Minors handled: DQB-026 lastRunNotes restored after sync; teardown can no longer hide the original error (blank-page failure logged, context always closed; snapshot-hide failures recorded as annotations); temporary scripts deleted before delivery.
+- Known flake to watch: firefox DQB-041 once timed out on the first load of /register (heading not rendered within 15 s, verification run 2026-11-10_19-49-03); it passed on re-run and in the final run.
+- All three account collections were empty after the final runs (DQB-039 passed on every browser).
+- Scenario changes from quality review 1 (approval re-recorded 2026-11-11 under the user's "run and fix" authorisation): DQB-027 asserts the exact "Invalid username or password!"; DQB-033 also asserts the URL is /login after "Log out" on /books (R-28 closed); DQB-046 expected text states /books (R-29 closed; the test already asserted it).
+- The teardown hardening (after the final full runs) only changes error-handling paths; it was re-checked on Chromium (run 2026-11-10_20-21-35, 3 passed), not yet on Firefox/WebKit.
+- Delivery Report stored as the workbook's first sheet (verdict: Ready with limitations).
