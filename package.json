@@ -1,5 +1,5 @@
 {
-  "name": "project1-playwright-tests",
+  "name": "url-driven-playwright-e2e-automation",
   "private": true,
   "scripts": {
     "test:e2e": "playwright test",

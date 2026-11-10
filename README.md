@@ -1,4 +1,4 @@
-# Project1
+# URL-driven Playwright E2E automation
 
 URL-driven Playwright TypeScript E2E automation. Give Claude Code an
 application URL, and it explores the app, builds an Excel scenario catalogue,
