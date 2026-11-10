@@ -21,8 +21,9 @@ test.describe('Responsive layout at 375x812', () => {
     }
     // Probe P8: the table's overflow wrapper clips Publisher at x=360, leaving about 6% of the
     // header box (its left padding, no text) inside the viewport on all three browsers. "Not
-    // visible in the viewport" is therefore checked as less than half of the header inside it (R-27).
-    await expect(booksPage.table.columnHeader('Publisher')).not.toBeInViewport({ ratio: 0.5 });
+    // visible in the viewport" is therefore checked as less than 10% of the header inside it (R-27):
+    // the padding sliver passes, any part of the header text entering the viewport fails.
+    await expect(booksPage.table.columnHeader('Publisher')).not.toBeInViewport({ ratio: 0.1 });
     expect(await booksPage.documentScrollWidth(), 'no page-level horizontal scroll').toBeLessThanOrEqual(MOBILE_VIEWPORT.width);
   });
 

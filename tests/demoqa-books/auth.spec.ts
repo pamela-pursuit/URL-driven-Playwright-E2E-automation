@@ -13,6 +13,7 @@ const PROFILE_URL = /\/profile$/;
 
 // K6: account values are typed through evaluate, whose arguments a trace would record. trace
 // must be file level (it forces a new worker).
+// Trade-off: failures in this file have no trace; screenshots, video and error context remain.
 test.use({ trace: 'off' });
 
 test.describe('Authentication and session', () => {
@@ -51,9 +52,8 @@ test.describe('Authentication and session', () => {
 
     expect(outcome).toBe('rejected');
     await expect(page).toHaveURL(LOGIN_URL);
-    await expect(loginPage.errorMessage).toHaveText(/\S/);
-    // R-18 two-phase: the exact text is recorded now and asserted once the first run is reviewed.
-    recordObservation('R-18', `Unknown user message: ${await loginPage.errorText()}`);
+    // R-18 closed: the same text as a wrong password (no account enumeration), confirmed on all 3 browsers.
+    await expect(loginPage.errorMessage).toHaveText(MESSAGES.loginInvalid);
   });
 
   test('[DQB-028] Login submitted with both fields empty', async ({ loginPage, page }) => {
@@ -143,6 +143,7 @@ test.describe('Authentication and session', () => {
     const landingUrl = await booksPage.session.logOut();
     recordObservation('R-28', `"Log out" on /books leads to ${new URL(landingUrl).pathname}`);
 
+    await expect(page).toHaveURL(LOGIN_URL);
     await expect.poll(() => sessionCookieNames(page.context()), { message: 'token cookie removed' }).not.toContain('token');
     await profilePage.goto();
     await expect(profilePage.signedOutMessage).toHaveText(MESSAGES.signedOut);

@@ -38,9 +38,13 @@ test.describe('Register form validation', () => {
     await expect(registerPage.userName).toHaveValue(form.userName);
     await expect(registerPage.password).toHaveValue(form.password);
     await expect(page).toHaveURL(REGISTER_URL);
+    const captchaKeys = bodyKeys.filter((key) => /captcha/i.test(key));
+    const captchaNote = captchaKeys.length > 0
+      ? `captcha field sent to the server: ${captchaKeys.join(', ')}`
+      : 'no captcha token sent to the server';
     recordObservation(
       'R-26',
-      `Register request sent after the automatic reCAPTCHA v3 token; body keys: ${bodyKeys.join(', ')} (no captcha token sent to the server)`
+      `Register request sent after the automatic reCAPTCHA v3 token; body keys: ${bodyKeys.join(', ')} (${captchaNote})`
     );
   });
 });

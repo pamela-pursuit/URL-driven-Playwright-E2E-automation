@@ -40,9 +40,12 @@ export class DemoqaBookDetailPage {
     return this.page.locator(`#${WRAPPER_ID[field]}`);
   }
 
-  /** Probe P4: the value is the last label inside the wrapper, after the "*-label" caption. */
+  /**
+   * Probe P4b: each field wrapper holds one value element with id "userName-value" (the id is
+   * reused across fields, so it is always scoped to the field's wrapper).
+   */
   fieldValue(field: BookField): Locator {
-    return this.wrapper(field).locator('label, span, div, a').last();
+    return this.wrapper(field).locator('#userName-value');
   }
 
   /** Generic text presence, for absence checks of the API message (DQB-020). */

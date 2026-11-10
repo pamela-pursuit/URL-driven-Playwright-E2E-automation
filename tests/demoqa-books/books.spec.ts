@@ -242,7 +242,7 @@ test.describe('Book Store list, search, sort and detail', () => {
     recordObservation('R-22', 'Unknown ISBN shows empty fields and no user-facing error (current behaviour asserted)');
   });
 
-  test('[DQB-021] Book list when the books service fails', async ({ booksApi, booksPage, alerts, pageErrors }) => {
+  test('[DQB-021] Book list when the books service fails', { annotation: { type: 'issue', description: 'DEF-001' } }, async ({ booksApi, booksPage, alerts, pageErrors }) => {
     const { fired } = await booksApi.failListWith(500);
     pageErrors.mark();
 

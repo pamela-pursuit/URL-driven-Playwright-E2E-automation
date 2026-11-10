@@ -87,9 +87,12 @@ export class DemoqaRegisterPage {
     if (STRONG_PASSWORD_RULE.test(await this.password.inputValue())) {
       throw new Error('R-07: refusing to submit a password that satisfies the server rule');
     }
-    // A late reCAPTCHA callback clears every field; prove the form is still filled right before the click.
+    // A late reCAPTCHA callback clears every field; prove the form is still filled right before the
+    // click (a precondition, not an assertion: fillForm already confirmed every value).
     for (const input of this.inputs) {
-      await expect(input, 'register field still filled before submit').not.toHaveValue('');
+      if ((await input.inputValue()) === '') {
+        throw new Error('Register form was cleared before submit (late reCAPTCHA callback, R-01); not submitting');
+      }
     }
     const [response] = await Promise.all([
       this.page.waitForResponse(API.createUser, { timeout: READY_MS }),

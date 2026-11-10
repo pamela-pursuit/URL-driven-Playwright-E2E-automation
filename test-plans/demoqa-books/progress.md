@@ -56,3 +56,11 @@ Chromium account probably still holds suite books "Speaking JavaScript" and "Des
 - DQB-019 steps changed (expected unchanged); approval re-recorded 2026-11-11 under the user's advance "run and fix" authorisation.
 - Defects logged: DEF-001 (DQB-021 fails while open), DEF-002, DEF-003, DEF-004; risks R-34..R-37 added, R-26 updated.
 - Final full run started: Pass A (102 guest, --workers=3) and Pass B (39 @account without DQB-026, --workers=1). DQB-026's result stays from run 1 (passed on all 3).
+
+## Quality review 1 and fixes (2026-11-11)
+
+- Verdict **Not ready**, no Blockers. Majors: (1) worker login context not masked (close-time screenshot); (2) error-context ARIA snapshots carried account values (12 files in run 2026-11-10_18-50-36); (3) DQB-027 asserted only non-empty text.
+- Fixed: maskAccountValues() for every context and about:blank before closing the login context; aria-hidden plus teardown visibility:hidden for #userName-value, #userForm #userName and #userForm #password (Playwright 1.64 ai-mode snapshots keep aria-hidden visible elements); DQB-027 asserts "Invalid username or password!" (R-18 closed); minors 5, 6, 7, 9, 10, 11; DQB-021 annotated DEF-001.
+- Local artifacts redacted (git-ignored only, never committed): 12 text files and 55 screenshots removed, 5 kept-report zips rebuilt; all 113 remaining text files in demoqa-books runs contain no account values.
+- Verification: guest subset 2026-11-10_19-49-03 (17/18; firefox DQB-041 first-load timeout, passed on re-run 19-51-31); account 2026-11-10_19-57-32 39/39.
+- Final full run on current code started (Pass A guest, Pass B account without DQB-026). DQB-026 evidence remains run 1 (passed x3); the fixture changes since then only affect masking of artifacts, not login behaviour.

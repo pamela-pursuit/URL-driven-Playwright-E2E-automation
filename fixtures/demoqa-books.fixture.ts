@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { test as base, expect, type BrowserContext, type Cookie, type Route } from '@playwright/test';
+import { test as base, expect, type BrowserContext, type Cookie, type Page, type Route } from '@playwright/test';
 import { getAccount } from '../lib/credentials-store.cjs';
 import { DemoqaAlerts } from '../pages/demoqa-books/alerts';
 import { DemoqaBookDetailPage } from '../pages/demoqa-books/book-detail.page';
@@ -196,6 +196,72 @@ async function signInThroughUi(
 const MASK_CSS =
   '#userName-value, #userForm #userName { background: #000 !important; color: #000 !important; }';
 
+/**
+ * Hidden from the accessibility tree, so ARIA snapshots (error-context.md) never contain them: CSS
+ * does not change the tree, and Playwright snapshots an input's value as its text (also for
+ * type=password). The checks read textContent/inputValue directly, which aria-hidden does not affect.
+ */
+const ARIA_HIDDEN_SELECTOR = '#userName-value, #userForm #userName, #userForm #password';
+
+/**
+ * K6c: masks account values in every page of the context, for screenshots (CSS) and ARIA snapshots
+ * (aria-hidden, re-applied by a MutationObserver because React re-renders replace the elements).
+ * Must run before the context's first page is created. aria-hidden alone does not keep a value out
+ * of error-context.md: that snapshot (mode "ai") also lists aria-hidden elements that are visible
+ * on screen, so hideAccountValuesForSnapshot() completes the mask at teardown.
+ */
+async function maskAccountValues(context: BrowserContext): Promise<void> {
+  await context.addInitScript(
+    ({ css, selector }: { css: string; selector: string }) => {
+      const hide = () => {
+        for (const element of document.querySelectorAll(selector)) {
+          if (element.getAttribute('aria-hidden') !== 'true') {
+            element.setAttribute('aria-hidden', 'true');
+          }
+        }
+      };
+      // Observing from the start covers elements rendered before DOMContentLoaded.
+      new MutationObserver(hide).observe(document, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['id', 'aria-hidden']
+      });
+      const addStyle = () => {
+        const style = document.createElement('style');
+        style.textContent = css;
+        (document.head ?? document.documentElement).appendChild(style);
+        hide();
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addStyle);
+      } else {
+        addStyle();
+      }
+    },
+    { css: MASK_CSS, selector: ARIA_HIDDEN_SELECTOR }
+  );
+}
+
+/**
+ * Playwright writes error-context.md from an ARIA snapshot taken after the fixtures are torn down
+ * (when the context closes). Making the masked elements also invisible (visibility: hidden) removes
+ * them and their values from that snapshot. Done only at teardown, after the test body and its
+ * screenshots, because the checks during the test rely on the elements being visible.
+ */
+async function hideAccountValuesForSnapshot(context: BrowserContext): Promise<void> {
+  for (const page of context.pages()) {
+    if (page.isClosed()) {
+      continue;
+    }
+    await page.evaluate((selector: string) => {
+      const style = document.createElement('style');
+      style.textContent = `${selector} { visibility: hidden !important; }`;
+      (document.head ?? document.documentElement).appendChild(style);
+    }, ARIA_HIDDEN_SELECTOR);
+  }
+}
+
 /** Lock owner is alive (signal 0 only checks existence). A dead or reused owner is taken over. */
 function lockOwnerAlive(pid: number): boolean {
   if (!Number.isInteger(pid) || pid <= 0 || pid === process.pid) {
@@ -209,18 +275,32 @@ function lockOwnerAlive(pid: number): boolean {
   }
 }
 
+/** PID recorded in the lock file; NaN when the file is gone (released between two calls). */
+function lockOwner(lockFile: string): number {
+  try {
+    return Number(fs.readFileSync(lockFile, 'utf8'));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return Number.NaN;
+    }
+    throw error;
+  }
+}
+
 function tryAcquireLock(lockFile: string): boolean {
   try {
     fs.writeFileSync(lockFile, String(process.pid), { flag: 'wx' });
-    return true;
-  } catch {
-    const owner = Number(fs.readFileSync(lockFile, 'utf8'));
-    if (!lockOwnerAlive(owner)) {
-      fs.writeFileSync(lockFile, String(process.pid));
-      return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'EEXIST') {
+      throw error;
     }
-    return false;
+    if (lockOwnerAlive(lockOwner(lockFile))) {
+      return false;
+    }
+    fs.writeFileSync(lockFile, String(process.pid));
   }
+  // Two processes may take over a dead owner's lock at once; only the one whose PID survived owns it.
+  return lockOwner(lockFile) === process.pid;
 }
 
 export const test = base.extend<Fixtures, WorkerFixtures>({
@@ -261,13 +341,19 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
       let logins = 0;
       const login = async () => {
         const context = await browser.newContext({ baseURL: workerInfo.project.use.baseURL, viewport: DESKTOP_VIEWPORT });
+        let page: Page | undefined;
         try {
+          await maskAccountValues(context);
           await blockThirdParty(context);
-          const page = await context.newPage();
+          page = await context.newPage();
           await signInThroughUi(new DemoqaLoginPage(page), new DemoqaProfilePage(page), browserAccount, breaker);
           logins += 1;
           cached = await sessionCookiesOf(context);
         } finally {
+          // screenshot: 'on' captures a context's pages when it closes; leave nothing signed in on screen.
+          if (page) {
+            await page.goto('about:blank');
+          }
           await context.close();
         }
       };
@@ -318,18 +404,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     if (!testInfo.tags.includes(ACCOUNT_TAG)) {
       throw new Error('Test uses an account but is not tagged @account (the guest pass would run it in parallel)');
     }
-    await context.addInitScript((css: string) => {
-      const add = () => {
-        const style = document.createElement('style');
-        style.textContent = css;
-        (document.head ?? document.documentElement).appendChild(style);
-      };
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', add);
-      } else {
-        add();
-      }
-    }, MASK_CSS);
+    await maskAccountValues(context);
     // Section 3.10: only the single-book delete may reach the server.
     const blocked: string[] = [];
     await context.route(
@@ -347,6 +422,8 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
       }
     );
     await use(browserAccount);
+    // Before any error below: the snapshot is taken when the context closes after this teardown.
+    await hideAccountValuesForSnapshot(context);
     if (blocked.length > 0) {
       throw new Error(`Blocked a DELETE ${blocked[0]} (only single-book delete is allowed)`);
     }
