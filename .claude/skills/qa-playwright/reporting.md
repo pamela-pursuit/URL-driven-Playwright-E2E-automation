@@ -9,6 +9,8 @@ artifacts/
 └── <app>/
     ├── latest.json                    # points to the newest run
     ├── discovery/                     # explorer output (discovery.json, screens/, probes/)
+    ├── html-reports/
+    │   └── <YYYY-MM-DD_HH-mm-ss>.zip  # permanent copy of each run's HTML report (never pruned)
     └── runs/
         └── <YYYY-MM-DD_HH-mm-ss>/     # one folder per run (UTC)
             ├── summary.md             # pass/fail per browser + per-test table with screenshot links
@@ -26,6 +28,18 @@ automatically for every run, whether started by `scripts/run-e2e.ps1` or by
 `npx playwright test` with `TEST_SUITE=<app>`. Only the newest
 `E2E_KEEP_RUNS` runs per app are kept (default 20). `artifacts/` is
 git-ignored.
+
+Each run's HTML report is also saved as `html-reports/<runId>.zip` (full report,
+including failure traces and videos). Pruning only touches `runs/`, so these zips
+are kept until deleted by hand. Set `E2E_ARCHIVE_REPORTS=0` to skip it. Open one with:
+
+```powershell
+Expand-Archive artifacts/<app>/html-reports/<runId>.zip -DestinationPath $env:TEMPeport-<runId>
+npx playwright show-report $env:TEMPeport-<runId>
+```
+
+The zips stay git-ignored and should not be shared unedited: screenshots of
+signed-in pages can show account values.
 
 ## Configuration in use
 

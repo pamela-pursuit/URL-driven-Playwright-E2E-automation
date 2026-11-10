@@ -4,6 +4,14 @@
 
 ### Added
 
+- Kept HTML reports: after every run, `lib/artifact-reporter.ts` saves the
+  full Playwright HTML report as `artifacts/<app>/html-reports/<runId>.zip`.
+  Pruning (`E2E_KEEP_RUNS`) only deletes run folders, so the zips are kept;
+  `E2E_ARCHIVE_REPORTS=0` turns it off. `jszip` is now a direct dev
+  dependency. The 19 existing demo-web-shop reports were archived too.
+- User manual: section 6.1 (which agents and skill guides run each step)
+  and kept HTML reports in 7.2, 12 and 13; README and `reporting.md` updated.
+
 - `@axe-core/playwright` dev dependency and an automated, report-only axe
   scan for demo-web-shop (DWS-070, Chromium only): Home, Login, Books
   listing, a product page and the cart. Violations are recorded as

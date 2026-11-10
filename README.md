@@ -135,6 +135,10 @@ node scripts/workbook.mjs build --app my-app
 # Open the HTML report of a run (the runner prints the run folder)
 npx playwright show-report artifacts/my-app/runs/<runId>/report
 
+# Open a kept copy (every run also saves artifacts/<app>/html-reports/<runId>.zip, never pruned)
+Expand-Archive artifacts/my-app/html-reports/<runId>.zip -DestinationPath $env:TEMP\report-<runId>
+npx playwright show-report $env:TEMP\report-<runId>
+
 # Type-check
 npx tsc --noEmit
 ```

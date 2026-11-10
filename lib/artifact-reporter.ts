@@ -6,10 +6,16 @@
 //
 // It also writes artifacts/<suite>/latest.json (pointer to the newest run)
 // and keeps only the newest E2E_KEEP_RUNS runs (default 20).
+//
+// After the run, it saves a permanent copy of the HTML report as
+// artifacts/<suite>/html-reports/<runId>.zip. That folder is outside runs/, so
+// pruning never deletes it. Set E2E_ARCHIVE_REPORTS=0 to turn this off.
+// The zips stay git-ignored: screenshots of signed-in pages can show account values.
 
 import type { FullConfig, FullResult, Reporter, Suite, TestCase, TestResult } from '@playwright/test/reporter';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import JSZip from 'jszip';
 
 interface Options {
   runDirectory: string;
@@ -161,6 +167,14 @@ export default class ArtifactReporter implements Reporter {
     console.log(`\nArtifacts saved to ${runDirectory.replaceAll('\\', '/')} (summary.md, screenshots/, report/, test-results/)`);
   }
 
+  // Runs after every reporter's onEnd, so Playwright's HTML report is complete by now.
+  async onExit(): Promise<void> {
+    if (process.env.E2E_ARCHIVE_REPORTS === '0') return;
+    const { runDirectory, suiteDirectory, runId } = this.options;
+    const target = await archiveReport(path.join(runDirectory, 'report'), path.join(suiteDirectory, 'html-reports'), runId);
+    if (target) console.log(`HTML report kept as ${target.replaceAll('\\', '/')}`);
+  }
+
   private prune(): void {
     const keep = Math.max(1, Number(process.env.E2E_KEEP_RUNS ?? 20) || 20);
     const runsRoot = path.dirname(this.options.runDirectory);
@@ -178,4 +192,32 @@ export default class ArtifactReporter implements Reporter {
   printsToStdio(): boolean {
     return false;
   }
+}
+
+/**
+ * Zips a Playwright HTML report folder into <archiveDir>/<name>.zip (paths inside the zip are
+ * relative to the report folder). Returns the zip path, or null when there is no report
+ * (for example a run started with --reporter=..., which replaces the HTML reporter).
+ */
+export async function archiveReport(reportDir: string, archiveDir: string, name: string): Promise<string | null> {
+  if (!existsSync(path.join(reportDir, 'index.html'))) return null;
+  const zip = new JSZip();
+  const addDir = (dir: string): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) addDir(full);
+      else zip.file(relative(reportDir, full), readFileSync(full));
+    }
+  };
+  addDir(reportDir);
+  mkdirSync(archiveDir, { recursive: true });
+  const target = path.join(archiveDir, `${name}.zip`);
+  await new Promise<void>((resolve, reject) => {
+    zip
+      .generateNodeStream({ type: 'nodebuffer', streamFiles: true, compression: 'DEFLATE', compressionOptions: { level: 6 } })
+      .pipe(createWriteStream(target))
+      .on('finish', () => resolve())
+      .on('error', reject);
+  });
+  return target;
 }
