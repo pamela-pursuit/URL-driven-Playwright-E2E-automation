@@ -21,7 +21,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Catalogue not loading blocks every book flow; shared public data may change (R-04, R-15)",
       "requirementRef": "REQ-01",
@@ -49,7 +49,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Multi-page and rows-per-page behaviour cannot be tested with 8 books and no control (Q-NB7)",
       "requirementRef": "REQ-01",
@@ -77,7 +77,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Search is the main way to find a book",
       "requirementRef": "REQ-02",
@@ -105,7 +105,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Case-sensitive search would hide books from users",
       "requirementRef": "REQ-02",
@@ -133,7 +133,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Author search is an alternate way to find a book",
       "requirementRef": "REQ-02",
@@ -161,7 +161,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Publisher filter returning wrong rows misleads users",
       "requirementRef": "REQ-02",
@@ -189,7 +189,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Partial matching is the observed contract; a change would reduce findability",
       "requirementRef": "REQ-02",
@@ -217,7 +217,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Special characters could break the filter",
       "requirementRef": "REQ-02",
@@ -245,7 +245,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Users get no feedback that nothing matched (R-21)",
       "requirementRef": "REQ-02",
@@ -274,7 +274,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "A stuck filter would hide books",
       "requirementRef": "REQ-02",
@@ -303,7 +303,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Observed behaviour; whether search should persist is not specified",
       "requirementRef": "REQ-02",
@@ -331,7 +331,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Pasted terms with spaces find nothing (R-19)",
       "requirementRef": "REQ-02",
@@ -359,7 +359,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Users who know the ISBN cannot find the book (R-20)",
       "requirementRef": "REQ-02",
@@ -388,7 +388,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Unescaped input could crash the client-side filter",
       "requirementRef": "REQ-02",
@@ -418,7 +418,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Header accessible name changes after sorting (R-10)",
       "requirementRef": "REQ-03",
@@ -446,7 +446,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Low business impact",
       "requirementRef": "REQ-03",
@@ -474,7 +474,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Low business impact",
       "requirementRef": "REQ-03",
@@ -502,7 +502,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Wrong details mislead users; description truncation is a possible defect (R-25)",
       "requirementRef": "REQ-04",
@@ -530,7 +530,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Duplicate id could click the wrong button (R-08)",
       "requirementRef": "REQ-04",
@@ -558,7 +558,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Users get a blank page with no explanation (R-22)",
       "requirementRef": "REQ-04",
@@ -587,7 +587,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Backend outage behaviour unspecified (R-30)",
       "requirementRef": "REQ-01",
@@ -614,7 +614,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Guests modifying collections would be an authorization defect",
       "requirementRef": "REQ-07",
@@ -641,7 +641,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Exposing account data or actions to guests (R-32)",
       "requirementRef": "REQ-07",
@@ -668,7 +668,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Signed-in users unable to add books blocks the core flow",
       "requirementRef": "REQ-04",
@@ -697,7 +697,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Login failure blocks every signed-in flow; each browser uses its own account (I2)",
       "requirementRef": "REQ-05",
@@ -726,7 +726,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Accepting a wrong password is a security defect; repeated attempts could lock the account (R-06). One attempt per account per run: each browser uses its own account, so three browsers mean one attempt per account.",
       "requirementRef": "REQ-05",
@@ -755,7 +755,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Message for unknown users not observed (R-18); a different message would enable account enumeration",
       "requirementRef": "REQ-05",
@@ -784,7 +784,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Hydration timing can swallow the first click (R-01)",
       "requirementRef": "REQ-05",
@@ -813,7 +813,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Incomplete forms reaching the server",
       "requirementRef": "REQ-05",
@@ -841,7 +841,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Losing the session on reload forces repeated logins",
       "requirementRef": "REQ-06",
@@ -868,7 +868,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Session not shared across pages; inconsistent logout label (R-24)",
       "requirementRef": "REQ-06",
@@ -897,7 +897,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Session left active after logout on a shared machine; #submit is shared with Delete Account (R-08)",
       "requirementRef": "REQ-06",
@@ -927,7 +927,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Not observed; behaviour assumed to match profile Logout (R-28)",
       "requirementRef": "ASSUMPTION-02",
@@ -956,7 +956,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Core collection flow; native alert can hang the test (R-02); leftovers from failed runs (R-05)",
       "requirementRef": "REQ-08",
@@ -985,7 +985,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
       "risk": "Duplicate entries would corrupt the collection (data integrity); grammar of the message (R-23)",
       "requirementRef": "REQ-08",
@@ -1015,7 +1015,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Lost collection data (data integrity); re-login persistence not yet observed (R-31)",
       "requirementRef": "REQ-09",
@@ -1044,7 +1044,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Accidental deletion if Cancel deletes (data integrity)",
       "requirementRef": "REQ-09",
@@ -1074,7 +1074,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Delete not persisting (data integrity); #submit duplicates could hit Delete Account (R-08)",
       "requirementRef": "REQ-09",
@@ -1101,7 +1101,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Unclear empty state (R-21); destructive buttons nearby (R-08)",
       "requirementRef": "REQ-09",
@@ -1129,7 +1129,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaRegisterPage",
       "risk": "Hydration timing can swallow the first click (R-01)",
       "requirementRef": "REQ-10",
@@ -1158,7 +1158,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaRegisterPage",
       "risk": "A valid value would create a real account (R-07); client does not enforce the rule or captcha (R-26)",
       "requirementRef": "REQ-10",
@@ -1186,7 +1186,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Low business impact",
       "requirementRef": "REQ-11",
@@ -1214,7 +1214,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaRegisterPage",
       "risk": "Low business impact",
       "requirementRef": "REQ-10",
@@ -1242,7 +1242,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Low business impact",
       "requirementRef": "REQ-07",
@@ -1272,7 +1272,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Fixed footer overlaps the lower menu (R-13); menu ids are not unique by meaning",
       "requirementRef": "REQ-11",
@@ -1300,7 +1300,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
       "risk": "Target not observed (R-29)",
       "requirementRef": "ASSUMPTION-03",
@@ -1327,7 +1327,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
       "risk": "Mobile users cannot see Publisher (R-27); layout differs at 375px (R-11)",
       "requirementRef": "REQ-12",
@@ -1354,7 +1354,7 @@
         "firefox",
         "webkit"
       ],
-      "automationStatus": "Planned",
+      "automationStatus": "Automated",
       "pageObject": "DemoqaLoginPage",
       "risk": "Mobile users unable to sign in (R-11)",
       "requirementRef": "REQ-12",

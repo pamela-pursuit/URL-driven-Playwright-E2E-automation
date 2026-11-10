@@ -1,0 +1,99 @@
+import { expect, type Locator, type Page } from '@playwright/test';
+import { API } from '../../test-data/demoqa-books.data';
+import { DemoqaAlerts } from './alerts';
+import { READY_MS, waitForHydration } from './app-ready';
+import { DemoqaBooksPage } from './books.page';
+import { DemoqaSessionBar } from './session-bar.page';
+
+export type BookField = 'isbn' | 'title' | 'subtitle' | 'author' | 'publisher' | 'pages' | 'description' | 'website';
+
+/** Verified stable wrapper ids (discovery 3.2); labels are not associated with values. */
+const WRAPPER_ID: Record<BookField, string> = {
+  isbn: 'ISBN-wrapper',
+  title: 'title-wrapper',
+  subtitle: 'subtitle-wrapper',
+  author: 'author-wrapper',
+  publisher: 'publisher-wrapper',
+  pages: 'pages-wrapper',
+  description: 'description-wrapper',
+  website: 'website-wrapper'
+};
+
+/** /books?search=<ISBN>: one book's details. */
+export class DemoqaBookDetailPage {
+  readonly session: DemoqaSessionBar;
+  readonly backButton: Locator;
+  readonly addToCollectionButton: Locator;
+  readonly alertRegion: Locator;
+  private readonly alerts: DemoqaAlerts;
+
+  constructor(private readonly page: Page) {
+    this.alerts = DemoqaAlerts.for(page);
+    this.session = new DemoqaSessionBar(page);
+    // Both buttons share id addNewRecordButton (R-08), so role + exact name only.
+    this.backButton = page.getByRole('button', { name: 'Back To Book Store', exact: true });
+    this.addToCollectionButton = page.getByRole('button', { name: 'Add To Your Collection', exact: true });
+    this.alertRegion = page.getByRole('alert');
+  }
+
+  wrapper(field: BookField): Locator {
+    return this.page.locator(`#${WRAPPER_ID[field]}`);
+  }
+
+  /** Probe P4: the value is the last label inside the wrapper, after the "*-label" caption. */
+  fieldValue(field: BookField): Locator {
+    return this.wrapper(field).locator('label, span, div, a').last();
+  }
+
+  /** Generic text presence, for absence checks of the API message (DQB-020). */
+  text(value: string): Locator {
+    return this.page.getByText(value);
+  }
+
+  async open(isbn: string): Promise<void> {
+    const bookLoaded = this.page.waitForResponse(API.bookByIsbn(isbn), { timeout: READY_MS });
+    await this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' });
+    await bookLoaded;
+    await this.waitForBook();
+  }
+
+  /** DQB-020: returns the status of the book request; values stay empty, so no value wait. */
+  async openUnknown(isbn: string): Promise<number> {
+    const bookLoaded = this.page.waitForResponse(API.bookByIsbn(isbn), { timeout: READY_MS });
+    await this.page.goto(`books?search=${isbn}`, { waitUntil: 'domcontentloaded' });
+    const response = await bookLoaded;
+    await this.wrapper('title').waitFor();
+    await this.backButton.waitFor();
+    return response.status();
+  }
+
+  /** Ready when the Title value has text and the back button is hydrated. */
+  async waitForBook(): Promise<void> {
+    await expect
+      .poll(async () => ((await this.fieldValue('title').textContent()) ?? '').trim(), {
+        message: 'Book detail Title value is rendered',
+        timeout: READY_MS
+      })
+      .not.toBe('');
+    await waitForHydration(this.backButton);
+  }
+
+  /** Clicks "Add To Your Collection" and returns the native alert text and the API status. */
+  async addToCollection(): Promise<{ message: string; status: number }> {
+    const [response, message] = await Promise.all([
+      this.page.waitForResponse(API.addBooks, { timeout: READY_MS }),
+      this.alerts.acceptNext('Add To Your Collection', () => this.addToCollectionButton.click())
+    ]);
+    return { message, status: response.status() };
+  }
+
+  async backToBookStore(): Promise<DemoqaBooksPage> {
+    const list = new DemoqaBooksPage(this.page);
+    await Promise.all([
+      this.page.waitForURL(/\/books$/, { waitUntil: 'domcontentloaded' }),
+      this.backButton.click()
+    ]);
+    await list.waitForReady();
+    return list;
+  }
+}

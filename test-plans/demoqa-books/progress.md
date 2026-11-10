@@ -14,9 +14,9 @@ Node: the default Node 20.11.1 is blocked by Defender. Prefix commands with
 | 1b | Requirements (requirement-analyst) and user questions | Done: 13 REQs; Q1 answered (one account per browser: existingUser, firefoxUser, webkitUser); accessibility out of scope (confirmed by the user) | requirements.md |
 | 2 | Scenario catalogue and Excel workbook | Done: 48 scenarios (14 High, 19 Medium, 15 Low), all Planned, all on 3 browsers; validate 0 errors | scenarios.json, demoqa-books-e2e-scenarios.xlsx |
 | 2b | Scenario review gate (user approval) | Done: approved in advance by the user (recorded 2026-11-10 with `approve`, 48 scenarios); user reviews the list later in the workbook | approval in scenarios.json |
-| 3a | Architecture | In progress | architecture.md |
-| 3b | Implementation | Not started | pages/demoqa-books/, tests/demoqa-books/, fixtures/demoqa-books.fixture.ts, test-data/demoqa-books.data.ts |
-| 4 | Run confirmation, execution, failure fixes | Not started | artifacts/demoqa-books/runs/, html-reports/ |
+| 3a | Architecture | Done: 144 tests (48 x 3); guest pass --workers=3, account pass (@account, 42 tests) --workers=1; DQB-026 the only wrong password per account | architecture.md |
+| 3b | Implementation | Done (2026-11-11): 48 automated, 144 listed (102 guest, 42 @account); tsc OK; validate 0 errors; Chromium smoke 3 passed (run 2026-11-10_18-41-28); leak check clean | pages/demoqa-books/, tests/demoqa-books/, fixtures/demoqa-books.fixture.ts, test-data/demoqa-books.data.ts |
+| 4 | Run confirmation, execution, failure fixes | In progress (run authorised in advance by the user) | artifacts/demoqa-books/runs/, html-reports/ |
 | 5 | Quality review, delivery report, commit and push | Not started | Delivery Report sheet |
 
 ## Scope

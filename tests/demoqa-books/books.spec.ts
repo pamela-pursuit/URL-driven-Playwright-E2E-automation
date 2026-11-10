@@ -1,0 +1,255 @@
+import { expect, recordObservation, test } from '../../fixtures/demoqa-books.fixture';
+import {
+  AUTHORS_ASC,
+  BOOKS,
+  CATALOGUE_TITLES,
+  DESKTOP_VIEWPORT,
+  GIT_POCKET_GUIDE_DETAIL,
+  MESSAGES,
+  SEARCH,
+  SEARCH_EXPECTED,
+  TITLES_ASC,
+  TITLES_DESC,
+  UNKNOWN_ISBN
+} from '../../test-data/demoqa-books.data';
+
+const BOOKS_URL = /\/books$/;
+
+test.describe('Book Store list, search, sort and detail', () => {
+  test.use({ viewport: DESKTOP_VIEWPORT });
+
+  test('[DQB-001] Guest sees the 8-book catalogue on the Book Store', async ({ booksPage, page }) => {
+    const response = await booksPage.open();
+
+    expect(response.status()).toBe(200);
+    expect(response.request().redirectedFrom(), 'no redirect before /books').toBeNull();
+    await expect(page).toHaveURL(BOOKS_URL);
+    for (const column of ['Image', 'Title', 'Author', 'Publisher'] as const) {
+      await expect(booksPage.table.columnHeader(column)).toBeVisible();
+    }
+    await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+    await expect(booksPage.table.titleLink(BOOKS.gitPocketGuide.title)).toHaveAttribute(
+      'href',
+      `/books?search=${BOOKS.gitPocketGuide.isbn}`
+    );
+    await expect(booksPage.table.cell(BOOKS.gitPocketGuide.title, 'Author')).toHaveText(BOOKS.gitPocketGuide.author);
+    await expect(booksPage.table.cell(BOOKS.gitPocketGuide.title, 'Publisher')).toHaveText(BOOKS.gitPocketGuide.publisher);
+  });
+
+  test('[DQB-002] All 8 books fit on one page and the pager is disabled', async ({ booksPage }) => {
+    await booksPage.open();
+
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfOne);
+    await expect(booksPage.table.previousButton).toBeDisabled();
+    await expect(booksPage.table.nextButton).toBeDisabled();
+    await expect(booksPage.table.titleLinks).toHaveCount(CATALOGUE_TITLES.length);
+    for (const title of CATALOGUE_TITLES) {
+      await expect(booksPage.table.titleLink(title)).toBeVisible();
+    }
+  });
+
+  test('[DQB-003] Search by part of a title', async ({ booksPage, page }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.title);
+
+    await expect(booksPage.table.titleLinks).toHaveText([BOOKS.gitPocketGuide.title]);
+    await expect(page).toHaveURL(BOOKS_URL);
+  });
+
+  test('[DQB-004] Search ignores letter case', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.titleUpper);
+
+    await expect(booksPage.table.titleLinks).toHaveText([BOOKS.gitPocketGuide.title]);
+  });
+
+  test('[DQB-005] Search by author name', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.author);
+
+    await expect(booksPage.table.titleLinks).toHaveText([BOOKS.youDontKnowJs.title]);
+    await expect(booksPage.table.bookRows).toHaveCount(1);
+    await expect(booksPage.table.cell(BOOKS.youDontKnowJs.title, 'Author')).toHaveText(BOOKS.youDontKnowJs.author);
+  });
+
+  test('[DQB-006] Search by publisher', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.publisher);
+
+    await expect(booksPage.table.titleLinks).toHaveText(SEARCH_EXPECTED.publisher);
+    await expect(booksPage.table.titleLinks).toHaveCount(6);
+    for (const title of SEARCH_EXPECTED.noStarch) {
+      await expect(booksPage.table.titleLink(title)).toHaveCount(0);
+    }
+  });
+
+  test('[DQB-007] Search matches a fragment inside a word', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.partial);
+
+    await expect(booksPage.table.titleLinks).toHaveText(SEARCH_EXPECTED.partial);
+  });
+
+  test('[DQB-008] Search term with an apostrophe', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.apostrophe);
+
+    await expect(booksPage.table.titleLinks).toHaveText([BOOKS.youDontKnowJs.title]);
+  });
+
+  test('[DQB-009] Search with no matching book shows an empty table', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.noMatch);
+
+    await expect(booksPage.table.titleLinks).toHaveCount(0);
+    for (const column of ['Image', 'Title', 'Author', 'Publisher'] as const) {
+      await expect(booksPage.table.columnHeader(column)).toBeVisible();
+    }
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
+    recordObservation('R-21', 'No empty-state message exists for a search without results (current behaviour asserted)');
+  });
+
+  test('[DQB-010] Clearing the search restores the full list', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.title);
+    await expect(booksPage.table.titleLinks).toHaveCount(1);
+
+    await booksPage.clearSearch();
+
+    await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfOne);
+  });
+
+  test('[DQB-011] Search text is not kept after a reload', async ({ booksPage, page }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.title);
+    await expect(booksPage.table.titleLinks).toHaveCount(1);
+    await expect(page).toHaveURL(BOOKS_URL);
+
+    await booksPage.reload();
+
+    await expect(booksPage.searchBox).toHaveValue('');
+    await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+  });
+
+  test('[DQB-012] Search with surrounding spaces is not trimmed', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.padded);
+
+    await expect(booksPage.table.titleLinks).toHaveCount(0);
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
+    recordObservation('R-19', 'Search input is not trimmed: "  git  " finds no book (current behaviour asserted)');
+  });
+
+  test('[DQB-013] Searching by ISBN finds no book', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.search(SEARCH.isbn);
+
+    await expect(booksPage.table.titleLinks).toHaveCount(0);
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
+    recordObservation('R-20', 'ISBN is not searchable from the list (current behaviour asserted)');
+  });
+
+  test('[DQB-014] Search with regular-expression characters keeps the page usable', async ({ booksPage, pageErrors }) => {
+    await booksPage.open();
+    // Section 10.2 note 5: only errors raised between typing and clearing count (blocked ad code may
+    // raise errors at load).
+    pageErrors.mark();
+
+    await booksPage.search(SEARCH.regex);
+    await expect(booksPage.table.titleLinks).toHaveCount(0);
+    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
+
+    await booksPage.clearSearch();
+    await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+    expect(pageErrors.sinceMark(), 'no uncaught page error while searching').toEqual([]);
+  });
+
+  test('[DQB-015] Title sort cycles ascending, descending and original order', async ({ booksPage }) => {
+    await booksPage.open();
+
+    await test.step('Click 1: ascending', async () => {
+      await booksPage.table.sortBy('Title');
+      await expect(booksPage.table.titleLinks).toHaveText(TITLES_ASC);
+      await expect(booksPage.table.sortIndicator('Title', 'asc')).toHaveText('↑');
+    });
+    await test.step('Click 2: descending', async () => {
+      await booksPage.table.sortBy('Title');
+      await expect(booksPage.table.titleLinks).toHaveText(TITLES_DESC);
+      await expect(booksPage.table.sortIndicator('Title', 'desc')).toHaveText('↓');
+    });
+    await test.step('Click 3: original order', async () => {
+      await booksPage.table.sortBy('Title');
+      await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+      await expect(booksPage.table.anySortIndicator).toHaveCount(0);
+    });
+  });
+
+  test('[DQB-016] Author sort orders rows by author ascending', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.table.sortBy('Author');
+
+    await expect(booksPage.table.columnCells('Author')).toHaveText(AUTHORS_ASC);
+    await expect(booksPage.table.sortIndicator('Author', 'asc')).toBeVisible();
+  });
+
+  test('[DQB-017] Image column is not sortable', async ({ booksPage }) => {
+    await booksPage.open();
+    await booksPage.table.sortBy('Image');
+
+    // Sorting is synchronous client-side (discovery 3.1), so the state right after the click is final.
+    await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+    await expect(booksPage.table.anySortIndicator).toHaveCount(0);
+  });
+
+  test('[DQB-018] Guest opens a book and sees its details', async ({ booksPage, page }) => {
+    await booksPage.open();
+    const detail = await booksPage.openBook(GIT_POCKET_GUIDE_DETAIL.title);
+
+    await expect(page).toHaveURL(new RegExp(`/books\\?search=${GIT_POCKET_GUIDE_DETAIL.isbn}$`));
+    await expect(detail.fieldValue('isbn')).toHaveText(GIT_POCKET_GUIDE_DETAIL.isbn);
+    await expect(detail.fieldValue('title')).toHaveText(GIT_POCKET_GUIDE_DETAIL.title);
+    await expect(detail.fieldValue('subtitle')).toHaveText(GIT_POCKET_GUIDE_DETAIL.subTitle);
+    await expect(detail.fieldValue('author')).toHaveText(GIT_POCKET_GUIDE_DETAIL.author);
+    await expect(detail.fieldValue('publisher')).toHaveText(GIT_POCKET_GUIDE_DETAIL.publisher);
+    await expect(detail.fieldValue('pages')).toHaveText(GIT_POCKET_GUIDE_DETAIL.totalPages);
+    // R-25: the description is truncated, so only its presence is asserted.
+    await expect(detail.fieldValue('description')).not.toBeEmpty();
+    // Probe P4: the Website value is rendered as a label, not a link; presence is asserted.
+    await expect(detail.fieldValue('website')).not.toBeEmpty();
+  });
+
+  test('[DQB-019] Back To Book Store returns to the list', async ({ bookDetailPage, page }) => {
+    await bookDetailPage.open(BOOKS.gitPocketGuide.isbn);
+    const list = await bookDetailPage.backToBookStore();
+
+    await expect(page).toHaveURL(BOOKS_URL);
+    await expect(list.table.titleLinks).toHaveText(CATALOGUE_TITLES);
+  });
+
+  test('[DQB-020] Detail URL with an unknown ISBN shows empty fields', async ({ bookDetailPage }) => {
+    const status = await bookDetailPage.openUnknown(UNKNOWN_ISBN);
+
+    expect(status, 'GET /BookStore/v1/Book?ISBN=0000000000 status').toBe(400);
+    await expect(bookDetailPage.wrapper('title')).toBeVisible();
+    await expect(bookDetailPage.fieldValue('title')).toHaveText('');
+    await expect(bookDetailPage.backButton).toBeVisible();
+    // Section 10.2 note 4: checked against the known candidates only.
+    await expect(bookDetailPage.alertRegion).toHaveCount(0);
+    await expect(bookDetailPage.text(MESSAGES.isbnNotAvailable)).toHaveCount(0);
+    recordObservation('R-22', 'Unknown ISBN shows empty fields and no user-facing error (current behaviour asserted)');
+  });
+
+  test('[DQB-021] Book list when the books service fails', async ({ booksApi, booksPage, alerts }) => {
+    const { fired } = await booksApi.failListWith(500);
+
+    await booksPage.openExpectingNoRows();
+    await fired;
+
+    await expect(booksPage.table.titleLinks).toHaveCount(0);
+    await expect(booksPage.searchBox).toBeVisible();
+    // R-30: the failure behaviour is not specified; what is shown is recorded, not asserted.
+    const pagerText = await booksPage.table.pageInfo.allInnerTexts();
+    recordObservation('R-30', `Pager text: ${pagerText.join(' | ') || '(none)'}; native alerts: ${alerts.unexpected().join(' | ') || '(none)'}`);
+  });
+});
