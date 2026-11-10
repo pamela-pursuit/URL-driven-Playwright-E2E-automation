@@ -12,7 +12,23 @@ npm install
 npx playwright install chromium firefox webkit
 ```
 
-## Start a new application
+## Choose a QA entry point
+
+There are two related ways to use the QA setup:
+
+- **`qa-playwright` agent**: a focused task, such as reviewing acceptance
+  criteria, fixing a locator, or adding a small set of tests.
+- **`e2e-agent`**: the full URL-driven workflow, including safe discovery,
+  scenario review, implementation, browser runs, and a delivery report.
+
+In VS Code, choose either agent from the chat agent picker. For the full flow,
+choose **e2e-agent** and provide the application URL and any target flows.
+`e2e-agent` can delegate focused work to `qa-playwright`.
+
+The `/e2e-agent` skill workflow below is also available in Claude Code and
+coordinates the specialized agents under `.claude/agents/`.
+
+## Start a new application in Claude Code
 
 In Claude Code, type:
 
