@@ -2290,7 +2290,7 @@
       "type": "Defect",
       "description": "/customer/downloadableproducts did not render within 20 s or 45 s (possible defect).",
       "impact": "Medium",
-      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report.",
+      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report. Logged as DEF-005 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-066"
       ],
@@ -2431,7 +2431,7 @@
       "type": "Discrepancy",
       "description": "Cart quantity 0 or -1 with \"Update shopping cart\" silently removes the row with no message. Tests assert current behaviour; possible defect.",
       "impact": "Medium",
-      "mitigation": "Report to product owner; update the assertion if the behaviour is changed.",
+      "mitigation": "Report to product owner; update the assertion if the behaviour is changed. Logged as DEF-006 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-042"
       ],
@@ -2549,7 +2549,7 @@
       "type": "Ambiguity",
       "description": "/customer/backinstocksubscriptions renders for guests while other /customer/* pages redirect.",
       "impact": "Low",
-      "mitigation": "Assert observed behaviour and flag as a possible defect.",
+      "mitigation": "Assert observed behaviour and flag as a possible defect. Logged as DEF-007 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-014"
       ],
@@ -2649,7 +2649,7 @@
       "type": "Ambiguity",
       "description": "Keyboard tab order on the login page not observed.",
       "impact": "Low",
-      "mitigation": "Report-only; record the observed order.",
+      "mitigation": "Report-only; record the observed order. Logged as DEF-013 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-068"
       ],
@@ -2660,7 +2660,7 @@
       "type": "Ambiguity",
       "description": "No WCAG target level specified; accessibility is report-only (D4).",
       "impact": "Low",
-      "mitigation": "Ask for a target (e.g. WCAG 2.1 AA) before gating.",
+      "mitigation": "Ask for a target (e.g. WCAG 2.1 AA) before gating. Logged as DEF-009, DEF-010, DEF-011, DEF-012 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-068",
         "DWS-069",
@@ -2717,7 +2717,7 @@
       "type": "Discrepancy",
       "description": "Cart and wishlist thumbnails lack width/height, causing layout shift that can move controls under the pointer during load (observed, DWS-056).",
       "impact": "Low",
-      "mitigation": "Page objects wait for row images to complete before using row controls; report as a UI defect.",
+      "mitigation": "Page objects wait for row images to complete before using row controls; report as a UI defect. Logged as DEF-008 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-056"
       ],
@@ -2856,6 +2856,272 @@
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet (site owner / product owner)",
       "nextAction": "Report to the site owner; if a gift-card message is introduced, update the DWS-045 assertion."
+    },
+    {
+      "id": "DEF-005",
+      "riskRef": "R-05",
+      "title": "Downloadable products page never finishes loading for a signed-in customer",
+      "severity": "Medium",
+      "status": "Needs confirmation",
+      "category": "Functional",
+      "scenarios": [
+        "DWS-066"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); signed in with the test account; Chromium",
+      "steps": [
+        "Sign in as a customer",
+        "Open My account and select \"Downloadable products\" (/customer/downloadableproducts)",
+        "Wait for the page to load"
+      ],
+      "expected": "The page loads with its heading and the customer's downloadable products, or a message that there are none, within normal page load time.",
+      "actual": "No page heading appeared within 20 s (twice) or 45 s (once) during discovery on 2026-11-05. The other My account pages load normally in the same session.",
+      "expectedBasis": "Recommendation: the page is linked from My account, so it should load like the other account pages. Expected content is not specified (requirements.md).",
+      "evidence": [
+        {
+          "label": "discovery.md sections 3 and 4.11 (no screenshot: signed-in pages show the account email)",
+          "path": "test-plans/demo-web-shop/discovery.md"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Reproduce once more manually (the shared demo can be slow). If it still does not load, change to New and report; then automate DWS-066."
+    },
+    {
+      "id": "DEF-006",
+      "riskRef": "R-11",
+      "title": "Cart quantity 0 or -1 silently removes the item with no message",
+      "severity": "Medium",
+      "status": "Needs confirmation",
+      "category": "Functional / validation",
+      "scenarios": [
+        "DWS-042"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "As a guest, add a product to the cart",
+        "Open /cart, set the quantity to 0 and select \"Update shopping cart\"",
+        "Add the product again, set the quantity to -1 and select \"Update shopping cart\""
+      ],
+      "expected": "To be confirmed by the product owner: either a validation message for 0 and negative quantities, or a deliberate removal with a confirmation message.",
+      "actual": "In both cases the row disappears, the header shows \"Shopping cart (0)\", and no message is shown.",
+      "expectedBasis": "Not specified. Quantity 0 removing the item may be intended; -1 being accepted silently is questionable.",
+      "evidence": [
+        {
+          "label": "DWS-042 (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-14-06/test-results/demo-web-shop-cart-guest-G-296d5-te-silently-removes-the-row-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Ask the product owner for the intended behaviour; then change to New or Rejected and update DWS-042."
+    },
+    {
+      "id": "DEF-007",
+      "riskRef": "R-21",
+      "title": "Back-in-stock subscriptions page opens for guests while other account pages require login",
+      "severity": "Low",
+      "status": "Needs confirmation",
+      "category": "Authorization",
+      "scenarios": [
+        "DWS-014"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "Sign out (guest)",
+        "Open /customer/backinstocksubscriptions",
+        "For comparison, open /customer/info"
+      ],
+      "expected": "Like the other /customer/* pages, a guest is redirected to /login?ReturnUrl=...",
+      "actual": "The page renders for a guest with the heading \"My account - Back in stock subscriptions\" and \"You are not currently subscribed to any Back In Stock notification lists\". /customer/info redirects to login. No customer data was exposed.",
+      "expectedBasis": "Consistency with the other /customer/* pages (observed). Access rules are not specified.",
+      "evidence": [
+        {
+          "label": "DWS-014 guest view (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-authorizatio-4fa54-age-is-reachable-by-a-guest-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Confirm the intended access rule; then change to New or Rejected and update DWS-014."
+    },
+    {
+      "id": "DEF-008",
+      "riskRef": "R-36",
+      "title": "Cart and wishlist thumbnails have no width or height, so the page shifts while images load",
+      "severity": "Low",
+      "status": "Needs confirmation",
+      "category": "UI",
+      "scenarios": [
+        "DWS-056"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "As a guest, add a product to the wishlist",
+        "Open /wishlist in Firefox with the cache cleared (or on a slow connection)",
+        "Watch the row controls while the thumbnail loads"
+      ],
+      "expected": "Controls stay in place while images load (images have width and height set).",
+      "actual": "The thumbnail has no width or height. When it loads, the \"Add to cart\" checkbox moves about 24.5 px, so a click at that moment can miss it (reproduced by probe F2c).",
+      "expectedBasis": "Recommendation: reserving image space avoids layout shift (Core Web Vitals, CLS). Not stated in the requirements.",
+      "evidence": [
+        {
+          "label": "DWS-056 (firefox, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-firefox/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Confirm with the product owner; the tests already wait for images, so no test change is needed."
+    },
+    {
+      "id": "DEF-009",
+      "riskRef": "R-31",
+      "title": "Form fields and dropdowns have no accessible name (screen readers cannot identify them)",
+      "severity": "High",
+      "status": "Needs confirmation",
+      "category": "Accessibility",
+      "scenarios": [
+        "DWS-069",
+        "DWS-070"
+      ],
+      "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium; name checks on all three browsers",
+      "steps": [
+        "Open /, /login, /books, a product page and /cart (with one item)",
+        "Inspect the controls listed under Actual Result with a screen reader or the browser accessibility tree"
+      ],
+      "expected": "Every form field and dropdown has an accessible name (a visible label, aria-label or aria-labelledby).",
+      "actual": "No accessible name (axe 'label' and 'select-name', impact critical): header search (#small-searchterms) and newsletter email (#newsletter-email) on every page; listing \"Sort by\", \"Display per page\" and \"View as\" selects; cart quantity, remove checkbox, coupon code, gift card code, and the terms of service checkbox that is needed to check out.",
+      "expectedBasis": "WCAG 2.1 Level A: 1.3.1 Info and Relationships and 4.1.2 Name, Role, Value. No WCAG target is agreed yet (R-31).",
+      "evidence": [
+        {
+          "label": "DWS-070 axe report with full results per page (chromium, 2026-11-10)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-10_14-03-26/report/index.html"
+        },
+        {
+          "label": "DWS-069 known gaps (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-accessibilit-66424-ssibility-gaps-are-reported-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+    },
+    {
+      "id": "DEF-010",
+      "riskRef": "R-31",
+      "title": "Pages do not declare a language (<html> has no lang attribute)",
+      "severity": "Medium",
+      "status": "Needs confirmation",
+      "category": "Accessibility",
+      "scenarios": [
+        "DWS-069",
+        "DWS-070"
+      ],
+      "environment": "https://demowebshop.tricentis.com; guest; all three browsers",
+      "steps": [
+        "Open any page (checked: /, /login, /books, a product page, /cart)",
+        "Inspect the <html> element"
+      ],
+      "expected": "<html lang=\"en\"> (or the page language), so screen readers use the correct pronunciation.",
+      "actual": "The <html> element has no lang attribute on all five pages (axe 'html-has-lang', impact serious).",
+      "expectedBasis": "WCAG 2.1 Level A: 3.1.1 Language of Page. No WCAG target is agreed yet (R-31).",
+      "evidence": [
+        {
+          "label": "DWS-070 axe report with full results per page (chromium, 2026-11-10)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-10_14-03-26/report/index.html"
+        },
+        {
+          "label": "DWS-069 known gaps (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-accessibilit-66424-ssibility-gaps-are-reported-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+    },
+    {
+      "id": "DEF-011",
+      "riskRef": "R-31",
+      "title": "Home page image links have no text alternative",
+      "severity": "Medium",
+      "status": "Needs confirmation",
+      "category": "Accessibility",
+      "scenarios": [
+        "DWS-070"
+      ],
+      "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium",
+      "steps": [
+        "Open /",
+        "Inspect the slider banner link to tricentis.com/speed and the banner link to academy.tricentis.com"
+      ],
+      "expected": "Each link has discernible text, for example alt text on its image.",
+      "actual": "Both links contain only an image without a text alternative, so screen readers announce no link purpose (axe 'link-name', impact serious, 2 elements).",
+      "expectedBasis": "WCAG 2.1 Level A: 2.4.4 Link Purpose (In Context) and 4.1.2 Name, Role, Value. No WCAG target is agreed yet (R-31).",
+      "evidence": [
+        {
+          "label": "DWS-070 axe report with full results per page (chromium, 2026-11-10)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-10_14-03-26/report/index.html"
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Agree a WCAG target (R-31); if it includes Level A, change to New and report."
+    },
+    {
+      "id": "DEF-012",
+      "riskRef": "R-31",
+      "title": "Page structure: no main landmark, content outside landmarks, no h1 on the home page, heading order, empty table header",
+      "severity": "Low",
+      "status": "Needs confirmation",
+      "category": "Accessibility",
+      "scenarios": [
+        "DWS-069",
+        "DWS-070"
+      ],
+      "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium",
+      "steps": [
+        "Run an axe scan (or inspect headings and landmarks) on /, /login, /books, a product page and /cart"
+      ],
+      "expected": "Each page has one main landmark with content inside landmarks, the home page has an h1, heading levels do not skip, and table headers have text.",
+      "actual": "No main landmark on all five pages ('landmark-one-main'); 26 to 49 elements per page outside landmarks ('region'); no h1 on the home page ('page-has-heading-one'); the cart \"Information\" h3 skips a heading level ('heading-order'); the cart picture column header is empty ('empty-table-header'). axe impact moderate or minor.",
+      "expectedBasis": "Mostly axe-core best-practice rules; the h1 and heading order relate to WCAG 2.1 1.3.1 and 2.4.6. No WCAG target is agreed yet (R-31).",
+      "evidence": [
+        {
+          "label": "DWS-070 axe report with full results per page (chromium, 2026-11-10)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-10_14-03-26/report/index.html"
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Agree a WCAG target (R-31); then decide which of these to report."
+    },
+    {
+      "id": "DEF-013",
+      "riskRef": "R-30",
+      "title": "Keyboard: on Firefox, Tab from the top of the login page does not reach the Email field",
+      "severity": "Low",
+      "status": "Needs confirmation",
+      "category": "Accessibility (keyboard)",
+      "scenarios": [
+        "DWS-068"
+      ],
+      "environment": "https://demowebshop.tricentis.com/login; Playwright Firefox, Chromium and WebKit",
+      "steps": [
+        "Open /login",
+        "Press Tab repeatedly from the top of the page and count presses until the Email field has focus"
+      ],
+      "expected": "The Email field can be reached with Tab in every browser, ideally with few presses (for example via a skip link).",
+      "actual": "Firefox: Email not reached within 100 Tab presses. Chromium: 54 presses. WebKit: 10 presses (Safari skips links by default). Tab from Email to Password works in all three, and keyboard sign-in from the Email field works.",
+      "expectedBasis": "WCAG 2.1 Level A: 2.1.1 Keyboard and 2.4.1 Bypass Blocks. The Firefox result may come from a Playwright or browser setting and needs a manual check.",
+      "evidence": [
+        {
+          "label": "DWS-068 test notes in run 2026-11-06_13-21-14 (no screenshot: the final page shows the account email)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/summary.md"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet",
+      "nextAction": "Check manually in desktop Firefox; if confirmed, change to New. The 54 presses on Chromium also suggest adding a skip link."
     }
   ],
   "executions": [

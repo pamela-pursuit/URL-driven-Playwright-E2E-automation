@@ -14,7 +14,10 @@
   basis for the expected result, evidence links and next action. `validate`
   checks required fields, severity and status values, and risk and scenario
   references. The Delivery Report dashboard shows a defect count.
-- demo-web-shop defects DEF-001 to DEF-004 (from R-13, R-14, R-15, R-12).
+- demo-web-shop defects DEF-001 to DEF-004 (from R-13, R-14, R-15, R-12),
+  status New, and DEF-005 to DEF-013, status Needs confirmation: R-05,
+  R-11, R-21, R-36, and the accessibility findings from DWS-068 to DWS-070
+  (pending a WCAG target, R-31).
 
 ### Changed
 
