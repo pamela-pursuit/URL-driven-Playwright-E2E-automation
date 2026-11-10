@@ -1,0 +1,2178 @@
+{
+  "app": "demoqa-books",
+  "baseUrl": "https://demoqa.com/",
+  "code": "DQB",
+  "scenarios": [
+    {
+      "id": "DQB-001",
+      "feature": "Book List",
+      "journey": "Guest opens the Book Store and sees the 8-book catalogue",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; ad hosts blocked (R-03)",
+      "testData": "catalogueTitles (the 8 titles from discovery D 3.1)",
+      "steps": [
+        "Open /books",
+        "Wait until the book rows are rendered (R-01)"
+      ],
+      "expected": "HTTP 200 at https://demoqa.com/books (no redirect). Column headers \"Image\", \"Title\", \"Author\", \"Publisher\" are visible. The table shows exactly the 8 title links: \"Git Pocket Guide\", \"Learning JavaScript Design Patterns\", \"Designing Evolvable Web APIs with ASP.NET\", \"Speaking JavaScript\", \"You Don't Know JS\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\". Link \"Git Pocket Guide\" has href /books?search=9781449325862. Row \"Git Pocket Guide\" shows author \"Richard E. Silverman\" and publisher \"O'Reilly Media\".",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Catalogue not loading blocks every book flow; shared public data may change (R-04, R-15)",
+      "requirementRef": "REQ-01",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-002",
+      "feature": "Book List",
+      "journey": "All 8 books fit on one page and the pager is disabled",
+      "testType": "Boundary",
+      "priority": "Medium",
+      "preconditions": "Signed out",
+      "testData": "None",
+      "steps": [
+        "Open /books",
+        "Wait until the book rows are rendered"
+      ],
+      "expected": "Text \"Page 1 of 1\" is shown below the table. Buttons \"Previous\" and \"Next\" are both disabled. All 8 title links are visible on this single page.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Multi-page and rows-per-page behaviour cannot be tested with 8 books and no control (Q-NB7)",
+      "requirementRef": "REQ-01",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-003",
+      "feature": "Search",
+      "journey": "Guest searches by part of a title",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchTitle = \"git\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"git\" in the box with placeholder \"Type to search\""
+      ],
+      "expected": "Only one title link remains: \"Git Pocket Guide\". URL stays https://demoqa.com/books.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Search is the main way to find a book",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-004",
+      "feature": "Search",
+      "journey": "Search ignores letter case",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchTitleUpper = \"GIT\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"GIT\" in \"Type to search\""
+      ],
+      "expected": "Only one title link remains: \"Git Pocket Guide\" (same result as lower-case \"git\").",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Case-sensitive search would hide books from users",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-005",
+      "feature": "Search",
+      "journey": "Guest searches by author name",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchAuthor = \"Kyle\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"Kyle\" in \"Type to search\""
+      ],
+      "expected": "Only one row remains: title \"You Don't Know JS\", author \"Kyle Simpson\".",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Author search is an alternate way to find a book",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-006",
+      "feature": "Search",
+      "journey": "Guest searches by publisher",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchPublisher = \"O'Reilly Media\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"O'Reilly Media\" in \"Type to search\""
+      ],
+      "expected": "Exactly 6 title links remain (the six O'Reilly Media books from D 3.1). \"Eloquent JavaScript, Second Edition\" and \"Understanding ECMAScript 6\" (No Starch Press) are not shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Publisher filter returning wrong rows misleads users",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-007",
+      "feature": "Search",
+      "journey": "Search matches a fragment in the middle of a word",
+      "testType": "Boundary",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchPartial = \"script\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"script\" in \"Type to search\""
+      ],
+      "expected": "Exactly 5 title links remain: \"Learning JavaScript Design Patterns\", \"Speaking JavaScript\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\".",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Partial matching is the observed contract; a change would reduce findability",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-008",
+      "feature": "Search",
+      "journey": "Search term containing an apostrophe",
+      "testType": "Edge Case",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchApostrophe = \"Don't\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"Don't\" in \"Type to search\""
+      ],
+      "expected": "Only one title link remains: \"You Don't Know JS\".",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Special characters could break the filter",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-009",
+      "feature": "Search",
+      "journey": "Search with no matching book",
+      "testType": "Negative",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchNoMatch = \"zzzznotabook\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"zzzznotabook\" in \"Type to search\""
+      ],
+      "expected": "No title links are shown; the column headers stay visible; text \"Page 1 of 0\" is shown. No empty-state message exists today (current behaviour asserted; possible gap R-21).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Users get no feedback that nothing matched (R-21)",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-010",
+      "feature": "Search",
+      "journey": "Clearing the search restores the full list",
+      "testType": "Edge Case",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchTitle = \"git\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"git\" in \"Type to search\" and wait for one row",
+        "Clear the search box"
+      ],
+      "expected": "All 8 title links are shown again and text \"Page 1 of 1\" is shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "A stuck filter would hide books",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-011",
+      "feature": "Search",
+      "journey": "Search text is not kept after a page reload",
+      "testType": "Persistence",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchTitle = \"git\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"git\" in \"Type to search\" and wait for one row",
+        "Reload the page and wait for the rows"
+      ],
+      "expected": "While filtered, the URL stays https://demoqa.com/books. After reload the search box is empty and all 8 title links are shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Observed behaviour; whether search should persist is not specified",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-012",
+      "feature": "Search",
+      "journey": "Search term with leading and trailing spaces is not trimmed",
+      "testType": "Edge Case",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchPadded = \"  git  \" (two spaces each side)",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"  git  \" in \"Type to search\""
+      ],
+      "expected": "No title links are shown and text \"Page 1 of 0\" is shown (current behaviour: input not trimmed). Flagged as possible defect R-19.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Pasted terms with spaces find nothing (R-19)",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-013",
+      "feature": "Search",
+      "journey": "Searching by ISBN finds no book",
+      "testType": "Edge Case",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchIsbn = \"9781449325862\" (ISBN of Git Pocket Guide)",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"9781449325862\" in \"Type to search\""
+      ],
+      "expected": "No title links are shown and text \"Page 1 of 0\" is shown (current behaviour: ISBN is not searchable). Flagged as possible gap R-20.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Users who know the ISBN cannot find the book (R-20)",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-014",
+      "feature": "Search",
+      "journey": "Search with regular-expression characters does not break the page",
+      "testType": "Edge Case",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "searchRegex = \"(.*\"",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Type \"(.*\" in \"Type to search\"",
+        "Clear the search box"
+      ],
+      "expected": "No title links are shown and text \"Page 1 of 0\" is shown; the page stays usable (no uncaught page error). After clearing, all 8 title links return.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Unescaped input could crash the client-side filter",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-015",
+      "feature": "Sort",
+      "journey": "Title sort cycles ascending, descending and original order",
+      "testType": "Positive",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "None",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Click the Title column header (name matched by /^Title/, R-10)",
+        "Click it a second time",
+        "Click it a third time"
+      ],
+      "expected": "Click 1: titles in ascending A-Z order and the header shows the indicator with aria-label \"sorted-asc\" (\"↑\"). Click 2: titles in descending order and indicator \"sorted-desc\" (\"↓\"). Click 3: titles back in the original order of DQB-001 and no sort indicator.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Header accessible name changes after sorting (R-10)",
+      "requirementRef": "REQ-03",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-016",
+      "feature": "Sort",
+      "journey": "Author sort orders rows by author ascending",
+      "testType": "Positive",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "None",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Click the Author column header once"
+      ],
+      "expected": "Author cells are in ascending order: first \"Addy Osmani\", last \"Richard E. Silverman\"; the Author header shows the \"sorted-asc\" indicator.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Low business impact",
+      "requirementRef": "REQ-03",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-017",
+      "feature": "Sort",
+      "journey": "Image column is not sortable",
+      "testType": "Negative",
+      "priority": "Low",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "None",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Click the Image column header"
+      ],
+      "expected": "Row order is unchanged (same as DQB-001) and no \"sorted-asc\" or \"sorted-desc\" indicator appears.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Low business impact",
+      "requirementRef": "REQ-03",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-018",
+      "feature": "Book Detail",
+      "journey": "Guest opens a book from the list and sees its details",
+      "testType": "Positive",
+      "priority": "Medium",
+      "preconditions": "Signed out; /books rows rendered",
+      "testData": "knownBook = Git Pocket Guide, ISBN 9781449325862",
+      "steps": [
+        "Open /books and wait for the rows",
+        "Click title link \"Git Pocket Guide\""
+      ],
+      "expected": "URL is https://demoqa.com/books?search=9781449325862. Detail fields show: ISBN \"9781449325862\", Title \"Git Pocket Guide\", Sub Title \"A Working Introduction\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\", Total Pages \"234\". Description is not empty (full text not asserted: it is truncated, R-25). A Website value is present.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Wrong details mislead users; description truncation is a possible defect (R-25)",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-019",
+      "feature": "Book Detail",
+      "journey": "Back To Book Store returns from a book to the list",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed out",
+      "testData": "knownBook = Git Pocket Guide, ISBN 9781449325862",
+      "steps": [
+        "Open /books?search=9781449325862 and wait for the Title value",
+        "Click button \"Back To Book Store\" (by role and name; id addNewRecordButton is duplicated, R-08)"
+      ],
+      "expected": "URL is https://demoqa.com/books and all 8 title links are shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Duplicate id could click the wrong button (R-08)",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-020",
+      "feature": "Book Detail",
+      "journey": "Detail URL with an unknown ISBN",
+      "testType": "Error Handling",
+      "priority": "Medium",
+      "preconditions": "Signed out",
+      "testData": "unknownIsbn = \"0000000000\"",
+      "steps": [
+        "Open /books?search=0000000000",
+        "Wait for the book request to finish (GET /BookStore/v1/Book?ISBN=0000000000)"
+      ],
+      "expected": "The book request returns 400. The detail labels render with empty values (Title value empty) and button \"Back To Book Store\" is visible. No user-facing error message is shown today (current behaviour asserted; possible defect R-22). The 400 console error is allow-listed (R-14).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Users get a blank page with no explanation (R-22)",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-021",
+      "feature": "Book List",
+      "journey": "Book list when the books service fails (simulated)",
+      "testType": "Error Handling",
+      "priority": "Low",
+      "preconditions": "Signed out; page.route answers GET **/BookStore/v1/Books with HTTP 500",
+      "testData": "booksApiFailure (route **/BookStore/v1/Books -> 500)",
+      "steps": [
+        "Register the route that returns 500 for the books list request",
+        "Open /books",
+        "Wait for the routed request to complete"
+      ],
+      "expected": "No book title links are rendered and the \"Type to search\" box is still visible (page does not go blank). Any message or pager text shown is recorded in the test annotations, not asserted: the failure behaviour is not specified (R-30).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Backend outage behaviour unspecified (R-30)",
+      "requirementRef": "REQ-01",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/books.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-022",
+      "feature": "Authorization",
+      "journey": "Guest on a book detail page cannot add it to a collection",
+      "testType": "Authorization",
+      "priority": "High",
+      "preconditions": "Signed out (no session cookies)",
+      "testData": "knownBook = Git Pocket Guide, ISBN 9781449325862",
+      "steps": [
+        "Open /books?search=9781449325862 and wait for the Title value"
+      ],
+      "expected": "Buttons \"Login\" and \"Back To Book Store\" are visible. Button \"Add To Your Collection\" is not present (count 0). No \"User Name :\" value is shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Guests modifying collections would be an authorization defect",
+      "requirementRef": "REQ-07",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-023",
+      "feature": "Authorization",
+      "journey": "Guest opening /profile sees the signed-out message instead of a collection",
+      "testType": "Authorization",
+      "priority": "High",
+      "preconditions": "Signed out (no session cookies)",
+      "testData": "None",
+      "steps": [
+        "Open /profile"
+      ],
+      "expected": "HTTP 200, URL stays https://demoqa.com/profile (no redirect, as observed; R-32). Text \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\" is visible with links \"login\" (href /login) and \"register\" (href /register). No collection table, no \"Logout\", \"Delete Account\" or \"Delete All Books\" buttons.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Exposing account data or actions to guests (R-32)",
+      "requirementRef": "REQ-07",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-024",
+      "feature": "Authorization",
+      "journey": "Signed-in user sees account controls on a book detail page",
+      "testType": "Authorization",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account (storageState reused)",
+      "testData": "credentials: the browser's account (userName); knownBook = Git Pocket Guide, ISBN 9781449325862",
+      "steps": [
+        "Open /books?search=9781449325862 and wait for the Title value"
+      ],
+      "expected": "\"User Name :\" value equals the browser's account userName. Buttons \"Log out\", \"Back To Book Store\" and \"Add To Your Collection\" are visible. Button \"Login\" is not present.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Signed-in users unable to add books blocks the core flow",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-025",
+      "feature": "Authentication",
+      "journey": "Registered user signs in with valid credentials",
+      "testType": "Authentication",
+      "priority": "High",
+      "preconditions": "Signed out; /login form ready (fields keep typed values, R-01)",
+      "testData": "credentials: the browser's account (existingUser on Chromium, firefoxUser on Firefox, webkitUser on WebKit; userName, password)",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Fill placeholder \"UserName\" and placeholder \"Password\" with the browser's account values",
+        "Click button \"Login\" inside the login form"
+      ],
+      "expected": "URL becomes https://demoqa.com/profile (allow up to 15 s, observed 3.9 to 5.1 s, R-12). \"User Name :\" value equals the browser's account userName; button \"Logout\" and text \"Books :\" are visible.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Login failure blocks every signed-in flow; each browser uses its own account (I2)",
+      "requirementRef": "REQ-05",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-026",
+      "feature": "Authentication",
+      "journey": "Real user name with a wrong password is rejected",
+      "testType": "Negative",
+      "priority": "High",
+      "preconditions": "Signed out. At most one wrong-password attempt per account per run (lockout unknown, Q-NB1, R-06): retries disabled for this test, and no other test uses a wrong password with a real user name",
+      "testData": "credentials: the browser's account (userName); wrongLoginValue (generated, never the real value)",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Fill \"UserName\" with the browser's account userName and \"Password\" with wrongLoginValue",
+        "Click button \"Login\" inside the login form"
+      ],
+      "expected": "Text \"Invalid username or password!\" is shown in p#name. URL stays https://demoqa.com/login. The Password field keeps the typed value. No session cookie \"token\" is set.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Accepting a wrong password is a security defect; repeated attempts could lock the account (R-06). One attempt per account per run: each browser uses its own account, so three browsers mean one attempt per account.",
+      "requirementRef": "REQ-05",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-027",
+      "feature": "Authentication",
+      "journey": "Unknown user name is rejected",
+      "testType": "Negative",
+      "priority": "High",
+      "preconditions": "Signed out",
+      "testData": "fakeUserName (generated qa-nonexistent-<timestamp>); wrongLoginValue (generated)",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Fill \"UserName\" with fakeUserName and \"Password\" with wrongLoginValue",
+        "Click button \"Login\" inside the login form"
+      ],
+      "expected": "URL stays https://demoqa.com/login and an error text is shown in p#name; no redirect to /profile. The exact text is recorded on the first run and asserted only once confirmed (expected by Q-NB2 to be \"Invalid username or password!\"; not yet observed, R-18).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Message for unknown users not observed (R-18); a different message would enable account enumeration",
+      "requirementRef": "REQ-05",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-028",
+      "feature": "Authentication",
+      "journey": "Login submitted with both fields empty",
+      "testType": "Validation",
+      "priority": "Medium",
+      "preconditions": "Signed out",
+      "testData": "None",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Leave \"UserName\" and \"Password\" empty",
+        "Click button \"Login\" inside the login form"
+      ],
+      "expected": "Both the UserName and Password inputs get class \"is-invalid\". No text appears in p#name. URL stays https://demoqa.com/login.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Hydration timing can swallow the first click (R-01)",
+      "requirementRef": "REQ-05",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-029",
+      "feature": "Authentication",
+      "journey": "Login submitted with only a user name",
+      "testType": "Validation",
+      "priority": "Medium",
+      "preconditions": "Signed out",
+      "testData": "fakeUserName (generated qa-nonexistent-<timestamp>)",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Fill \"UserName\" with fakeUserName and leave \"Password\" empty",
+        "Click button \"Login\" inside the login form"
+      ],
+      "expected": "Only the Password input gets class \"is-invalid\"; the UserName input does not. No login request (POST /Account/v1/Login) is sent. URL stays https://demoqa.com/login.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Incomplete forms reaching the server",
+      "requirementRef": "REQ-05",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-030",
+      "feature": "Session",
+      "journey": "Session survives a reload of the profile page",
+      "testType": "Session",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account",
+      "testData": "credentials: the browser's account (userName)",
+      "steps": [
+        "Open /profile and wait for \"Books :\"",
+        "Reload the page"
+      ],
+      "expected": "After reload the URL is still https://demoqa.com/profile, \"User Name :\" value equals the browser's account userName and button \"Logout\" is visible. The signed-out message is not shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Losing the session on reload forces repeated logins",
+      "requirementRef": "REQ-06",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-031",
+      "feature": "Session",
+      "journey": "Signed-in user sees their name on the book list",
+      "testType": "Session",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account",
+      "testData": "credentials: the browser's account (userName)",
+      "steps": [
+        "Open /books and wait for the rows"
+      ],
+      "expected": "\"User Name :\" value equals the browser's account userName and button \"Log out\" is visible (text \"Log out\" here vs \"Logout\" on /profile, R-24). Button \"Login\" is not present.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Session not shared across pages; inconsistent logout label (R-24)",
+      "requirementRef": "REQ-06",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-032",
+      "feature": "Session",
+      "journey": "Logout from the profile ends the session",
+      "testType": "Session",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account with a fresh login in this test (do not log out a shared storageState)",
+      "testData": "credentials: the browser's account (userName, password)",
+      "steps": [
+        "Sign in through /login and wait for /profile",
+        "Click button \"Logout\" (by role and name; never #submit, R-08)",
+        "Open /profile"
+      ],
+      "expected": "After Logout the URL is https://demoqa.com/login and cookies \"token\", \"expires\", \"userID\" and \"userName\" are no longer present. /profile then shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Session left active after logout on a shared machine; #submit is shared with Delete Account (R-08)",
+      "requirementRef": "REQ-06",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-033",
+      "feature": "Session",
+      "journey": "Log out from the book list ends the session",
+      "testType": "Session",
+      "priority": "Medium",
+      "preconditions": "Signed in as the browser's account with a fresh login in this test",
+      "testData": "credentials: the browser's account (userName, password)",
+      "steps": [
+        "Sign in through /login and wait for /profile",
+        "Open /books and wait for the rows",
+        "Click button \"Log out\"",
+        "Open /profile"
+      ],
+      "expected": "The URL reached after \"Log out\" is recorded (not observed; assumed /login like profile Logout, R-28). Session cookie \"token\" is no longer present, and /profile shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Not observed; behaviour assumed to match profile Logout (R-28)",
+      "requirementRef": "ASSUMPTION-02",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/auth.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-034",
+      "feature": "Collection",
+      "journey": "Signed-in user adds a book to their collection",
+      "testType": "Positive",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account. Setup removes Git Pocket Guide from the collection if left over from a failed run (row delete + OK). Teardown removes it again (Q-NB4). Tests on the same account run one at a time",
+      "testData": "credentials: the browser's account; addBook = Git Pocket Guide, ISBN 9781449325862",
+      "steps": [
+        "Open /books?search=9781449325862 and wait for the Title value",
+        "Register a dialog handler (R-02), then click \"Add To Your Collection\"",
+        "Open /profile and wait for \"Books :\""
+      ],
+      "expected": "A native alert with text \"Book added to your collection.\" appears and is accepted; the detail URL is unchanged. On /profile a row shows Title \"Git Pocket Guide\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\" and a delete icon (#delete-record-9781449325862).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Core collection flow; native alert can hang the test (R-02); leftovers from failed runs (R-05)",
+      "requirementRef": "REQ-08",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-035",
+      "feature": "Collection",
+      "journey": "Adding a book that is already in the collection is refused",
+      "testType": "Negative",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it once (alert \"Book added to your collection.\" accepted). Teardown removes it (Q-NB4)",
+      "testData": "credentials: the browser's account; dupBook = Learning JavaScript Design Patterns, ISBN 9781449331818",
+      "steps": [
+        "Open /books?search=9781449331818 and wait for the Title value",
+        "Register a dialog handler, then click \"Add To Your Collection\" for a book already in the collection",
+        "Open /profile and wait for \"Books :\""
+      ],
+      "expected": "A native alert with the exact text \"Book already present in the your collection!\" appears and is accepted (wording asserted as observed; possible defect R-23). On /profile the book appears in exactly one row (no duplicate). The 400 console error is allow-listed (R-14).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "Duplicate entries would corrupt the collection (data integrity); grammar of the message (R-23)",
+      "requirementRef": "REQ-08",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-036",
+      "feature": "Collection",
+      "journey": "Added book stays in the collection after reload and after signing in again",
+      "testType": "Persistence",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account with a fresh login in this test. Setup removes the book if left over, then adds it (alert accepted). Teardown removes it (Q-NB4)",
+      "testData": "credentials: the browser's account (userName, password); persistBook = Speaking JavaScript, ISBN 9781449365035",
+      "steps": [
+        "Open /profile and confirm the row \"Speaking JavaScript\"",
+        "Reload /profile",
+        "Click \"Logout\", then sign in again through /login",
+        "Wait for /profile"
+      ],
+      "expected": "After reload the row \"Speaking JavaScript\" (Author \"Axel Rauschmayer\", Publisher \"O'Reilly Media\") is still shown. After logout and a new login, /profile still shows that row (server-side persistence, assumption R-31).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Lost collection data (data integrity); re-login persistence not yet observed (R-31)",
+      "requirementRef": "REQ-09",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-037",
+      "feature": "Collection",
+      "journey": "Cancelling the delete confirmation keeps the book",
+      "testType": "Edge Case",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it (alert accepted). Teardown removes it (Q-NB4)",
+      "testData": "credentials: the browser's account; cancelBook = Designing Evolvable Web APIs with ASP.NET, ISBN 9781449337711",
+      "steps": [
+        "Open /profile and wait for the row \"Designing Evolvable Web APIs with ASP.NET\"",
+        "Click the delete icon of that row (#delete-record-9781449337711 or title \"Delete\" within the row)",
+        "Click \"Cancel\" in the dialog"
+      ],
+      "expected": "A dialog (role dialog) titled \"Delete Book\" with text \"Do you want to delete this book?\" and buttons \"OK\" and \"Cancel\" opens. After \"Cancel\" the dialog closes, no native alert appears, and the row is still shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Accidental deletion if Cancel deletes (data integrity)",
+      "requirementRef": "REQ-09",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-038",
+      "feature": "Collection",
+      "journey": "Signed-in user deletes one book from their collection",
+      "testType": "Positive",
+      "priority": "High",
+      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it (alert accepted). Never click \"Delete All Books\" or \"Delete Account\"",
+      "testData": "credentials: the browser's account; deleteBook = You Don't Know JS, ISBN 9781491904244",
+      "steps": [
+        "Open /profile and wait for the row \"You Don't Know JS\"",
+        "Click the delete icon of that row",
+        "Register a dialog handler, then click \"OK\" in the \"Delete Book\" dialog",
+        "Reload /profile"
+      ],
+      "expected": "A native alert with text \"Book deleted.\" appears and is accepted. The row \"You Don't Know JS\" disappears and is still absent after reload.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Delete not persisting (data integrity); #submit duplicates could hit Delete Account (R-08)",
+      "requirementRef": "REQ-09",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-039",
+      "feature": "Collection",
+      "journey": "Profile with an empty collection",
+      "testType": "Edge Case",
+      "priority": "Medium",
+      "preconditions": "Signed in as the browser's account; collection empty (A-02, R-16: setup removes only books added by these tests; if other books are present the test records them and skips the empty check)",
+      "testData": "credentials: the browser's account (userName)",
+      "steps": [
+        "Open /profile and wait for \"Books :\""
+      ],
+      "expected": "\"User Name :\" value equals the browser's account userName. Column headers \"Image\", \"Title\", \"Author\", \"Publisher\", \"Action\" are shown with no book rows, text \"Page 1 of 0\" is shown, and buttons \"Logout\", \"Go To Book Store\", \"Delete Account\" and \"Delete All Books\" are visible (not clicked). No empty-state message exists today (possible gap R-21).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Unclear empty state (R-21); destructive buttons nearby (R-08)",
+      "requirementRef": "REQ-09",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/collection.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-040",
+      "feature": "Registration",
+      "journey": "Register form submitted with all fields empty",
+      "testType": "Validation",
+      "priority": "Medium",
+      "preconditions": "Signed out; /register form ready (R-01)",
+      "testData": "None",
+      "steps": [
+        "Open /register and wait until the form is ready",
+        "Click button \"Register\" with all fields empty"
+      ],
+      "expected": "The First Name, Last Name, UserName and Password inputs all get class \"is-invalid\". No text appears in p#name. No account is created; URL stays https://demoqa.com/register.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaRegisterPage",
+      "risk": "Hydration timing can swallow the first click (R-01)",
+      "requirementRef": "REQ-10",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/register.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-041",
+      "feature": "Registration",
+      "journey": "Register with a weak password shows the server rule message",
+      "testType": "Validation",
+      "priority": "Medium",
+      "preconditions": "Signed out; /register form ready; reCAPTCHA not solved and not bypassed. Only the weak value \"abc\" is ever submitted, never a value that satisfies the rule (R-07)",
+      "testData": "registerFirstName \"QA\"; registerLastName \"Automation\"; fakeUserName (generated qa-nonexistent-<timestamp>); weakRegisterValue \"abc\"",
+      "steps": [
+        "Open /register and wait until the form is ready",
+        "Fill First Name, Last Name, UserName (fakeUserName) and Password (weakRegisterValue); confirm each field keeps its value",
+        "Click button \"Register\""
+      ],
+      "expected": "POST /Account/v1/User returns 400. p#name shows \"Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.\" All four fields keep their values. URL stays https://demoqa.com/register. The client sending the request without a captcha token is recorded as possible defect R-26.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaRegisterPage",
+      "risk": "A valid value would create a real account (R-07); client does not enforce the rule or captcha (R-26)",
+      "requirementRef": "REQ-10",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/register.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-042",
+      "feature": "Navigation",
+      "journey": "New User button opens the register page",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed out",
+      "testData": "None",
+      "steps": [
+        "Open /login and wait until the form is ready",
+        "Click button \"New User\""
+      ],
+      "expected": "URL is https://demoqa.com/register and heading \"Register\" is visible.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Low business impact",
+      "requirementRef": "REQ-11",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/navigation.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-043",
+      "feature": "Navigation",
+      "journey": "Back to Login returns from the register page",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed out",
+      "testData": "None",
+      "steps": [
+        "Open /register and wait until the form is ready",
+        "Click button \"Back to Login\""
+      ],
+      "expected": "URL is https://demoqa.com/login and heading \"Login\" is visible.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaRegisterPage",
+      "risk": "Low business impact",
+      "requirementRef": "REQ-10",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/navigation.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-044",
+      "feature": "Navigation",
+      "journey": "Guest follows the login and register links from the signed-out profile",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed out",
+      "testData": "None",
+      "steps": [
+        "Open /profile and click link \"login\"",
+        "Open /profile again and click link \"register\""
+      ],
+      "expected": "Link \"login\" leads to https://demoqa.com/login (heading \"Login\"); link \"register\" leads to https://demoqa.com/register (heading \"Register\").",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Low business impact",
+      "requirementRef": "REQ-07",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/navigation.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-045",
+      "feature": "Navigation",
+      "journey": "Left menu Book Store Application links open their pages",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed out; desktop viewport 1280x900",
+      "testData": "None",
+      "steps": [
+        "Open /books",
+        "In the \"Book Store Application\" menu group click \"Login\"",
+        "In the same group click \"Book Store\"",
+        "In the same group click \"Profile\""
+      ],
+      "expected": "\"Login\" leads to https://demoqa.com/login, \"Book Store\" to https://demoqa.com/books, \"Profile\" to https://demoqa.com/profile; after each click the clicked menu item has class \"active\". (\"Book Store API\" /swagger is out of scope.)",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Fixed footer overlaps the lower menu (R-13); menu ids are not unique by meaning",
+      "requirementRef": "REQ-11",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/navigation.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-046",
+      "feature": "Navigation",
+      "journey": "Go To Book Store leads from the profile to the book list",
+      "testType": "Navigation",
+      "priority": "Low",
+      "preconditions": "Signed in as the browser's account",
+      "testData": "credentials: the browser's account",
+      "steps": [
+        "Open /profile and wait for \"Books :\"",
+        "Click button \"Go To Book Store\""
+      ],
+      "expected": "The resulting URL is recorded; expected https://demoqa.com/books with the 8 title links (target not observed, assumption R-29).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "Target not observed (R-29)",
+      "requirementRef": "ASSUMPTION-03",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/navigation.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-047",
+      "feature": "Responsive",
+      "journey": "Book list on a 375x812 mobile viewport",
+      "testType": "Responsive",
+      "priority": "Medium",
+      "preconditions": "Signed out; viewport 375x812",
+      "testData": "mobileViewport 375x812",
+      "steps": [
+        "Open /books and wait for the rows"
+      ],
+      "expected": "The left menu is collapsed (Book Store Application menu links not visible). The \"Type to search\" box and button \"Login\" are visible. Column headers \"Image\", \"Title\", \"Author\" are visible; \"Publisher\" is not visible in the viewport (current behaviour, possible gap R-27). document.documentElement.scrollWidth is at most 375 (no page-level horizontal scroll).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "Mobile users cannot see Publisher (R-27); layout differs at 375px (R-11)",
+      "requirementRef": "REQ-12",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/responsive.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "DQB-048",
+      "feature": "Responsive",
+      "journey": "Login page on a 375x812 mobile viewport",
+      "testType": "Responsive",
+      "priority": "Medium",
+      "preconditions": "Signed out; viewport 375x812",
+      "testData": "mobileViewport 375x812",
+      "steps": [
+        "Open /login and wait until the form is ready"
+      ],
+      "expected": "Fields with placeholders \"UserName\" and \"Password\" and button \"Login\" are visible. The left menu is collapsed. document.documentElement.scrollWidth is at most 375 (no page-level horizontal scroll).",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "automationStatus": "Planned",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "Mobile users unable to sign in (R-11)",
+      "requirementRef": "REQ-12",
+      "executionStatus": "Not Run",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-books/responsive.spec.ts",
+      "lastRun": "",
+      "lastRunNotes": ""
+    }
+  ],
+  "testData": [
+    {
+      "key": "chromiumUserName",
+      "source": "credentials:existingUser.userName",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-026",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "Chromium project account (I2). Never written to files or logs"
+    },
+    {
+      "key": "chromiumPassword",
+      "source": "credentials:existingUser.password",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "Chromium project account (I2)"
+    },
+    {
+      "key": "firefoxUserName",
+      "source": "credentials:firefoxUser.userName",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-026",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "Firefox project account (I2)"
+    },
+    {
+      "key": "firefoxPassword",
+      "source": "credentials:firefoxUser.password",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "Firefox project account (I2)"
+    },
+    {
+      "key": "webkitUserName",
+      "source": "credentials:webkitUser.userName",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-026",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "WebKit project account (I2)"
+    },
+    {
+      "key": "webkitPassword",
+      "source": "credentials:webkitUser.password",
+      "usedBy": [
+        "DQB-024",
+        "DQB-025",
+        "DQB-030",
+        "DQB-031",
+        "DQB-032",
+        "DQB-033",
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039",
+        "DQB-046"
+      ],
+      "notes": "WebKit project account (I2)"
+    },
+    {
+      "key": "wrongLoginValue",
+      "value": "qa-wrong-<timestamp>",
+      "source": "generated",
+      "usedBy": [
+        "DQB-026",
+        "DQB-027"
+      ],
+      "notes": "Generated per run; never the real credential. Used at most once per real account per run (Q-NB1)"
+    },
+    {
+      "key": "fakeUserName",
+      "value": "qa-nonexistent-<timestamp>",
+      "source": "generated",
+      "usedBy": [
+        "DQB-027",
+        "DQB-029",
+        "DQB-041"
+      ],
+      "notes": "Unique per run; must not match any real account"
+    },
+    {
+      "key": "weakRegisterValue",
+      "value": "abc",
+      "source": "static",
+      "usedBy": [
+        "DQB-041"
+      ],
+      "notes": "Fails the server rule (code 1300). Never replace with a value that satisfies the rule: that would create an account (R-07)"
+    },
+    {
+      "key": "registerFirstName",
+      "value": "QA",
+      "source": "static",
+      "usedBy": [
+        "DQB-041"
+      ]
+    },
+    {
+      "key": "registerLastName",
+      "value": "Automation",
+      "source": "static",
+      "usedBy": [
+        "DQB-041"
+      ]
+    },
+    {
+      "key": "catalogueTitles",
+      "value": "Git Pocket Guide; Learning JavaScript Design Patterns; Designing Evolvable Web APIs with ASP.NET; Speaking JavaScript; You Don't Know JS; Programming JavaScript Applications; Eloquent JavaScript, Second Edition; Understanding ECMAScript 6",
+      "source": "observed (discovery D 3.1)",
+      "usedBy": [
+        "DQB-001",
+        "DQB-002",
+        "DQB-010",
+        "DQB-015",
+        "DQB-017"
+      ],
+      "notes": "Shared public catalogue (A-01, R-15)"
+    },
+    {
+      "key": "searchTitle",
+      "value": "git",
+      "source": "static",
+      "usedBy": [
+        "DQB-003",
+        "DQB-010",
+        "DQB-011"
+      ]
+    },
+    {
+      "key": "searchTitleUpper",
+      "value": "GIT",
+      "source": "static",
+      "usedBy": [
+        "DQB-004"
+      ]
+    },
+    {
+      "key": "searchAuthor",
+      "value": "Kyle",
+      "source": "static",
+      "usedBy": [
+        "DQB-005"
+      ]
+    },
+    {
+      "key": "searchPublisher",
+      "value": "O'Reilly Media",
+      "source": "static",
+      "usedBy": [
+        "DQB-006"
+      ]
+    },
+    {
+      "key": "searchPartial",
+      "value": "script",
+      "source": "static",
+      "usedBy": [
+        "DQB-007"
+      ]
+    },
+    {
+      "key": "searchApostrophe",
+      "value": "Don't",
+      "source": "static",
+      "usedBy": [
+        "DQB-008"
+      ]
+    },
+    {
+      "key": "searchNoMatch",
+      "value": "zzzznotabook",
+      "source": "static",
+      "usedBy": [
+        "DQB-009"
+      ]
+    },
+    {
+      "key": "searchPadded",
+      "value": "  git  ",
+      "source": "static",
+      "usedBy": [
+        "DQB-012"
+      ],
+      "notes": "Two leading and two trailing spaces"
+    },
+    {
+      "key": "searchIsbn",
+      "value": "9781449325862",
+      "source": "static",
+      "usedBy": [
+        "DQB-013"
+      ]
+    },
+    {
+      "key": "searchRegex",
+      "value": "(.*",
+      "source": "static",
+      "usedBy": [
+        "DQB-014"
+      ]
+    },
+    {
+      "key": "knownBook",
+      "value": "Git Pocket Guide / 9781449325862",
+      "source": "observed (discovery D 3.2)",
+      "usedBy": [
+        "DQB-018",
+        "DQB-019",
+        "DQB-022",
+        "DQB-024"
+      ]
+    },
+    {
+      "key": "unknownIsbn",
+      "value": "0000000000",
+      "source": "static",
+      "usedBy": [
+        "DQB-020"
+      ]
+    },
+    {
+      "key": "booksApiFailure",
+      "value": "page.route GET **/BookStore/v1/Books -> HTTP 500",
+      "source": "simulated",
+      "usedBy": [
+        "DQB-021"
+      ]
+    },
+    {
+      "key": "addBook",
+      "value": "Git Pocket Guide / 9781449325862",
+      "source": "observed (discovery D 4)",
+      "usedBy": [
+        "DQB-034"
+      ],
+      "notes": "Removed in setup and teardown (Q-NB4)"
+    },
+    {
+      "key": "dupBook",
+      "value": "Learning JavaScript Design Patterns / 9781449331818",
+      "source": "observed (discovery D 3.1)",
+      "usedBy": [
+        "DQB-035"
+      ],
+      "notes": "Distinct book per collection test; removed in setup and teardown"
+    },
+    {
+      "key": "persistBook",
+      "value": "Speaking JavaScript / 9781449365035",
+      "source": "observed (discovery D 3.1)",
+      "usedBy": [
+        "DQB-036"
+      ],
+      "notes": "Distinct book per collection test; removed in setup and teardown"
+    },
+    {
+      "key": "cancelBook",
+      "value": "Designing Evolvable Web APIs with ASP.NET / 9781449337711",
+      "source": "observed (discovery D 3.1)",
+      "usedBy": [
+        "DQB-037"
+      ],
+      "notes": "Distinct book per collection test; removed in setup and teardown"
+    },
+    {
+      "key": "deleteBook",
+      "value": "You Don't Know JS / 9781491904244",
+      "source": "observed (discovery D 3.1)",
+      "usedBy": [
+        "DQB-038"
+      ],
+      "notes": "Distinct book per collection test; removed in setup if left over"
+    },
+    {
+      "key": "desktopViewport",
+      "value": "1280x900",
+      "source": "static",
+      "usedBy": [
+        "DQB-045"
+      ],
+      "notes": "Default for all desktop scenarios (Q-NB8)"
+    },
+    {
+      "key": "mobileViewport",
+      "value": "375x812",
+      "source": "static",
+      "usedBy": [
+        "DQB-047",
+        "DQB-048"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-01",
+      "type": "Risk",
+      "description": "Hydration timing: input typed or clicks made right after load are lost (2 runs, D 8)",
+      "impact": "High",
+      "mitigation": "Wait for a readiness signal (rows rendered, field keeps its value via toHaveValue) before interacting; web-first assertions, no fixed sleeps",
+      "scenarios": [
+        "DQB-025",
+        "DQB-028",
+        "DQB-029",
+        "DQB-040",
+        "DQB-041"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-02",
+      "type": "Risk",
+      "description": "Native alert() for add, duplicate add and delete (D 8)",
+      "impact": "High",
+      "mitigation": "Register a dialog handler before the click, capture dialog.message(), accept it",
+      "scenarios": [
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-03",
+      "type": "Risk",
+      "description": "Third-party ads and trackers (Criteo, OpenX, DoubleClick, googlesyndication, etc.); an ad slot sits in the content area",
+      "impact": "Medium",
+      "mitigation": "Block the listed ad hosts with page.route; navigate with waitUntil 'domcontentloaded'. Do not block google.com/recaptcha on /register",
+      "scenarios": [],
+      "status": "Open"
+    },
+    {
+      "id": "R-04",
+      "type": "Risk",
+      "description": "Shared public demo: the catalogue or site can change or be down; other people use the same site",
+      "impact": "Medium",
+      "mitigation": "Health-check base URL; assert by named books; record outages as environment failures",
+      "scenarios": [
+        "DQB-001"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-05",
+      "type": "Risk",
+      "description": "Each browser has its own account (I2), but retries, parallel workers in the same browser project, or a concurrent run on the same account can collide; leftovers from failed runs pollute the collection",
+      "impact": "High",
+      "mitigation": "Tests that use the same browser's account run one at a time; each collection test uses its own book and removes only that book in setup and teardown (Q-NB4); never Delete All Books",
+      "scenarios": [
+        "DQB-034",
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038",
+        "DQB-039"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-06",
+      "type": "Risk",
+      "description": "Unknown lockout threshold on the per-browser accounts (Q-NB1)",
+      "impact": "High",
+      "mitigation": "One wrong-password attempt per account per run (DQB-026, retries disabled); fake user names for other negatives; reuse storageState",
+      "scenarios": [
+        "DQB-026",
+        "DQB-027"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-07",
+      "type": "Risk",
+      "description": "Registration / reCAPTCHA: the server accepts the request without a token; a valid password could create a real account",
+      "impact": "High",
+      "mitigation": "Only submit the weak value \"abc\"; never submit a pattern-valid value; never solve or bypass the captcha",
+      "scenarios": [
+        "DQB-040",
+        "DQB-041"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-08",
+      "type": "Risk",
+      "description": "Duplicate element ids: #submit (Logout, Delete Account, Delete All Books), #addNewRecordButton (Back To Book Store, Add To Your Collection), #userName on login and register, menu item-N ids",
+      "impact": "High",
+      "mitigation": "Never locate by these ids; use role + exact name; Logout via /^Log ?out$/",
+      "scenarios": [
+        "DQB-019",
+        "DQB-032",
+        "DQB-038",
+        "DQB-039"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-09",
+      "type": "Risk",
+      "description": "Labels not linked to inputs; search box and icon unnamed; delete icon is a span with title only",
+      "impact": "Medium",
+      "mitigation": "Use getByPlaceholder, getByTitle('Delete') scoped to the row, #delete-record-<ISBN> fallback",
+      "scenarios": [
+        "DQB-003",
+        "DQB-025",
+        "DQB-037",
+        "DQB-038"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-10",
+      "type": "Risk",
+      "description": "Sort header accessible name changes after sorting",
+      "impact": "Low",
+      "mitigation": "Regex header names /^Title/; assert via sorted-asc/sorted-desc labels and row order",
+      "scenarios": [
+        "DQB-015",
+        "DQB-016"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-11",
+      "type": "Risk",
+      "description": "Responsive differences at 375px: menu collapsed, Publisher column hidden",
+      "impact": "Medium",
+      "mitigation": "Separate mobile scenarios; do not reuse desktop Publisher assertions at 375px",
+      "scenarios": [
+        "DQB-047",
+        "DQB-048"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-12",
+      "type": "Risk",
+      "description": "Slow login redirect (3.9 to 5.1 s) vs default 5 s expect timeout",
+      "impact": "Medium",
+      "mitigation": "Longer timeout for the post-login URL assertion",
+      "scenarios": [
+        "DQB-025",
+        "DQB-032",
+        "DQB-033",
+        "DQB-036"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-13",
+      "type": "Risk",
+      "description": "Fixed footer overlaps the lower left menu at 1280x900",
+      "impact": "Low",
+      "mitigation": "Scroll into view; scope menu clicks to the Book Store Application group",
+      "scenarios": [
+        "DQB-045"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-14",
+      "type": "Risk",
+      "description": "Expected console errors (400 on duplicate add and unknown ISBN; requestStorageAccess on /register)",
+      "impact": "Low",
+      "mitigation": "Do not fail tests on console errors globally; allow-list these",
+      "scenarios": [
+        "DQB-020",
+        "DQB-035",
+        "DQB-041"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-15",
+      "type": "Assumption",
+      "description": "A-01: The catalogue keeps the 8 books listed in discovery D 3.1",
+      "impact": "Medium",
+      "mitigation": "Assert by name; investigate on change",
+      "scenarios": [
+        "DQB-001",
+        "DQB-002",
+        "DQB-006",
+        "DQB-007",
+        "DQB-015",
+        "DQB-016"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-16",
+      "type": "Assumption",
+      "description": "A-02: Each browser's account collection is empty at the start of a run, apart from leftovers of our own tests",
+      "impact": "Medium",
+      "mitigation": "Setup removes own-test books; row-specific assertions; DQB-039 records unexpected books instead of deleting them",
+      "scenarios": [
+        "DQB-039"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-17",
+      "type": "Assumption",
+      "description": "A-03: Firefox and WebKit render the same markup and timing as Chromium (only Chromium observed)",
+      "impact": "Medium",
+      "mitigation": "First run on those browsers is exploratory; investigate before calling a failure flaky",
+      "scenarios": [],
+      "status": "Open"
+    },
+    {
+      "id": "R-18",
+      "type": "Ambiguity",
+      "description": "Message for an unknown user name was not observed (Q-NB2)",
+      "impact": "Medium",
+      "mitigation": "DQB-027 asserts URL and presence of an error in p#name; exact text \"Invalid username or password!\" asserted only after the first run confirms it",
+      "scenarios": [
+        "DQB-027"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-19",
+      "type": "Discrepancy",
+      "description": "Search input is not trimmed: \"  git  \" returns no rows",
+      "impact": "Low",
+      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3)",
+      "scenarios": [
+        "DQB-012"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-20",
+      "type": "Discrepancy",
+      "description": "ISBN is not searchable on /books although it identifies the book",
+      "impact": "Low",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "scenarios": [
+        "DQB-013"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-21",
+      "type": "Discrepancy",
+      "description": "No empty-state message: a no-match search and an empty collection only show the header row and \"Page 1 of 0\"",
+      "impact": "Low",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "scenarios": [
+        "DQB-009",
+        "DQB-039"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-22",
+      "type": "Discrepancy",
+      "description": "Unknown ISBN detail URL shows blank fields and no user-facing error (API answers 400 code 1205)",
+      "impact": "Medium",
+      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3)",
+      "scenarios": [
+        "DQB-020"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-23",
+      "type": "Discrepancy",
+      "description": "Duplicate-add alert wording \"Book already present in the your collection!\" (\"the your\")",
+      "impact": "Low",
+      "mitigation": "Assert the exact observed text; report the grammar as possible defect (Q-NB3)",
+      "scenarios": [
+        "DQB-035"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-24",
+      "type": "Discrepancy",
+      "description": "Logout button text differs: \"Logout\" on /profile, \"Log out\" on list and detail",
+      "impact": "Low",
+      "mitigation": "Assert the observed text per page; locate with /^Log ?out$/; report as possible defect (Q-NB3)",
+      "scenarios": [
+        "DQB-031",
+        "DQB-032",
+        "DQB-033"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-25",
+      "type": "Discrepancy",
+      "description": "Book description is cut mid-word (\"... for those of you with Git exp\")",
+      "impact": "Low",
+      "mitigation": "Do not assert the full description; assert it is not empty; report as possible defect (Q-NB3)",
+      "scenarios": [
+        "DQB-018"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-26",
+      "type": "Discrepancy",
+      "description": "Register client sends POST /Account/v1/User despite the failing password pattern and without a reCAPTCHA token; only the server rejects it",
+      "impact": "Medium",
+      "mitigation": "Record in DQB-041; report as possible defect (Q-NB3); never submit a valid value (R-07)",
+      "scenarios": [
+        "DQB-041"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-27",
+      "type": "Discrepancy",
+      "description": "Publisher column is not visible on /books at 375x812",
+      "impact": "Low",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "scenarios": [
+        "DQB-047"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-28",
+      "type": "Assumption",
+      "description": "ASSUMPTION-02: \"Log out\" on /books ends the session like \"Logout\" on /profile (not observed)",
+      "impact": "Medium",
+      "mitigation": "DQB-033 records the landing URL and asserts only the signed-out state of /profile; confirm on the first run",
+      "scenarios": [
+        "DQB-033"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-29",
+      "type": "Assumption",
+      "description": "ASSUMPTION-03: \"Go To Book Store\" on /profile leads to /books (target not observed)",
+      "impact": "Low",
+      "mitigation": "DQB-046 records the URL; confirm on the first run before treating a difference as a defect",
+      "scenarios": [
+        "DQB-046"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-30",
+      "type": "Ambiguity",
+      "description": "Behaviour of /books when the books API fails is not specified or observed",
+      "impact": "Low",
+      "mitigation": "DQB-021 asserts only that no rows render and the page is not blank; any message is recorded, not asserted",
+      "scenarios": [
+        "DQB-021"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-31",
+      "type": "Assumption",
+      "description": "ASSUMPTION-01: the collection is stored server-side and survives logout and a new login; books other than Git Pocket Guide add and delete the same way (only Git Pocket Guide observed)",
+      "impact": "Medium",
+      "mitigation": "Confirm on the first run; distinct books per collection test keep tests independent",
+      "scenarios": [
+        "DQB-035",
+        "DQB-036",
+        "DQB-037",
+        "DQB-038"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-32",
+      "type": "Ambiguity",
+      "description": "Whether /profile should redirect guests to /login is not specified; today it shows a signed-out message (HTTP 200)",
+      "impact": "Low",
+      "mitigation": "Assert observed behaviour in DQB-023; raise as clarification",
+      "scenarios": [
+        "DQB-023"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-33",
+      "type": "Ambiguity",
+      "description": "Session lifetime and expiry not specified or observed; no expiry scenario (waiting for expiry is out of scope)",
+      "impact": "Low",
+      "mitigation": "Add a scenario once a lifetime is specified",
+      "scenarios": [],
+      "status": "Open"
+    }
+  ],
+  "defects": [],
+  "executions": [],
+  "approval": {
+    "approvedAt": "2026-11-10T18:08:45.993Z",
+    "scenarios": {
+      "DQB-001": "57b0b10665466147",
+      "DQB-002": "11bbc3ab73620b9e",
+      "DQB-003": "c0b8d67bc1b5c067",
+      "DQB-004": "bb2a9a584394bb6f",
+      "DQB-005": "46b8d1fafaaf3725",
+      "DQB-006": "5cbfdc14638dd644",
+      "DQB-007": "8f5a3ce862d82127",
+      "DQB-008": "8549ad1ab4e2eac2",
+      "DQB-009": "726d87d6b3537948",
+      "DQB-010": "eef8db753b7729f2",
+      "DQB-011": "d2d8b87471ef56ba",
+      "DQB-012": "558075ceb382c457",
+      "DQB-013": "92177b53ded42106",
+      "DQB-014": "8788f09ba757231e",
+      "DQB-015": "a830680a77848899",
+      "DQB-016": "90c588604166f1f2",
+      "DQB-017": "88c13521c9100ed2",
+      "DQB-018": "76802e9f71cd0715",
+      "DQB-019": "8b88b0e3b0b1db92",
+      "DQB-020": "a0a7e829504000a5",
+      "DQB-021": "ce1bd013119b2fa8",
+      "DQB-022": "0d9fb718f8cba4fb",
+      "DQB-023": "70b3ba425935fdde",
+      "DQB-024": "41cf987ad1af6ecf",
+      "DQB-025": "86cce4040fe9e609",
+      "DQB-026": "62752c72d3f25bbc",
+      "DQB-027": "651e612b1d63c8d9",
+      "DQB-028": "f01e8a6084aacff9",
+      "DQB-029": "077ce30928d86b89",
+      "DQB-030": "d13263e0774d9983",
+      "DQB-031": "1faacbf63fd22271",
+      "DQB-032": "159c6095a75d232d",
+      "DQB-033": "9182922a762a077c",
+      "DQB-034": "f3fe4321baf0e8ec",
+      "DQB-035": "1945d50129a03c4a",
+      "DQB-036": "880fd192b8d9510d",
+      "DQB-037": "514d1a51322b372d",
+      "DQB-038": "9ad6446961d33817",
+      "DQB-039": "5d5e9e29e14544e1",
+      "DQB-040": "2a2c9b0003734965",
+      "DQB-041": "85d8753a8f7d90b2",
+      "DQB-042": "77b16106c7dda718",
+      "DQB-043": "3acc6c6d8ad1b8dd",
+      "DQB-044": "b62f91334da35cb9",
+      "DQB-045": "e31602ee88339bc2",
+      "DQB-046": "1f9df04da1c51377",
+      "DQB-047": "5912a7dc9d64724b",
+      "DQB-048": "de5e8ed38e602ff8"
+    }
+  }
+}
