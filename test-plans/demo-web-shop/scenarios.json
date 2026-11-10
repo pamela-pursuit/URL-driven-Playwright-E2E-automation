@@ -2442,7 +2442,7 @@
       "type": "Discrepancy",
       "description": "An invalid gift card shows the coupon text \"The coupon code you entered couldn't be applied to your order\". Tests assert current behaviour; possible defect.",
       "impact": "Low",
-      "mitigation": "Report; update the assertion if a gift-card-specific message is introduced.",
+      "mitigation": "Report; update the assertion if a gift-card-specific message is introduced. Logged as DEF-004 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-045"
       ],
@@ -2453,7 +2453,7 @@
       "type": "Discrepancy",
       "description": "Cart \"Estimate shipping\" lists \"Ground (0.00)\" for United States 10001, but checkout charges \"Ground (10.00)\" for the same address.",
       "impact": "Medium",
-      "mitigation": "Report as a possible defect or configuration gap; assert each screen as observed.",
+      "mitigation": "Report as a possible defect or configuration gap; assert each screen as observed. Logged as DEF-001 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-047",
         "DWS-060",
@@ -2466,7 +2466,7 @@
       "type": "Discrepancy",
       "description": "Login reveals whether an email exists: \"No customer account found\" for unknown emails vs \"The credentials provided are incorrect\" for a known email (account enumeration).",
       "impact": "Medium",
-      "mitigation": "Assert observed text; report as a security observation for product decision (Q-NB2).",
+      "mitigation": "Assert observed text; report as a security observation for product decision (Q-NB2). Logged as DEF-002 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-002",
         "DWS-003",
@@ -2479,7 +2479,7 @@
       "type": "Discrepancy",
       "description": "Wishlist share URL uses http, not https.",
       "impact": "Low",
-      "mitigation": "Assert only the /wishlist/<guid> path; report the scheme.",
+      "mitigation": "Assert only the /wishlist/<guid> path; report the scheme. Logged as DEF-003 on 2026-11-10 (see \"Defects\").",
       "scenarios": [
         "DWS-055"
       ],
@@ -2722,6 +2722,140 @@
         "DWS-056"
       ],
       "status": "Open"
+    }
+  ],
+  "defects": [
+    {
+      "id": "DEF-001",
+      "riskRef": "R-13",
+      "title": "Cart shipping estimate shows Ground 0.00 but checkout charges Ground 10.00 for the same address",
+      "severity": "High",
+      "status": "New",
+      "category": "Functional (pricing)",
+      "scenarios": [
+        "DWS-047",
+        "DWS-060",
+        "DWS-061"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "As a guest, add a product to the cart (the tests use Health Book, 10.00)",
+        "Open /cart",
+        "Under Estimate shipping, select Country \"United States\", enter Zip / postal code \"10001\" and select \"Estimate shipping\"",
+        "Note the Ground price",
+        "Select Checkout, continue as guest, and enter a billing address in New York 10001, United States",
+        "At Shipping Method, note the Ground price; continue to Confirm Order"
+      ],
+      "expected": "The cart estimate shows the same Ground price that checkout charges for the same address (10.00).",
+      "actual": "The estimate lists Ground (0.00), Next Day Air (0.00), 2nd Day Air (0.00) and In-Store Pickup (0.00). Checkout offers Ground (10.00) and Confirm Order shows Shipping: (Ground) 10.00, Total: 27.00.",
+      "expectedBasis": "Recommendation (not in the requirements): a shipping estimate should match the checkout charge. Confirm with the product owner whether the estimate is meant to be indicative only.",
+      "evidence": [
+        {
+          "label": "DWS-047 estimate (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-14-06/test-results/demo-web-shop-cart-guest-G-c117f-ping-lists-shipping-options-chromium/test-finished-1.png"
+        },
+        {
+          "label": "DWS-060 Confirm Order (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-14-06/test-results/demo-web-shop-checkout-gue-8c1ea-ry-without-placing-an-order-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet (site owner / product owner)",
+      "nextAction": "Report to the site owner; if the behaviour changes, update the DWS-047 assertion."
+    },
+    {
+      "id": "DEF-002",
+      "riskRef": "R-14",
+      "title": "Login error message reveals whether an email address is registered (account enumeration)",
+      "severity": "Medium",
+      "status": "New",
+      "category": "Security",
+      "scenarios": [
+        "DWS-002",
+        "DWS-003",
+        "DWS-004"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "Open /login",
+        "Enter an email that is not registered (for example qa.unknown+<timestamp>@example.test) and any password; select \"Log in\"",
+        "Note the message",
+        "Enter a registered email with a wrong password; select \"Log in\"",
+        "Note the message"
+      ],
+      "expected": "Both attempts show the same generic message (for example \"Login was unsuccessful\" with no hint whether the email exists).",
+      "actual": "Unknown email: \"No customer account found\". Registered email with wrong password: \"The credentials provided are incorrect\". An attacker can tell which emails have accounts. (Empty fields also show \"No customer account found\".)",
+      "expectedBasis": "Recommendation: OWASP Authentication Cheat Sheet (generic authentication error messages). Not stated in the requirements; product decision needed (Q-NB2).",
+      "evidence": [
+        {
+          "label": "DWS-003 unknown email (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-auth-Authent-db329-3-Unknown-email-is-rejected-chromium/test-finished-1.png"
+        },
+        {
+          "label": "DWS-002 known email: screenshot not linked (it shows the account email); message text in its test result"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet (site owner / product owner)",
+      "nextAction": "Report as a security observation; if the messages are unified, update DWS-002 to DWS-004."
+    },
+    {
+      "id": "DEF-003",
+      "riskRef": "R-15",
+      "title": "Wishlist share URL uses http instead of https",
+      "severity": "Medium",
+      "status": "New",
+      "category": "Security",
+      "scenarios": [
+        "DWS-055"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "As a guest, add a product to the wishlist (the tests use Health Book)",
+        "Open /wishlist",
+        "Read the URL after \"Your wishlist URL for sharing:\""
+      ],
+      "expected": "The share URL uses https, like the rest of the site.",
+      "actual": "The share URL is http://demowebshop.tricentis.com/wishlist/<guid>. Not verified whether the http link redirects to https.",
+      "expectedBasis": "Recommendation: the site is served over https, so shared links should be too. Not stated in the requirements.",
+      "evidence": [
+        {
+          "label": "DWS-055 wishlist (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-21-14/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet (site owner / product owner)",
+      "nextAction": "Report to the site owner; check whether the http URL redirects to https."
+    },
+    {
+      "id": "DEF-004",
+      "riskRef": "R-12",
+      "title": "Invalid gift card code shows the coupon error message",
+      "severity": "Low",
+      "status": "New",
+      "category": "Content / validation message",
+      "scenarios": [
+        "DWS-045"
+      ],
+      "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
+      "steps": [
+        "As a guest, add a product to the cart",
+        "Open /cart",
+        "In the gift card field, enter \"INVALIDGIFT\" and select \"Add gift card\""
+      ],
+      "expected": "A message that refers to the gift card (exact text to be defined by the product owner).",
+      "actual": "\"The coupon code you entered couldn't be applied to your order\" (the same text as an invalid coupon).",
+      "expectedBasis": "Recommendation: error text should name the field the user filled in. The exact wording is not specified.",
+      "evidence": [
+        {
+          "label": "DWS-045 gift card (chromium, 2026-11-06)",
+          "path": "artifacts/demo-web-shop/runs/2026-11-06_13-14-06/test-results/demo-web-shop-cart-guest-G-aed40-de-shows-the-coupon-message-chromium/test-finished-1.png"
+        }
+      ],
+      "foundOn": "2026-11-05",
+      "reportedTo": "Not reported yet (site owner / product owner)",
+      "nextAction": "Report to the site owner; if a gift-card message is introduced, update the DWS-045 assertion."
     }
   ],
   "executions": [

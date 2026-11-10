@@ -31,6 +31,9 @@ const TEST_TYPES = [
   'Session', 'Persistence', 'Navigation', 'Error Handling', 'Accessibility', 'Responsive', 'Cross-Browser'
 ];
 const RISK_TYPES = ['Risk', 'Assumption', 'Ambiguity', 'Blocker', 'Discrepancy', 'Defect'];
+// Defect log ("defects" in scenarios.json, "Defects" sheet).
+const DEFECT_SEVERITIES = ['Critical', 'High', 'Medium', 'Low'];
+const DEFECT_STATUSES = ['New', 'Needs confirmation', 'Reported', 'In progress', 'Fixed', 'Verified', 'Closed', 'Rejected'];
 const ID_PATTERN = /\[([A-Z][A-Z0-9]*-\d{3,})\]/;
 const SECRET_HINT = /password|passwd|secret|token|api[-_]?key|bearer/i;
 
@@ -67,6 +70,7 @@ async function loadCatalogue(app) {
   data.testData ??= [];
   data.risks ??= [];
   data.executions ??= [];
+  data.defects ??= [];
   return data;
 }
 
@@ -183,6 +187,21 @@ async function validate(app, data) {
     }
   }
   for (const r of data.risks) if (r.type && !RISK_TYPES.includes(r.type)) warnings.push(`risk ${r.id}: non-standard type "${r.type}"`);
+
+  const riskIds = new Set(data.risks.map((r) => r.id));
+  const defectIds = new Set();
+  for (const d of data.defects) {
+    const where = `defect ${d.id ?? '(no id)'}`;
+    if (!d.id) errors.push(`${where}: missing id`);
+    else if (defectIds.has(d.id)) errors.push(`${where}: duplicate id`);
+    defectIds.add(d.id);
+    for (const field of ['title', 'severity', 'status', 'expected', 'actual']) if (!d[field]) errors.push(`${where}: missing ${field}`);
+    if (!d.steps?.length) errors.push(`${where}: missing steps to reproduce`);
+    if (d.severity && !DEFECT_SEVERITIES.includes(d.severity)) errors.push(`${where}: severity must be one of ${DEFECT_SEVERITIES.join(', ')}`);
+    if (d.status && !DEFECT_STATUSES.includes(d.status)) errors.push(`${where}: status must be one of ${DEFECT_STATUSES.join(', ')}`);
+    if (d.riskRef && !riskIds.has(d.riskRef)) errors.push(`${where}: riskRef ${d.riskRef} is not in the risk register`);
+    for (const sid of d.scenarios ?? []) if (!ids.has(sid)) errors.push(`${where}: unknown scenario ${sid}`);
+  }
 
   const titles = await collectTestTitles(paths(app).tests);
   for (const s of data.scenarios) {
@@ -385,7 +404,7 @@ async function sync(app, data) {
 
 const COLORS = {
   header: 'FF1F3864', headerText: 'FFFFFFFF', band: 'FFF2F5FA', border: 'FFD0D7E2',
-  High: 'FFF8CBAD', Medium: 'FFFFE699', Low: 'FFE2EFDA',
+  Critical: 'FFFF9999', High: 'FFF8CBAD', Medium: 'FFFFE699', Low: 'FFE2EFDA',
   Passed: 'FFC6EFCE', Failed: 'FFFFC7CE', Flaky: 'FFFFEB9C', Skipped: 'FFEDEDED', Partial: 'FFFFEB9C', Blocked: 'FFD9D2E9', 'Not Run': 'FFFFFFFF'
 };
 
@@ -506,7 +525,8 @@ function addDeliveryReportSheet(wb, app, data, md) {
     }),
     ['Why counts differ', `${scope.limited.length} scenarios run on fewer browsers by design and ${scope.notAutomated.length} are not automated. See "Not executed and why" below and the "Not Executed" sheet.`],
     ['Latest run', latestRun],
-    ['Open risks', `${openRisks} of ${data.risks.length} (see "Risks and Assumptions")`]
+    ['Open risks', `${openRisks} of ${data.risks.length} (see "Risks and Assumptions")`],
+    ['Defects', defectSummary(data.defects)]
   ];
   const kpiHeader = ws.addRow(['Summary', 'Value']);
   ws.mergeCells(kpiHeader.number, 2, kpiHeader.number, REPORT_WIDTH);
@@ -849,6 +869,47 @@ function addNotExecutedSheet(wb, data, scope) {
   return ws;
 }
 
+// "3 open (1 High, 2 Medium); 0 closed", counted from data.defects.
+function defectSummary(defects) {
+  if (!defects.length) return 'None logged (see "Defects")';
+  const closed = new Set(['Fixed', 'Verified', 'Closed', 'Rejected']);
+  const open = defects.filter((d) => !closed.has(d.status));
+  const bySeverity = DEFECT_SEVERITIES.map((s) => [s, open.filter((d) => d.severity === s).length]).filter(([, n]) => n);
+  return `${open.length} open${bySeverity.length ? ` (${bySeverity.map(([s, n]) => `${n} ${s}`).join(', ')})` : ''}; ${defects.length - open.length} closed (see "Defects")`;
+}
+
+// One row per logged defect, with steps, expected vs actual, and links to evidence screenshots.
+function addDefectsSheet(wb, app, data) {
+  const ws = wb.addWorksheet('Defects', { properties: { tabColor: { argb: 'FFC00000' } } });
+  if (!data.defects.length) {
+    ws.addRow(['No defects logged. Add entries to "defects" in scenarios.json and run build.']);
+    return;
+  }
+  const workbookDir = path.dirname(paths(app).workbook);
+  addTable(ws, [
+    'Defect ID', 'Title', 'Severity', 'Status', 'Category', 'Risk Ref', 'Related Scenarios', 'Environment',
+    'Steps to Reproduce', 'Expected Result', 'Actual Result', 'Basis for Expected Result', 'Evidence',
+    'Found On', 'Reported To', 'Next Action'
+  ], data.defects.map((d) => [
+    d.id, d.title, d.severity, d.status, d.category ?? '', d.riskRef ?? '', (d.scenarios ?? []).join(', '), d.environment ?? '',
+    d.steps.map((step, i) => `${i + 1}. ${step}`).join('\n'), d.expected, d.actual, d.expectedBasis ?? '',
+    (d.evidence ?? []).map((e) => e.label).join('\n'),
+    d.foundOn ?? '', d.reportedTo ?? '', d.nextAction ?? ''
+  ]), [11, 36, 10, 14, 14, 9, 18, 30, 52, 40, 44, 36, 30, 12, 22, 36]);
+  ws.eachRow((row, i) => {
+    if (i === 1) return;
+    tint(row.getCell(3));
+    // A cell holds one hyperlink: link the first screenshot; every label stays listed in the cell text.
+    const first = (data.defects[i - 2].evidence ?? []).find((e) => e.path);
+    if (first) {
+      row.getCell(13).value = { text: row.getCell(13).value, hyperlink: path.relative(workbookDir, first.path).replaceAll('\\', '/') };
+      row.getCell(13).font = { color: { argb: 'FF0563C1' }, underline: true };
+    }
+  });
+  ws.dataValidations?.add?.(`C2:C${data.defects.length + 1}`, { type: 'list', allowBlank: false, formulae: [`"${DEFECT_SEVERITIES.join(',')}"`] });
+  ws.dataValidations?.add?.(`D2:D${data.defects.length + 1}`, { type: 'list', allowBlank: false, formulae: [`"${DEFECT_STATUSES.join(',')}"`] });
+}
+
 async function build(app, data) {
   const wb = new ExcelJS.Workbook();
   wb.creator = 'E2E automation agent';
@@ -860,6 +921,8 @@ async function build(app, data) {
   if (data.deliveryReport) addDeliveryReportSheet(wb, app, data, data.deliveryReport);
   // Second sheet: full accounting of everything not executed or not passing.
   addNotExecutedSheet(wb, data, executionScope(data));
+  // Third sheet: logged product defects (data.defects).
+  addDefectsSheet(wb, app, data);
 
   const scenarioHeaders = [
     'Scenario ID', 'Feature', 'User Journey', 'Test Type', 'Priority', 'Preconditions', 'Test Data', 'Steps',

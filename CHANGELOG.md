@@ -9,6 +9,12 @@
   listing, a product page and the cart. Violations are recorded as
   `a11y-axe` annotations with the full results attached as JSON; they do not
   fail CI until a WCAG target is agreed (R-31).
+- A defect log: `defects` in `scenarios.json` and a "Defects" sheet (third
+  tab) with severity, status, steps to reproduce, expected vs actual, the
+  basis for the expected result, evidence links and next action. `validate`
+  checks required fields, severity and status values, and risk and scenario
+  references. The Delivery Report dashboard shows a defect count.
+- demo-web-shop defects DEF-001 to DEF-004 (from R-13, R-14, R-15, R-12).
 
 ### Changed
 
