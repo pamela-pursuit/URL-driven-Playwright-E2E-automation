@@ -62,3 +62,5 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | 2026-11-11 | D8: TC-02 (wrong password) now runs on all three browsers, always in a final separate pass (tag @runs-last). Firefox and WebKit run 2026-11-11_16-26: 2 passed; valid sign-in afterwards OK (no lockout). TC-13 renamed "After logging in, you go back to the page you wanted". Defect column now only shown on failed test cases. | |
 
 **Run plan from now on:** guest pass (`--workers=3`), account pass with `--grep-invert @runs-last` (`--workers=1`), then the last pass `--grep @runs-last --workers=1`.
+
+| 2026-11-11 | **Approved** by the user ("ok") after the plain-language rewrite of test cases and defects, TC-13 rename and D8 (TC-02 on all three browsers, run last) | all test cases |
