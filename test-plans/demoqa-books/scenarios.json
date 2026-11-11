@@ -6,16 +6,16 @@
     {
       "id": "TC-01",
       "feature": "Book List",
-      "journey": "Guest opens the Book Store and sees the 8-book catalogue",
+      "journey": "A guest opens the Book Store and sees all 8 books",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; ad hosts blocked (R-03)",
+      "preconditions": "Signed out; ad sites blocked (R-03)",
       "testData": "catalogueTitles (the 8 titles from discovery D 3.1)",
       "steps": [
         "Open /books",
-        "Wait until the book rows are rendered (R-01)"
+        "Wait until the book rows appear (R-01)"
       ],
-      "expected": "HTTP 200 at https://demoqa.com/books (no redirect). Column headers \"Image\", \"Title\", \"Author\", \"Publisher\" are visible. The table shows exactly the 8 title links: \"Git Pocket Guide\", \"Learning JavaScript Design Patterns\", \"Designing Evolvable Web APIs with ASP.NET\", \"Speaking JavaScript\", \"You Don't Know JS\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\". Link \"Git Pocket Guide\" has href /books?search=9781449325862. Row \"Git Pocket Guide\" shows author \"Richard E. Silverman\" and publisher \"O'Reilly Media\".",
+      "expected": "The page opens at https://demoqa.com/books (HTTP 200, no redirect). The column headings \"Image\", \"Title\", \"Author\", \"Publisher\" are visible. The table shows exactly these 8 book titles: \"Git Pocket Guide\", \"Learning JavaScript Design Patterns\", \"Designing Evolvable Web APIs with ASP.NET\", \"Speaking JavaScript\", \"You Don't Know JS\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\". The \"Git Pocket Guide\" link points to /books?search=9781449325862. The \"Git Pocket Guide\" row shows the author \"Richard E. Silverman\" and the publisher \"O'Reilly Media\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -34,16 +34,16 @@
     {
       "id": "TC-02",
       "feature": "Book List",
-      "journey": "All 8 books fit on one page and the pager is disabled",
+      "journey": "All 8 books fit on one page and the page buttons are switched off",
       "testType": "Boundary",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "None",
       "steps": [
         "Open /books",
-        "Wait until the book rows are rendered"
+        "Wait until the book rows appear"
       ],
-      "expected": "Text \"Page 1 of 1\" is shown below the table. Buttons \"Previous\" and \"Next\" are both disabled. All 8 title links are visible on this single page.",
+      "expected": "The text \"Page 1 of 1\" is shown under the table. The \"Previous\" and \"Next\" buttons are both disabled. All 8 book titles are visible on this one page.",
       "browsers": [
         "chromium",
         "firefox",
@@ -62,16 +62,16 @@
     {
       "id": "TC-03",
       "feature": "Search",
-      "journey": "Guest searches by part of a title",
+      "journey": "A guest searches with part of a title",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchTitle = \"git\"",
       "steps": [
         "Open /books and wait for the rows",
-        "Type \"git\" in the box with placeholder \"Type to search\""
+        "Type \"git\" in the search box (the one that says \"Type to search\")"
       ],
-      "expected": "Only one title link remains: \"Git Pocket Guide\". URL stays https://demoqa.com/books.",
+      "expected": "Only one title is left: \"Git Pocket Guide\". The address stays https://demoqa.com/books.",
       "browsers": [
         "chromium",
         "firefox",
@@ -90,16 +90,16 @@
     {
       "id": "TC-04",
       "feature": "Search",
-      "journey": "Search ignores letter case",
+      "journey": "Search ignores capital and small letters",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchTitleUpper = \"GIT\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"GIT\" in \"Type to search\""
       ],
-      "expected": "Only one title link remains: \"Git Pocket Guide\" (same result as lower-case \"git\").",
+      "expected": "Only one title is left: \"Git Pocket Guide\" (the same as searching for lower-case \"git\").",
       "browsers": [
         "chromium",
         "firefox",
@@ -118,16 +118,16 @@
     {
       "id": "TC-05",
       "feature": "Search",
-      "journey": "Guest searches by author name",
+      "journey": "A guest searches by author name",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchAuthor = \"Kyle\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"Kyle\" in \"Type to search\""
       ],
-      "expected": "Only one row remains: title \"You Don't Know JS\", author \"Kyle Simpson\".",
+      "expected": "Only one row is left: the title \"You Don't Know JS\", by the author \"Kyle Simpson\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -146,16 +146,16 @@
     {
       "id": "TC-06",
       "feature": "Search",
-      "journey": "Guest searches by publisher",
+      "journey": "A guest searches by publisher",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchPublisher = \"O'Reilly Media\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"O'Reilly Media\" in \"Type to search\""
       ],
-      "expected": "Exactly 6 title links remain (the six O'Reilly Media books from D 3.1). \"Eloquent JavaScript, Second Edition\" and \"Understanding ECMAScript 6\" (No Starch Press) are not shown.",
+      "expected": "Exactly 6 titles are left (the six O'Reilly Media books from D 3.1). \"Eloquent JavaScript, Second Edition\" and \"Understanding ECMAScript 6\" (No Starch Press) are not shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -174,16 +174,16 @@
     {
       "id": "TC-07",
       "feature": "Search",
-      "journey": "Search matches a fragment in the middle of a word",
+      "journey": "Search finds text in the middle of a word",
       "testType": "Boundary",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchPartial = \"script\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"script\" in \"Type to search\""
       ],
-      "expected": "Exactly 5 title links remain: \"Learning JavaScript Design Patterns\", \"Speaking JavaScript\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\".",
+      "expected": "Exactly 5 titles are left: \"Learning JavaScript Design Patterns\", \"Speaking JavaScript\", \"Programming JavaScript Applications\", \"Eloquent JavaScript, Second Edition\", \"Understanding ECMAScript 6\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -202,16 +202,16 @@
     {
       "id": "TC-08",
       "feature": "Search",
-      "journey": "Search term containing an apostrophe",
+      "journey": "A search word with an apostrophe",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchApostrophe = \"Don't\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"Don't\" in \"Type to search\""
       ],
-      "expected": "Only one title link remains: \"You Don't Know JS\".",
+      "expected": "Only one title is left: \"You Don't Know JS\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -230,16 +230,16 @@
     {
       "id": "TC-09",
       "feature": "Search",
-      "journey": "Search with no matching book",
+      "journey": "A search that matches no book",
       "testType": "Negative",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchNoMatch = \"zzzznotabook\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"zzzznotabook\" in \"Type to search\""
       ],
-      "expected": "No title links are shown; the column headers stay visible; text \"Page 1 of 0\" is shown. No automated check for the missing empty-state message (DEF-007, R-21).",
+      "expected": "No titles are shown, the column headings stay visible, and the text \"Page 1 of 0\" is shown. There is no automatic check for the missing empty-list message (DEF-007, R-21).",
       "browsers": [
         "chromium",
         "firefox",
@@ -258,17 +258,17 @@
     {
       "id": "TC-10",
       "feature": "Search",
-      "journey": "Clearing the search restores the full list",
+      "journey": "Clearing the search brings back the full list",
       "testType": "Edge Case",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchTitle = \"git\"",
       "steps": [
         "Open /books and wait for the rows",
-        "Type \"git\" in \"Type to search\" and wait for one row",
+        "Type \"git\" in \"Type to search\" and wait until one row is left",
         "Clear the search box"
       ],
-      "expected": "All 8 title links are shown again and text \"Page 1 of 1\" is shown.",
+      "expected": "All 8 titles are shown again, with the text \"Page 1 of 1\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -287,17 +287,17 @@
     {
       "id": "TC-11",
       "feature": "Search",
-      "journey": "Search text is not kept after a page reload",
+      "journey": "Search text is not kept after reloading the page",
       "testType": "Persistence",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchTitle = \"git\"",
       "steps": [
         "Open /books and wait for the rows",
-        "Type \"git\" in \"Type to search\" and wait for one row",
+        "Type \"git\" in \"Type to search\" and wait until one row is left",
         "Reload the page and wait for the rows"
       ],
-      "expected": "While filtered, the URL stays https://demoqa.com/books. After reload the search box is empty and all 8 title links are shown.",
+      "expected": "While the list is filtered, the address stays https://demoqa.com/books. After reloading, the search box is empty and all 8 titles are shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -316,17 +316,17 @@
     {
       "id": "TC-12",
       "feature": "Search",
-      "journey": "Search term with leading and trailing spaces finds the same books",
+      "journey": "A search word with spaces before and after finds the same books",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchTitle = \"git\"; searchPadded = \"  git  \" (two spaces each side)",
       "steps": [
         "Open /books and wait for the rows",
-        "Type \"git\" in \"Type to search\" and note the title links (Git Pocket Guide)",
+        "Type \"git\" in \"Type to search\" and note the titles shown (Git Pocket Guide)",
         "Replace the search with \"  git  \""
       ],
-      "expected": "Searching \"  git  \" shows the same title links as \"git\": exactly \"Git Pocket Guide\". Fails while DEF-005 (R-19) is open: today \"  git  \" shows no title links and \"Page 1 of 0\".",
+      "expected": "Searching for \"  git  \" shows the same titles as \"git\": exactly \"Git Pocket Guide\". Fails while DEF-005 (R-19) is open: today \"  git  \" shows no titles and \"Page 1 of 0\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -348,13 +348,13 @@
       "journey": "Searching by ISBN finds the book",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchIsbn = \"9781449325862\" (ISBN of Git Pocket Guide)",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"9781449325862\" in \"Type to search\""
       ],
-      "expected": "Exactly one title link \"Git Pocket Guide\" is shown. Fails while DEF-006 (R-20) is open: today the ISBN shows no title links and \"Page 1 of 0\".",
+      "expected": "Exactly one title, \"Git Pocket Guide\", is shown. Fails while DEF-006 (R-20) is open: today the ISBN shows no titles and \"Page 1 of 0\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -373,17 +373,17 @@
     {
       "id": "TC-14",
       "feature": "Search",
-      "journey": "Search with regular-expression characters does not break the page",
+      "journey": "A search with special characters does not break the page",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "searchRegex = \"(.*\"",
       "steps": [
         "Open /books and wait for the rows",
         "Type \"(.*\" in \"Type to search\"",
         "Clear the search box"
       ],
-      "expected": "No title links are shown and text \"Page 1 of 0\" is shown; the page stays usable (no uncaught page error). After clearing, all 8 title links return.",
+      "expected": "No titles are shown and the text \"Page 1 of 0\" is shown. The page keeps working (no script error on the page). After clearing, all 8 titles come back.",
       "browsers": [
         "chromium",
         "firefox",
@@ -402,18 +402,18 @@
     {
       "id": "TC-15",
       "feature": "Sort",
-      "journey": "Title sort cycles ascending, descending and original order",
+      "journey": "Sorting by Title goes A to Z, then Z to A, then back to normal",
       "testType": "Positive",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "None",
       "steps": [
         "Open /books and wait for the rows",
-        "Click the Title column header (name matched by /^Title/, R-10)",
+        "Click the Title column heading (found by the text it starts with, /^Title/, R-10)",
         "Click it a second time",
         "Click it a third time"
       ],
-      "expected": "Click 1: titles in ascending A-Z order and the header shows the indicator with aria-label \"sorted-asc\" (\"↑\"). Click 2: titles in descending order and indicator \"sorted-desc\" (\"↓\"). Click 3: titles back in the original order of TC-01 and no sort indicator.",
+      "expected": "1st click: titles in A to Z order, and the heading shows the sort marker labelled \"sorted-asc\" (\"↑\"). 2nd click: titles in Z to A order, with the marker \"sorted-desc\" (\"↓\"). 3rd click: titles back in the original order from TC-01, with no sort marker.",
       "browsers": [
         "chromium",
         "firefox",
@@ -432,16 +432,16 @@
     {
       "id": "TC-16",
       "feature": "Sort",
-      "journey": "Author sort orders rows by author ascending",
+      "journey": "Sorting by Author puts the authors in A to Z order",
       "testType": "Positive",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "None",
       "steps": [
         "Open /books and wait for the rows",
-        "Click the Author column header once"
+        "Click the Author column heading once"
       ],
-      "expected": "Author cells are in ascending order: first \"Addy Osmani\", last \"Richard E. Silverman\"; the Author header shows the \"sorted-asc\" indicator.",
+      "expected": "Authors are in A to Z order: first \"Addy Osmani\", last \"Richard E. Silverman\". The Author heading shows the \"sorted-asc\" marker.",
       "browsers": [
         "chromium",
         "firefox",
@@ -460,16 +460,16 @@
     {
       "id": "TC-17",
       "feature": "Sort",
-      "journey": "Image column is not sortable",
+      "journey": "The Image column cannot be sorted",
       "testType": "Negative",
       "priority": "Low",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "None",
       "steps": [
         "Open /books and wait for the rows",
-        "Click the Image column header"
+        "Click the Image column heading"
       ],
-      "expected": "Row order is unchanged (same as TC-01) and no \"sorted-asc\" or \"sorted-desc\" indicator appears.",
+      "expected": "The order of the rows does not change (same as TC-01) and no \"sorted-asc\" or \"sorted-desc\" marker appears.",
       "browsers": [
         "chromium",
         "firefox",
@@ -488,16 +488,16 @@
     {
       "id": "TC-18",
       "feature": "Book Detail",
-      "journey": "Guest opens a book from the list and sees its details",
+      "journey": "A guest opens a book from the list and sees its details",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed out; /books rows rendered",
+      "preconditions": "Signed out; the book rows are shown on /books",
       "testData": "knownBook = Git Pocket Guide, ISBN 9781449325862",
       "steps": [
         "Open /books and wait for the rows",
-        "Click title link \"Git Pocket Guide\""
+        "Click the title \"Git Pocket Guide\""
       ],
-      "expected": "URL is https://demoqa.com/books?search=9781449325862. Detail fields show: ISBN \"9781449325862\", Title \"Git Pocket Guide\", Sub Title \"A Working Introduction\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\", Total Pages \"234\". Description is not empty and ends a sentence (trimmed text ends with \".\", \"!\", \"?\" or \"…\", optionally followed by a closing quote or bracket). A Website value is present. The description check fails while DEF-011 (R-25) is open: the API returns the description cut at 255 characters mid-word (\"...with Git exp\") and the page shows it unchanged.",
+      "expected": "The address is https://demoqa.com/books?search=9781449325862. The details show: ISBN \"9781449325862\", Title \"Git Pocket Guide\", Sub Title \"A Working Introduction\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\", Total Pages \"234\". The description is not empty and ends at the end of a sentence (after removing outer spaces it ends with \".\", \"!\", \"?\" or \"…\", possibly followed by a closing quote or bracket). A Website value is shown. The description check fails while DEF-011 (R-25) is open: the books service cuts the description at 255 characters in the middle of a word (\"...with Git exp\") and the page shows it as it is.",
       "browsers": [
         "chromium",
         "firefox",
@@ -523,10 +523,10 @@
       "testData": "knownBook = Git Pocket Guide, ISBN 9781449325862",
       "steps": [
         "Open /books and wait for the rows",
-        "Click title link \"Git Pocket Guide\" and wait for the Title value",
-        "Click button \"Back To Book Store\""
+        "Click the title \"Git Pocket Guide\" and wait for the Title value",
+        "Click the \"Back To Book Store\" button"
       ],
-      "expected": "URL is https://demoqa.com/books and all 8 title links are shown.",
+      "expected": "The address is https://demoqa.com/books and all 8 titles are shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -545,7 +545,7 @@
     {
       "id": "TC-20",
       "feature": "Book Detail",
-      "journey": "Detail URL with an unknown ISBN",
+      "journey": "A book page address with an unknown ISBN",
       "testType": "Error Handling",
       "priority": "Medium",
       "preconditions": "Signed out",
@@ -554,7 +554,7 @@
         "Open /books?search=0000000000",
         "Wait for the book request to finish (GET /BookStore/v1/Book?ISBN=0000000000)"
       ],
-      "expected": "The book request returns 400. The detail labels render with empty values (Title value empty) and button \"Back To Book Store\" is visible. No automated check for the missing not-found message (DEF-008, R-22). The 400 console error is allow-listed (R-14).",
+      "expected": "The book request returns 400. The detail labels appear with empty values (the Title is empty) and the \"Back To Book Store\" button is visible. There is no automatic check for the missing not-found message (DEF-008, R-22). The 400 error in the browser console is allowed (R-14).",
       "browsers": [
         "chromium",
         "firefox",
@@ -573,17 +573,17 @@
     {
       "id": "TC-21",
       "feature": "Book List",
-      "journey": "Book list when the books service fails (simulated)",
+      "journey": "The book list when the books service fails (simulated)",
       "testType": "Error Handling",
       "priority": "Low",
-      "preconditions": "Signed out; page.route answers GET **/BookStore/v1/Books with HTTP 500",
+      "preconditions": "Signed out; the test makes GET **/BookStore/v1/Books return HTTP 500 (page.route)",
       "testData": "booksApiFailure (route **/BookStore/v1/Books -> 500)",
       "steps": [
-        "Register the route that returns 500 for the books list request",
+        "Set the test to return a 500 error for the book list request",
         "Open /books",
-        "Wait for the routed request to complete"
+        "Wait for that request to finish"
       ],
-      "expected": "No book title links are rendered and the \"Type to search\" box is still visible (page does not go blank). Any message or pager text shown is recorded in the test annotations, not asserted: the failure behaviour is not specified (R-30).",
+      "expected": "No book titles appear and the \"Type to search\" box is still visible (the page does not go blank). Any message or page-count text that is shown is written down in the test notes, not checked, because what should happen on failure is not specified (R-30).",
       "browsers": [
         "chromium",
         "firefox",
@@ -602,7 +602,7 @@
     {
       "id": "TC-22",
       "feature": "Authorization",
-      "journey": "Guest on a book detail page cannot add it to a collection",
+      "journey": "A guest on a book page cannot add it to a collection",
       "testType": "Authorization",
       "priority": "High",
       "preconditions": "Signed out (no session cookies)",
@@ -610,7 +610,7 @@
       "steps": [
         "Open /books?search=9781449325862 and wait for the Title value"
       ],
-      "expected": "Buttons \"Login\" and \"Back To Book Store\" are visible. Button \"Add To Your Collection\" is not present (count 0). No \"User Name :\" value is shown.",
+      "expected": "The \"Login\" and \"Back To Book Store\" buttons are visible. The \"Add To Your Collection\" button is not on the page at all. No \"User Name :\" value is shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -629,7 +629,7 @@
     {
       "id": "TC-23",
       "feature": "Authorization",
-      "journey": "Guest opening /profile sees the signed-out message instead of a collection",
+      "journey": "A guest opening /profile sees the signed-out message, not a collection",
       "testType": "Authorization",
       "priority": "High",
       "preconditions": "Signed out (no session cookies)",
@@ -637,7 +637,7 @@
       "steps": [
         "Open /profile"
       ],
-      "expected": "HTTP 200, URL stays https://demoqa.com/profile (no redirect, as observed; R-32). Text \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\" is visible with links \"login\" (href /login) and \"register\" (href /register). No collection table, no \"Logout\", \"Delete Account\" or \"Delete All Books\" buttons.",
+      "expected": "The page opens (HTTP 200) and stays at https://demoqa.com/profile (no redirect, as seen; R-32). The text \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\" is visible with the links \"login\" (to /login) and \"register\" (to /register). There is no collection table and there are no \"Logout\", \"Delete Account\" or \"Delete All Books\" buttons.",
       "browsers": [
         "chromium",
         "firefox",
@@ -656,15 +656,15 @@
     {
       "id": "TC-24",
       "feature": "Authorization",
-      "journey": "Signed-in user sees account controls on a book detail page",
+      "journey": "A signed-in user sees account buttons on a book page",
       "testType": "Authorization",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account (storageState reused)",
+      "preconditions": "Signed in with this browser's test account (saved sign-in reused)",
       "testData": "credentials: the browser's account (userName); knownBook = Git Pocket Guide, ISBN 9781449325862",
       "steps": [
         "Open /books?search=9781449325862 and wait for the Title value"
       ],
-      "expected": "\"User Name :\" value equals the browser's account userName. Buttons \"Log out\", \"Back To Book Store\" and \"Add To Your Collection\" are visible. Button \"Login\" is not present.",
+      "expected": "The \"User Name :\" value matches this browser's account user name. The \"Log out\", \"Back To Book Store\" and \"Add To Your Collection\" buttons are visible. The \"Login\" button is not on the page.",
       "browsers": [
         "chromium",
         "firefox",
@@ -683,17 +683,17 @@
     {
       "id": "TC-25",
       "feature": "Authentication",
-      "journey": "Registered user signs in with valid credentials",
+      "journey": "A registered user signs in with the correct user name and password",
       "testType": "Authentication",
       "priority": "High",
-      "preconditions": "Signed out; /login form ready (fields keep typed values, R-01)",
+      "preconditions": "Signed out; the /login form is ready (the fields keep what you type, R-01)",
       "testData": "credentials: the browser's account (existingUser on Chromium, firefoxUser on Firefox, webkitUser on WebKit; userName, password)",
       "steps": [
         "Open /login and wait until the form is ready",
-        "Fill placeholder \"UserName\" and placeholder \"Password\" with the browser's account values",
-        "Click button \"Login\" inside the login form"
+        "Type this browser's account user name and password in the boxes marked \"UserName\" and \"Password\"",
+        "Click the \"Login\" button in the login form"
       ],
-      "expected": "URL becomes https://demoqa.com/profile (allow up to 15 s, observed 3.9 to 5.1 s, R-12). \"User Name :\" value equals the browser's account userName; button \"Logout\" and text \"Books :\" are visible.",
+      "expected": "The address changes to https://demoqa.com/profile (allow up to 15 s; seen 3.9 to 5.1 s, R-12). The \"User Name :\" value matches this browser's account user name, and the \"Logout\" button and the text \"Books :\" are visible.",
       "browsers": [
         "chromium",
         "firefox",
@@ -712,17 +712,17 @@
     {
       "id": "TC-26",
       "feature": "Authentication",
-      "journey": "Real user name with a wrong password is rejected",
+      "journey": "A real user name with a wrong password is refused",
       "testType": "Negative",
       "priority": "High",
-      "preconditions": "Signed out. At most one wrong-password attempt per account per run (lockout unknown, Q-NB1, R-06): retries disabled for this test, and no other test uses a wrong password with a real user name",
+      "preconditions": "Signed out. At most one wrong-password try per account per run, because the site may lock the account (not known, Q-NB1, R-06): no retries for this test, and no other test uses a wrong password with a real user name",
       "testData": "credentials: the browser's account (userName); wrongLoginValue (generated, never the real value)",
       "steps": [
         "Open /login and wait until the form is ready",
-        "Fill \"UserName\" with the browser's account userName and \"Password\" with wrongLoginValue",
-        "Click button \"Login\" inside the login form"
+        "Type this browser's account user name in \"UserName\" and a wrong password in \"Password\"",
+        "Click the \"Login\" button in the login form"
       ],
-      "expected": "Text \"Invalid username or password!\" is shown in p#name. URL stays https://demoqa.com/login. The Password field keeps the typed value. No session cookie \"token\" is set.",
+      "expected": "The message \"Invalid username or password!\" appears in the form's message area. The address stays https://demoqa.com/login. The Password box keeps what was typed. No \"token\" session cookie is set.",
       "browsers": [
         "chromium",
         "firefox",
@@ -741,17 +741,17 @@
     {
       "id": "TC-27",
       "feature": "Authentication",
-      "journey": "Unknown user name is rejected",
+      "journey": "An unknown user name is refused",
       "testType": "Negative",
       "priority": "High",
       "preconditions": "Signed out",
       "testData": "fakeUserName (generated qa-nonexistent-<timestamp>); wrongLoginValue (generated)",
       "steps": [
         "Open /login and wait until the form is ready",
-        "Fill \"UserName\" with fakeUserName and \"Password\" with wrongLoginValue",
-        "Click button \"Login\" inside the login form"
+        "Type a made-up user name in \"UserName\" and a wrong password in \"Password\"",
+        "Click the \"Login\" button in the login form"
       ],
-      "expected": "Text \"Invalid username or password!\" is shown in p#name (the same message as for a wrong password, so no account enumeration; confirmed on all 3 browsers in run 2026-11-10_19-25-42, R-18). URL stays https://demoqa.com/login; no redirect to /profile.",
+      "expected": "The message \"Invalid username or password!\" appears in the form's message area. It is the same message as for a wrong password, so strangers cannot tell which accounts exist (confirmed on all 3 browsers in run 2026-11-10_19-25-42, R-18). The address stays https://demoqa.com/login and you are not sent to /profile.",
       "browsers": [
         "chromium",
         "firefox",
@@ -770,7 +770,7 @@
     {
       "id": "TC-28",
       "feature": "Authentication",
-      "journey": "Login submitted with both fields empty",
+      "journey": "Log in with both fields empty",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
@@ -778,9 +778,9 @@
       "steps": [
         "Open /login and wait until the form is ready",
         "Leave \"UserName\" and \"Password\" empty",
-        "Click button \"Login\" inside the login form"
+        "Click the \"Login\" button in the login form"
       ],
-      "expected": "Both the UserName and Password inputs get class \"is-invalid\". No text appears in p#name. URL stays https://demoqa.com/login.",
+      "expected": "The UserName and Password boxes are both marked as wrong (class \"is-invalid\"). No message appears in the form's message area. The address stays https://demoqa.com/login.",
       "browsers": [
         "chromium",
         "firefox",
@@ -799,17 +799,17 @@
     {
       "id": "TC-29",
       "feature": "Authentication",
-      "journey": "Login submitted with only a user name",
+      "journey": "Log in with only a user name",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "fakeUserName (generated qa-nonexistent-<timestamp>)",
       "steps": [
         "Open /login and wait until the form is ready",
-        "Fill \"UserName\" with fakeUserName and leave \"Password\" empty",
-        "Click button \"Login\" inside the login form"
+        "Type a made-up user name in \"UserName\" and leave \"Password\" empty",
+        "Click the \"Login\" button in the login form"
       ],
-      "expected": "Only the Password input gets class \"is-invalid\"; the UserName input does not. No login request (POST /Account/v1/Login) is sent. URL stays https://demoqa.com/login.",
+      "expected": "Only the Password box is marked as wrong (class \"is-invalid\"); the UserName box is not. No login request (POST /Account/v1/Login) is sent. The address stays https://demoqa.com/login.",
       "browsers": [
         "chromium",
         "firefox",
@@ -828,16 +828,16 @@
     {
       "id": "TC-30",
       "feature": "Session",
-      "journey": "Session survives a reload of the profile page",
+      "journey": "You stay signed in after reloading the profile page",
       "testType": "Session",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account",
+      "preconditions": "Signed in with this browser's test account",
       "testData": "credentials: the browser's account (userName)",
       "steps": [
         "Open /profile and wait for \"Books :\"",
         "Reload the page"
       ],
-      "expected": "After reload the URL is still https://demoqa.com/profile, \"User Name :\" value equals the browser's account userName and button \"Logout\" is visible. The signed-out message is not shown.",
+      "expected": "After reloading, the address is still https://demoqa.com/profile, the \"User Name :\" value matches this browser's account user name and the \"Logout\" button is visible. The signed-out message is not shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -856,15 +856,15 @@
     {
       "id": "TC-31",
       "feature": "Session",
-      "journey": "Signed-in user sees their name on the book list",
+      "journey": "A signed-in user sees their name on the book list",
       "testType": "Session",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account",
+      "preconditions": "Signed in with this browser's test account",
       "testData": "credentials: the browser's account (userName)",
       "steps": [
         "Open /books and wait for the rows"
       ],
-      "expected": "\"User Name :\" value equals the browser's account userName and the logout button is visible and labelled exactly \"Logout\", the same as on /profile. Button \"Login\" is not present. The label check fails while DEF-010 (R-24) is open: /books shows \"Log out\".",
+      "expected": "The \"User Name :\" value matches this browser's account user name, and the log-out button is visible with the exact label \"Logout\", the same as on /profile. The \"Login\" button is not on the page. The label check fails while DEF-010 (R-24) is open: /books shows \"Log out\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -883,17 +883,17 @@
     {
       "id": "TC-32",
       "feature": "Session",
-      "journey": "Logout from the profile ends the session",
+      "journey": "Logging out from the profile ends the session",
       "testType": "Session",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account with a fresh login in this test (do not log out a shared storageState)",
+      "preconditions": "Signed in with this browser's test account, using a new sign-in made in this test (never log out the shared saved sign-in)",
       "testData": "credentials: the browser's account (userName, password)",
       "steps": [
         "Sign in through /login and wait for /profile",
-        "Click button \"Logout\" (by role and name; never #submit, R-08)",
+        "Click the \"Logout\" button (find it by its name, never by #submit, R-08)",
         "Open /profile"
       ],
-      "expected": "After Logout the URL is https://demoqa.com/login and cookies \"token\", \"expires\", \"userID\" and \"userName\" are no longer present. /profile then shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
+      "expected": "After Logout the address is https://demoqa.com/login and the cookies \"token\", \"expires\", \"userID\" and \"userName\" are gone. /profile then shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
       "browsers": [
         "chromium",
         "firefox",
@@ -912,18 +912,18 @@
     {
       "id": "TC-33",
       "feature": "Session",
-      "journey": "Log out from the book list ends the session",
+      "journey": "Logging out from the book list ends the session",
       "testType": "Session",
       "priority": "Medium",
-      "preconditions": "Signed in as the browser's account with a fresh login in this test",
+      "preconditions": "Signed in with this browser's test account, using a new sign-in made in this test",
       "testData": "credentials: the browser's account (userName, password)",
       "steps": [
         "Sign in through /login and wait for /profile",
         "Open /books and wait for the rows",
-        "Click button \"Log out\"",
+        "Click the \"Log out\" button",
         "Open /profile"
       ],
-      "expected": "After \"Log out\" the URL is https://demoqa.com/login (confirmed in earlier runs, R-28 closed). Session cookie \"token\" is no longer present, and /profile shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
+      "expected": "After \"Log out\" the address is https://demoqa.com/login (confirmed in earlier runs, R-28 closed). The \"token\" session cookie is gone, and /profile shows \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
       "browsers": [
         "chromium",
         "firefox",
@@ -942,17 +942,17 @@
     {
       "id": "TC-34",
       "feature": "Collection",
-      "journey": "Signed-in user adds a book to their collection",
+      "journey": "A signed-in user adds a book to their collection",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account. Setup removes Git Pocket Guide from the collection if left over from a failed run (row delete + OK). Teardown removes it again (Q-NB4). Tests on the same account run one at a time",
+      "preconditions": "Signed in with this browser's test account. Before the test, Git Pocket Guide is removed from the collection if a failed run left it there (delete the row and click OK). After the test it is removed again (Q-NB4). Tests on the same account run one at a time",
       "testData": "credentials: the browser's account; addBook = Git Pocket Guide, ISBN 9781449325862",
       "steps": [
         "Open /books?search=9781449325862 and wait for the Title value",
-        "Register a dialog handler (R-02), then click \"Add To Your Collection\"",
+        "Get ready to accept the browser alert (R-02), then click \"Add To Your Collection\"",
         "Open /profile and wait for \"Books :\""
       ],
-      "expected": "A native alert with text \"Book added to your collection.\" appears and is accepted; the detail URL is unchanged. On /profile a row shows Title \"Git Pocket Guide\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\" and a delete icon (#delete-record-9781449325862).",
+      "expected": "A browser alert says \"Book added to your collection.\" and is accepted; the book page address does not change. On /profile a row shows Title \"Git Pocket Guide\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\" and a delete icon (#delete-record-9781449325862).",
       "browsers": [
         "chromium",
         "firefox",
@@ -974,14 +974,14 @@
       "journey": "Adding a book that is already in the collection is refused",
       "testType": "Negative",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it once (alert \"Book added to your collection.\" accepted). Teardown removes it (Q-NB4)",
+      "preconditions": "Signed in with this browser's test account. Before the test, the book is removed if left over, then added once (browser alert \"Book added to your collection.\" accepted). After the test it is removed (Q-NB4)",
       "testData": "credentials: the browser's account; dupBook = Learning JavaScript Design Patterns, ISBN 9781449331818",
       "steps": [
         "Open /books?search=9781449331818 and wait for the Title value",
-        "Register a dialog handler, then click \"Add To Your Collection\" for a book already in the collection",
+        "Get ready to accept the browser alert, then click \"Add To Your Collection\" for the book that is already in the collection",
         "Open /profile and wait for \"Books :\""
       ],
-      "expected": "A native alert appears whose text contains \"Book already present in\" and is accepted; the POST returns 400. The text does not contain \"the your\" (it reads \"...your collection\"). On /profile the book appears in exactly one row (no duplicate). The wording check fails while DEF-009 (R-23) is open: today the alert reads \"Book already present in the your collection!\". The 400 console error is allow-listed (R-14).",
+      "expected": "A browser alert appears with text containing \"Book already present in\" and is accepted; the server answers the add request with 400. The text does not contain \"the your\" (it should read \"...your collection\"). On /profile the book appears in exactly one row (no copy). The wording check fails while DEF-009 (R-23) is open: today the alert says \"Book already present in the your collection!\". The 400 error in the browser console is allowed (R-14).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1000,18 +1000,18 @@
     {
       "id": "TC-36",
       "feature": "Collection",
-      "journey": "Added book stays in the collection after reload and after signing in again",
+      "journey": "An added book stays after a reload and after signing in again",
       "testType": "Persistence",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account with a fresh login in this test. Setup removes the book if left over, then adds it (alert accepted). Teardown removes it (Q-NB4)",
+      "preconditions": "Signed in with this browser's test account, using a new sign-in made in this test. Before the test, the book is removed if left over, then added (browser alert accepted). After the test it is removed (Q-NB4)",
       "testData": "credentials: the browser's account (userName, password); persistBook = Speaking JavaScript, ISBN 9781449365035",
       "steps": [
-        "Open /profile and confirm the row \"Speaking JavaScript\"",
+        "Open /profile and check that the row \"Speaking JavaScript\" is there",
         "Reload /profile",
         "Click \"Logout\", then sign in again through /login",
         "Wait for /profile"
       ],
-      "expected": "After reload the row \"Speaking JavaScript\" (Author \"Axel Rauschmayer\", Publisher \"O'Reilly Media\") is still shown. After logout and a new login, /profile still shows that row (server-side persistence, assumption R-31).",
+      "expected": "After reloading, the row \"Speaking JavaScript\" (Author \"Axel Rauschmayer\", Publisher \"O'Reilly Media\") is still shown. After logging out and signing in again, /profile still shows that row (saved on the server, assumption R-31).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1030,17 +1030,17 @@
     {
       "id": "TC-37",
       "feature": "Collection",
-      "journey": "Cancelling the delete confirmation keeps the book",
+      "journey": "Cancelling the delete question keeps the book",
       "testType": "Edge Case",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it (alert accepted). Teardown removes it (Q-NB4)",
+      "preconditions": "Signed in with this browser's test account. Before the test, the book is removed if a failed run left it there, then added (browser alert accepted). After the test it is removed again (Q-NB4)",
       "testData": "credentials: the browser's account; cancelBook = Designing Evolvable Web APIs with ASP.NET, ISBN 9781449337711",
       "steps": [
         "Open /profile and wait for the row \"Designing Evolvable Web APIs with ASP.NET\"",
-        "Click the delete icon of that row (#delete-record-9781449337711 or title \"Delete\" within the row)",
-        "Click \"Cancel\" in the dialog"
+        "Click the delete icon on that row (#delete-record-9781449337711, or the icon titled \"Delete\" in the row)",
+        "Click \"Cancel\" in the pop-up window"
       ],
-      "expected": "A dialog (role dialog) titled \"Delete Book\" with text \"Do you want to delete this book?\" and buttons \"OK\" and \"Cancel\" opens. After \"Cancel\" the dialog closes, no native alert appears, and the row is still shown.",
+      "expected": "A pop-up window titled \"Delete Book\" opens with the text \"Do you want to delete this book?\" and the buttons \"OK\" and \"Cancel\". After \"Cancel\" the window closes, no browser alert appears, and the row is still shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1059,18 +1059,18 @@
     {
       "id": "TC-38",
       "feature": "Collection",
-      "journey": "Signed-in user deletes one book from their collection",
+      "journey": "A signed-in user deletes one book from their collection",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Signed in as the browser's account. Setup removes the book if left over, then adds it (alert accepted). Never click \"Delete All Books\" or \"Delete Account\"",
+      "preconditions": "Signed in with this browser's test account. Before the test, the book is removed if left over, then added (browser alert accepted). Never click \"Delete All Books\" or \"Delete Account\"",
       "testData": "credentials: the browser's account; deleteBook = You Don't Know JS, ISBN 9781491904244",
       "steps": [
         "Open /profile and wait for the row \"You Don't Know JS\"",
-        "Click the delete icon of that row",
-        "Register a dialog handler, then click \"OK\" in the \"Delete Book\" dialog",
+        "Click the delete icon on that row",
+        "Get ready to accept the browser alert, then click \"OK\" in the \"Delete Book\" window",
         "Reload /profile"
       ],
-      "expected": "A native alert with text \"Book deleted.\" appears and is accepted. The row \"You Don't Know JS\" disappears and is still absent after reload.",
+      "expected": "A browser alert says \"Book deleted.\" and is accepted. The row \"You Don't Know JS\" disappears and is still gone after reloading.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1089,15 +1089,15 @@
     {
       "id": "TC-39",
       "feature": "Collection",
-      "journey": "Profile with an empty collection",
+      "journey": "A profile with an empty collection",
       "testType": "Edge Case",
       "priority": "Medium",
-      "preconditions": "Signed in as the browser's account; collection empty (A-02, R-16: setup removes only books added by these tests; if other books are present the test records them and skips the empty check)",
+      "preconditions": "Signed in with this browser's test account; the collection is empty (A-02, R-16: the set-up removes only books these tests added; if other books are there, the test notes them and skips the empty check)",
       "testData": "credentials: the browser's account (userName)",
       "steps": [
         "Open /profile and wait for \"Books :\""
       ],
-      "expected": "\"User Name :\" value equals the browser's account userName. Column headers \"Image\", \"Title\", \"Author\", \"Publisher\", \"Action\" are shown with no book rows, text \"Page 1 of 0\" is shown, and buttons \"Logout\", \"Go To Book Store\", \"Delete Account\" and \"Delete All Books\" are visible (not clicked). No automated check for the missing empty-state message (DEF-007, R-21).",
+      "expected": "The \"User Name :\" value matches this browser's account user name. The column headings \"Image\", \"Title\", \"Author\", \"Publisher\", \"Action\" are shown with no book rows, the text \"Page 1 of 0\" is shown, and the buttons \"Logout\", \"Go To Book Store\", \"Delete Account\" and \"Delete All Books\" are visible (not clicked). There is no automatic check for the missing empty-list message (DEF-007, R-21).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1116,16 +1116,16 @@
     {
       "id": "TC-40",
       "feature": "Registration",
-      "journey": "Register form submitted with all fields empty",
+      "journey": "The register form sent with all fields empty",
       "testType": "Validation",
       "priority": "Medium",
-      "preconditions": "Signed out; /register form ready (R-01)",
+      "preconditions": "Signed out; the /register form is ready (R-01)",
       "testData": "None",
       "steps": [
         "Open /register and wait until the form is ready",
-        "Click button \"Register\" with all fields empty"
+        "Click the \"Register\" button with all fields empty"
       ],
-      "expected": "The First Name, Last Name, UserName and Password inputs all get class \"is-invalid\". No text appears in p#name. No account is created; URL stays https://demoqa.com/register.",
+      "expected": "The First Name, Last Name, UserName and Password boxes are all marked as wrong (class \"is-invalid\"). No message appears in the form's message area. No account is created and the address stays https://demoqa.com/register.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1144,17 +1144,17 @@
     {
       "id": "TC-41",
       "feature": "Registration",
-      "journey": "Register with a weak password shows the server rule message",
+      "journey": "Registering with a weak password shows the server's password rule",
       "testType": "Validation",
       "priority": "Medium",
-      "preconditions": "Signed out; /register form ready; reCAPTCHA not solved and not bypassed. Only the weak value \"abc\" is ever submitted, never a value that satisfies the rule (R-07)",
+      "preconditions": "Signed out; the /register form is ready; the reCAPTCHA is not solved and not bypassed. Only the weak value \"abc\" is ever sent, never a password that meets the rule (R-07)",
       "testData": "registerFirstName \"QA\"; registerLastName \"Automation\"; fakeUserName (generated qa-nonexistent-<timestamp>); weakRegisterValue \"abc\"",
       "steps": [
         "Open /register and wait until the form is ready",
-        "Fill First Name, Last Name, UserName (fakeUserName) and Password (weakRegisterValue); confirm each field keeps its value",
-        "Click button \"Register\""
+        "Fill in First Name, Last Name, UserName (a made-up user name) and Password (the weak password); check that each box keeps its value",
+        "Click the \"Register\" button"
       ],
-      "expected": "POST /Account/v1/User returns 400. p#name shows \"Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.\" All four fields keep their values. URL stays https://demoqa.com/register. The request body contains a field whose name matches \"captcha\" (the reCAPTCHA result is sent to the server). The captcha check fails while DEF-012 (R-26) is open: the request carries no captcha field.",
+      "expected": "The sign-up request (POST /Account/v1/User) returns 400. The form's message area shows \"Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.\" All four boxes keep their values. The address stays https://demoqa.com/register. The request sent to the server includes a field whose name contains \"captcha\" (the reCAPTCHA answer is passed on to the server). The captcha check fails while DEF-012 (R-26) is open: the request has no captcha field.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1173,16 +1173,16 @@
     {
       "id": "TC-42",
       "feature": "Navigation",
-      "journey": "New User button opens the register page",
+      "journey": "The New User button opens the register page",
       "testType": "Navigation",
       "priority": "Low",
       "preconditions": "Signed out",
       "testData": "None",
       "steps": [
         "Open /login and wait until the form is ready",
-        "Click button \"New User\""
+        "Click the \"New User\" button"
       ],
-      "expected": "URL is https://demoqa.com/register and heading \"Register\" is visible.",
+      "expected": "The address is https://demoqa.com/register and the heading \"Register\" is visible.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1208,9 +1208,9 @@
       "testData": "None",
       "steps": [
         "Open /register and wait until the form is ready",
-        "Click button \"Back to Login\""
+        "Click the \"Back to Login\" button"
       ],
-      "expected": "URL is https://demoqa.com/login and heading \"Login\" is visible.",
+      "expected": "The address is https://demoqa.com/login and the heading \"Login\" is visible.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1229,16 +1229,16 @@
     {
       "id": "TC-44",
       "feature": "Navigation",
-      "journey": "Guest follows the login and register links from the signed-out profile",
+      "journey": "A guest follows the login and register links on the signed-out profile",
       "testType": "Navigation",
       "priority": "Low",
       "preconditions": "Signed out",
       "testData": "None",
       "steps": [
-        "Open /profile and click link \"login\"",
-        "Open /profile again and click link \"register\""
+        "Open /profile and click the link \"login\"",
+        "Open /profile again and click the link \"register\""
       ],
-      "expected": "Link \"login\" leads to https://demoqa.com/login (heading \"Login\"); link \"register\" leads to https://demoqa.com/register (heading \"Register\").",
+      "expected": "The \"login\" link leads to https://demoqa.com/login (heading \"Login\"); the \"register\" link leads to https://demoqa.com/register (heading \"Register\").",
       "browsers": [
         "chromium",
         "firefox",
@@ -1257,18 +1257,18 @@
     {
       "id": "TC-45",
       "feature": "Navigation",
-      "journey": "Left menu Book Store Application links open their pages",
+      "journey": "The Book Store Application links in the left menu open their pages",
       "testType": "Navigation",
       "priority": "Low",
-      "preconditions": "Signed out; desktop viewport 1280x900",
+      "preconditions": "Signed out; desktop screen size 1280x900",
       "testData": "None",
       "steps": [
         "Open /books",
-        "In the \"Book Store Application\" menu group click \"Login\"",
-        "In the same group click \"Book Store\"",
-        "In the same group click \"Profile\""
+        "In the \"Book Store Application\" menu group, click \"Login\"",
+        "In the same group, click \"Book Store\"",
+        "In the same group, click \"Profile\""
       ],
-      "expected": "\"Login\" leads to https://demoqa.com/login, \"Book Store\" to https://demoqa.com/books, \"Profile\" to https://demoqa.com/profile; after each click the clicked menu item has class \"active\". (\"Book Store API\" /swagger is out of scope.)",
+      "expected": "\"Login\" leads to https://demoqa.com/login, \"Book Store\" to https://demoqa.com/books and \"Profile\" to https://demoqa.com/profile. After each click the clicked menu item is highlighted (class \"active\"). (\"Book Store API\" /swagger is out of scope.)",
       "browsers": [
         "chromium",
         "firefox",
@@ -1290,13 +1290,13 @@
       "journey": "Go To Book Store leads from the profile to the book list",
       "testType": "Navigation",
       "priority": "Low",
-      "preconditions": "Signed in as the browser's account",
+      "preconditions": "Signed in with this browser's test account",
       "testData": "credentials: the browser's account",
       "steps": [
         "Open /profile and wait for \"Books :\"",
-        "Click button \"Go To Book Store\""
+        "Click the \"Go To Book Store\" button"
       ],
-      "expected": "The URL is https://demoqa.com/books and the 8 title links are shown (confirmed in earlier runs, R-29 closed).",
+      "expected": "The address is https://demoqa.com/books and the 8 titles are shown (confirmed in earlier runs, R-29 closed).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1315,15 +1315,15 @@
     {
       "id": "TC-47",
       "feature": "Responsive",
-      "journey": "Book list on a 375x812 mobile viewport",
+      "journey": "The book list on a 375x812 mobile screen",
       "testType": "Responsive",
       "priority": "Medium",
-      "preconditions": "Signed out; viewport 375x812",
+      "preconditions": "Signed out; screen size 375x812",
       "testData": "mobileViewport 375x812",
       "steps": [
         "Open /books and wait for the rows"
       ],
-      "expected": "The left menu is collapsed (Book Store Application menu links not visible). The \"Type to search\" box and button \"Login\" are visible. Column headers \"Image\", \"Title\", \"Author\" are visible; \"Publisher\" is not visible in the viewport (current behaviour, possible gap R-27). document.documentElement.scrollWidth is at most 375 (no page-level horizontal scroll).",
+      "expected": "The left menu is folded away (the Book Store Application menu links are not visible). The \"Type to search\" box and the \"Login\" button are visible. The column headings \"Image\", \"Title\", \"Author\" are visible; \"Publisher\" is not visible on screen (current behaviour, possible gap R-27). The page is at most 375 pixels wide (no sideways scrolling of the whole page).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1342,15 +1342,15 @@
     {
       "id": "TC-48",
       "feature": "Responsive",
-      "journey": "Login page on a 375x812 mobile viewport",
+      "journey": "The login page on a 375x812 mobile screen",
       "testType": "Responsive",
       "priority": "Medium",
-      "preconditions": "Signed out; viewport 375x812",
+      "preconditions": "Signed out; screen size 375x812",
       "testData": "mobileViewport 375x812",
       "steps": [
         "Open /login and wait until the form is ready"
       ],
-      "expected": "Fields with placeholders \"UserName\" and \"Password\" and button \"Login\" are visible. The left menu is collapsed. document.documentElement.scrollWidth is at most 375 (no page-level horizontal scroll).",
+      "expected": "The boxes marked \"UserName\" and \"Password\" and the \"Login\" button are visible. The left menu is folded away. The page is at most 375 pixels wide (no sideways scrolling of the whole page).",
       "browsers": [
         "chromium",
         "firefox",

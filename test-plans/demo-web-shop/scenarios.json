@@ -6,17 +6,17 @@
     {
       "id": "TC-01",
       "feature": "Authentication",
-      "journey": "Registered customer signs in with valid credentials",
+      "journey": "Saved customer signs in with the correct email and password",
       "testType": "Authentication",
       "priority": "High",
-      "preconditions": "Signed out; existingUser credentials available",
+      "preconditions": "Signed out; the saved test account is available",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Open /login",
-        "Fill \"Email:\" and \"Password:\" with existingUser values",
-        "Select \"Log in\""
+        "Type the saved test account's email and password into \"Email:\" and \"Password:\"",
+        "Click \"Log in\""
       ],
-      "expected": "URL is /. Header account link (.header-links .account) text equals the existingUser email; link \"Log out\" is visible; links \"Log in\" and \"Register\" are absent (count 0).",
+      "expected": "You land on /. The account link in the header shows the saved account's email. The link \"Log out\" is visible. The links \"Log in\" and \"Register\" are not on the page at all.",
       "browsers": [
         "chromium",
         "firefox",
@@ -35,17 +35,17 @@
     {
       "id": "TC-02",
       "feature": "Authentication",
-      "journey": "Known email with a wrong password is rejected",
+      "journey": "Correct email with a wrong password is refused",
       "testType": "Negative",
       "priority": "High",
-      "preconditions": "Signed out. Run once per full run (lockout unknown); retries disabled for this test",
+      "preconditions": "Signed out. Runs once per full run with no retries, because the site may lock the account after failed tries (not known)",
       "testData": "credentials: existingUser.email; wrongLoginValue (generated, not the real credential)",
       "steps": [
         "Open /login",
-        "Fill \"Email:\" with existingUser email and \"Password:\" with wrongLoginValue",
-        "Select \"Log in\""
+        "Type the saved account's email in \"Email:\" and a wrong password in \"Password:\"",
+        "Click \"Log in\""
       ],
-      "expected": "URL stays /login. .validation-summary-errors shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"The credentials provided are incorrect\". Header still shows \"Log in\" and \"Register\".",
+      "expected": "You stay on /login. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"The credentials provided are incorrect\". The header still shows \"Log in\" and \"Register\".",
       "browsers": [
         "chromium"
       ],
@@ -63,17 +63,17 @@
     {
       "id": "TC-03",
       "feature": "Authentication",
-      "journey": "Unknown email is rejected without revealing that the account does not exist",
+      "journey": "Unknown email is refused without saying the account does not exist",
       "testType": "Negative",
       "priority": "High",
       "preconditions": "Signed out",
       "testData": "unknownEmail (generated qa.unknown+{timestamp}@example.test); wrongLoginValue",
       "steps": [
         "Open /login",
-        "Fill \"Email:\" with unknownEmail and \"Password:\" with wrongLoginValue",
-        "Select \"Log in\""
+        "Type an email that has no account in \"Email:\" and a wrong password in \"Password:\"",
+        "Click \"Log in\""
       ],
-      "expected": "URL stays /login, the summary shows \"Login was unsuccessful. Please correct the errors and try again.\" and the header still shows \"Log in\". The summary does not say \"No customer account found\" (no account enumeration). Known defect DEF-002: it currently does, so this fails.",
+      "expected": "You stay on /login. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and the header still shows \"Log in\". The error box must not say \"No customer account found\", because that tells strangers which emails have an account. Known defect DEF-002: the site does say it today, so this test fails.",
       "browsers": [
         "chromium",
         "firefox",
@@ -92,7 +92,7 @@
     {
       "id": "TC-04",
       "feature": "Authentication",
-      "journey": "Login submitted with both fields empty",
+      "journey": "Log in with both fields empty",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
@@ -100,9 +100,9 @@
       "steps": [
         "Open /login",
         "Leave \"Email:\" and \"Password:\" empty",
-        "Select \"Log in\""
+        "Click \"Log in\""
       ],
-      "expected": "Server round trip; URL stays /login. Summary shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"No customer account found\". No field-level message.",
+      "expected": "The form is sent to the server and you stay on /login. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"No customer account found\". No message appears under the fields.",
       "browsers": [
         "chromium",
         "firefox",
@@ -121,17 +121,17 @@
     {
       "id": "TC-05",
       "feature": "Authentication",
-      "journey": "Malformed email is flagged client-side",
+      "journey": "A badly formed email is flagged before the form is sent",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "malformedEmail = \"abc\"",
       "steps": [
         "Open /login",
-        "Fill \"Email:\" with \"abc\" and move focus away",
-        "Select \"Log in\""
+        "Type \"abc\" in \"Email:\" and click outside the field",
+        "Click \"Log in\""
       ],
-      "expected": "Field message under Email: \"Please enter a valid email address.\" The message remains after submit, no validation summary appears, URL stays /login.",
+      "expected": "The message \"Please enter a valid email address.\" appears under Email. It stays there after clicking Log in, no error box appears, and you stay on /login.",
       "browsers": [
         "chromium",
         "firefox",
@@ -150,17 +150,17 @@
     {
       "id": "TC-06",
       "feature": "Authentication",
-      "journey": "Whitespace-only email is not accepted as a login",
+      "journey": "An email made only of spaces does not log you in",
       "testType": "Edge Case",
       "priority": "Low",
       "preconditions": "Signed out",
       "testData": "whitespaceEmail = \"   \"; wrongLoginValue",
       "steps": [
         "Open /login",
-        "Fill \"Email:\" with three spaces and \"Password:\" with wrongLoginValue",
-        "Select \"Log in\""
+        "Type three spaces in \"Email:\" and a wrong password in \"Password:\"",
+        "Click \"Log in\""
       ],
-      "expected": "User stays signed out: URL remains /login and \"Log out\" is absent. .validation-summary-errors shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"No customer account found\" (observed on the first run, R-17 closed).",
+      "expected": "You stay signed out: you remain on /login and \"Log out\" is not shown. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and \"No customer account found\" (seen on the first run, R-17 closed).",
       "browsers": [
         "chromium",
         "firefox",
@@ -179,16 +179,16 @@
     {
       "id": "TC-07",
       "feature": "Session",
-      "journey": "Signed-in session survives a page reload",
+      "journey": "You stay signed in after reloading the page",
       "testType": "Session",
       "priority": "High",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Sign in",
-        "Reload /"
+        "Reload the home page (/)"
       ],
-      "expected": "\"Log out\" link still visible and the header account link still shows the existingUser email.",
+      "expected": "The \"Log out\" link is still visible and the header account link still shows the saved account's email.",
       "browsers": [
         "chromium",
         "firefox",
@@ -207,16 +207,16 @@
     {
       "id": "TC-08",
       "feature": "Session",
-      "journey": "Logout restores the guest header",
+      "journey": "Logging out brings back the guest header",
       "testType": "Authentication",
       "priority": "High",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Sign in",
-        "Select \"Log out\""
+        "Click \"Log out\""
       ],
-      "expected": "URL is /. Header shows \"Register\", \"Log in\", \"Shopping cart (0)\" and \"Wishlist (0)\"; \"Log out\" and the account link are absent.",
+      "expected": "You land on /. The header shows \"Register\", \"Log in\", \"Shopping cart (0)\" and \"Wishlist (0)\". \"Log out\" and the account link are gone.",
       "browsers": [
         "chromium",
         "firefox",
@@ -235,18 +235,18 @@
     {
       "id": "TC-09",
       "feature": "Session",
-      "journey": "Back navigation after logout shows no signed-in content",
+      "journey": "Going back after logging out shows no signed-in content",
       "testType": "Session",
       "priority": "High",
-      "preconditions": "Signed in as existingUser; visited / and /cart",
+      "preconditions": "Signed in with the saved test account; / and /cart visited",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Sign in",
         "Open /cart",
-        "Select \"Log out\"",
-        "Go back in history up to three times"
+        "Click \"Log out\"",
+        "Press the browser Back button up to three times"
       ],
-      "expected": "On every page reached by Back, \"Log out\" and the header account link are absent.",
+      "expected": "On every page you reach with Back, \"Log out\" and the header account link are not shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -265,17 +265,17 @@
     {
       "id": "TC-10",
       "feature": "Session",
-      "journey": "Session expiry simulated by clearing cookies",
+      "journey": "An expired session (cookies cleared) sends you to log in",
       "testType": "Session",
       "priority": "Medium",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Sign in",
-        "Clear the browser context cookies",
+        "Delete the browser's cookies",
         "Open /customer/info"
       ],
-      "expected": "Redirect to /login?ReturnUrl=%2fcustomer%2finfo; header shows \"Log in\". (Server-side timeout duration is not observed; see R-18.)",
+      "expected": "You are sent to /login?ReturnUrl=%2fcustomer%2finfo and the header shows \"Log in\". (How long a real session lasts on the server was not seen; see R-18.)",
       "browsers": [
         "chromium",
         "firefox",
@@ -294,16 +294,16 @@
     {
       "id": "TC-11",
       "feature": "Session",
-      "journey": "Login page opened while already signed in",
+      "journey": "Opening the login page while already signed in",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
         "Sign in",
         "Open /login"
       ],
-      "expected": "Observed behaviour: the login page renders (h1 \"Welcome, Please Sign In!\") with no redirect, and the header still shows \"Log out\". Whether this is intended is unspecified (R-19).",
+      "expected": "What we saw: the login page opens (heading \"Welcome, Please Sign In!\") without sending you anywhere else, and the header still shows \"Log out\". It is not stated whether this is intended (R-19).",
       "browsers": [
         "chromium",
         "firefox",
@@ -322,15 +322,15 @@
     {
       "id": "TC-12",
       "feature": "Authorization",
-      "journey": "Guest is redirected from protected account pages",
+      "journey": "A guest is sent to log in from private account pages",
       "testType": "Authorization",
       "priority": "High",
-      "preconditions": "Signed out (fresh context)",
+      "preconditions": "Signed out (new browser session)",
       "testData": "Pages: info, orders, addresses, changepassword, downloadableproducts, rewardpoints",
       "steps": [
-        "For each page, open /customer/<page> as a guest"
+        "As a guest, open each account page /customer/<page>"
       ],
-      "expected": "Each lands on /login?ReturnUrl=%2fcustomer%2f<page> with the login form (\"Log in\" button) visible.",
+      "expected": "Each one lands on /login?ReturnUrl=%2fcustomer%2f<page> and shows the login form with its \"Log in\" button.",
       "browsers": [
         "chromium",
         "firefox",
@@ -349,16 +349,16 @@
     {
       "id": "TC-13",
       "feature": "Authorization",
-      "journey": "Sign-in from a ReturnUrl redirect returns to the requested page",
+      "journey": "After a forced sign-in you return to the page you asked for",
       "testType": "Authorization",
       "priority": "High",
       "preconditions": "Signed out",
       "testData": "credentials: existingUser (email, password)",
       "steps": [
-        "Open /customer/info as a guest (redirect to /login?ReturnUrl=%2fcustomer%2finfo)",
-        "Sign in with existingUser"
+        "As a guest, open /customer/info (you are sent to /login?ReturnUrl=%2fcustomer%2finfo)",
+        "Sign in with the saved test account"
       ],
-      "expected": "Assumed (not observed, R-20): URL becomes /customer/info with h1 \"My account - Customer info\". Assert only after the first run confirms; otherwise record the actual landing page as a gap.",
+      "expected": "Assumed, not yet seen (R-20): you land on /customer/info with the heading \"My account - Customer info\". Only check this once the first run confirms it; otherwise record the page you actually land on as a gap.",
       "browsers": [
         "chromium",
         "firefox",
@@ -377,15 +377,15 @@
     {
       "id": "TC-14",
       "feature": "Authorization",
-      "journey": "Guest is redirected to login from the back-in-stock subscriptions page",
+      "journey": "A guest is sent to log in from back-in-stock subscriptions",
       "testType": "Authorization",
       "priority": "Low",
       "preconditions": "Signed out",
       "testData": "None",
       "steps": [
-        "Open /customer/backinstocksubscriptions as a guest"
+        "As a guest, open /customer/backinstocksubscriptions"
       ],
-      "expected": "Like the other /customer/* pages (TC-12), the guest is redirected to /login?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions. Known defect DEF-007: the page currently renders for guests, so this fails.",
+      "expected": "Like the other /customer/* pages (TC-12), the guest is sent to /login?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions. Known defect DEF-007: today the page opens for guests, so this test fails.",
       "browsers": [
         "chromium",
         "firefox",
@@ -404,15 +404,15 @@
     {
       "id": "TC-15",
       "feature": "Checkout",
-      "journey": "Guest opens checkout directly with an empty cart",
+      "journey": "A guest opens checkout directly with an empty cart",
       "testType": "Navigation",
       "priority": "Medium",
-      "preconditions": "Signed out; empty guest cart",
+      "preconditions": "Signed out; the guest cart is empty",
       "testData": "None",
       "steps": [
         "Open /onepagecheckout directly"
       ],
-      "expected": "Redirect to /cart showing \"Your Shopping Cart is empty!\".",
+      "expected": "You are sent to /cart, which shows \"Your Shopping Cart is empty!\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -431,16 +431,16 @@
     {
       "id": "TC-16",
       "feature": "Registration",
-      "journey": "Empty registration form shows required messages",
+      "journey": "An empty registration form shows the required-field messages",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "None",
       "steps": [
         "Open /register",
-        "Select \"Register\" without filling any field"
+        "Click \"Register\" without filling in anything"
       ],
-      "expected": "Stays on /register, no summary. Messages: \"First name is required.\", \"Last name is required.\", \"Email is required.\", \"Password is required.\" (Password) and \"Password is required.\" (Confirm password).",
+      "expected": "You stay on /register and no error box appears. The messages are: \"First name is required.\", \"Last name is required.\", \"Email is required.\", \"Password is required.\" (under Password) and \"Password is required.\" (under Confirm password).",
       "browsers": [
         "chromium",
         "firefox",
@@ -459,16 +459,16 @@
     {
       "id": "TC-17",
       "feature": "Registration",
-      "journey": "Invalid email format is rejected",
+      "journey": "Registration refuses a badly formed email",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "invalidEmail = \"not-an-email\"",
       "steps": [
         "Open /register",
-        "Fill \"Email:\" (exact) with \"not-an-email\" and move focus away"
+        "Type \"not-an-email\" in the field labelled exactly \"Email:\" and click outside it"
       ],
-      "expected": "Email field message \"Wrong email\"; URL stays /register; header still guest.",
+      "expected": "The Email field shows \"Wrong email\". You stay on /register and the header still shows you as a guest.",
       "browsers": [
         "chromium",
         "firefox",
@@ -487,18 +487,18 @@
     {
       "id": "TC-18",
       "feature": "Registration",
-      "journey": "Password length boundary (5 vs 6 characters)",
+      "journey": "Password length limit: 5 characters is too short, 6 is fine",
       "testType": "Boundary",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "shortValue = \"abc\" (observed) and \"abcde\"; minValue = \"abcdef\"",
       "steps": [
         "Open /register",
-        "Fill \"Password:\" (exact) with \"abc\", move focus away",
-        "Repeat with \"abcde\"",
-        "Repeat with \"abcdef\""
+        "Type \"abc\" in the field labelled exactly \"Password:\" and click outside it",
+        "Do the same with \"abcde\"",
+        "Do the same with \"abcdef\""
       ],
-      "expected": "\"abc\" and \"abcde\" show \"The password should have at least 6 characters.\" (data-val minimum 6, observed); \"abcdef\" shows no length message. Form is never submitted with valid data.",
+      "expected": "\"abc\" and \"abcde\" show \"The password should have at least 6 characters.\" (the page sets a minimum of 6, as seen). \"abcdef\" shows no length message. The form is never sent with valid details.",
       "browsers": [
         "chromium",
         "firefox",
@@ -517,17 +517,17 @@
     {
       "id": "TC-19",
       "feature": "Registration",
-      "journey": "Confirm password mismatch is rejected",
+      "journey": "Passwords that do not match are refused",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Signed out",
       "testData": "Password \"abcdef\", confirm \"abcdeg\"",
       "steps": [
         "Open /register",
-        "Fill \"Password:\" (exact) with \"abcdef\" and \"Confirm password:\" with \"abcdeg\"",
-        "Move focus away"
+        "Type \"abcdef\" in the field labelled exactly \"Password:\" and \"abcdeg\" in \"Confirm password:\"",
+        "Click outside the field"
       ],
-      "expected": "Confirm password message \"The password and confirmation password do not match.\"; no length message.",
+      "expected": "Confirm password shows \"The password and confirmation password do not match.\" No length message appears.",
       "browsers": [
         "chromium",
         "firefox",
@@ -546,17 +546,17 @@
     {
       "id": "TC-20",
       "feature": "Registration",
-      "journey": "Duplicate email registration is rejected (no account created)",
+      "journey": "Registering with an email that already exists is refused",
       "testType": "Negative",
       "priority": "Medium",
-      "preconditions": "Signed out; existingUser email already registered",
+      "preconditions": "Signed out; the saved test account's email is already registered",
       "testData": "credentials: existingUser.email; registerDummyPw (generated); names \"QA\" / \"Automation\"",
       "steps": [
         "Open /register",
-        "Fill First name \"QA\", Last name \"Automation\", Email = existingUser email, Password and Confirm = registerDummyPw",
-        "Select \"Register\""
+        "Type First name \"QA\", Last name \"Automation\", the saved account's email, and the dummy password (registerDummyPw) in both Password and Confirm password",
+        "Click \"Register\""
       ],
-      "expected": "Summary \"The specified email already exists\"; URL stays /register; header still shows \"Log in\" and \"Register\". No account is created.",
+      "expected": "The error box shows \"The specified email already exists\". You stay on /register and the header still shows \"Log in\" and \"Register\". No account is created.",
       "browsers": [
         "chromium",
         "firefox",
@@ -575,16 +575,16 @@
     {
       "id": "TC-21",
       "feature": "Search",
-      "journey": "Header search returns matching products",
+      "journey": "Header search finds matching products",
       "testType": "Positive",
       "priority": "Medium",
       "preconditions": "Any state",
       "testData": "searchTerm = \"computer\"",
       "steps": [
-        "Fill #small-searchterms with \"computer\"",
-        "Select \"Search\" in the header"
+        "Type \"computer\" in the header search box",
+        "Click \"Search\" in the header"
       ],
-      "expected": "URL /search?q=computer, h1 \"Search\". Results include \"Build your own computer\" and \"Simple Computer\"; result count > 0 (exact count not asserted, shared catalogue).",
+      "expected": "You land on /search?q=computer with the heading \"Search\". The results include \"Build your own computer\" and \"Simple Computer\", and at least one product is listed (the exact number is not checked because the catalogue is shared).",
       "browsers": [
         "chromium",
         "firefox",
@@ -603,15 +603,15 @@
     {
       "id": "TC-22",
       "feature": "Search",
-      "journey": "Search with no matches shows the empty message",
+      "journey": "A search with no matches shows the nothing-found message",
       "testType": "Negative",
       "priority": "Medium",
       "preconditions": "Any state",
       "testData": "noMatchTerm = \"zzqxnotfound\"",
       "steps": [
-        "Search \"zzqxnotfound\" from the header"
+        "Search for \"zzqxnotfound\" from the header"
       ],
-      "expected": "URL /search?q=zzqxnotfound; 0 product items; .search-results shows \"No products were found that matched your criteria.\"",
+      "expected": "You land on /search?q=zzqxnotfound. No products are listed and the results area shows \"No products were found that matched your criteria.\"",
       "browsers": [
         "chromium",
         "firefox",
@@ -630,16 +630,16 @@
     {
       "id": "TC-23",
       "feature": "Search",
-      "journey": "Search term below the minimum length",
+      "journey": "A search word shorter than the minimum length",
       "testType": "Boundary",
       "priority": "Medium",
       "preconditions": "Any state",
       "testData": "\"ab\" (header), \"a\" (direct URL /search?q=a)",
       "steps": [
-        "Search \"ab\" from the header",
+        "Search for \"ab\" from the header",
         "Open /search?q=a directly"
       ],
-      "expected": "Both show \"Search term minimum length is 3 characters\"; no products listed.",
+      "expected": "Both show \"Search term minimum length is 3 characters\" and no products are listed.",
       "browsers": [
         "chromium",
         "firefox",
@@ -658,16 +658,16 @@
     {
       "id": "TC-24",
       "feature": "Search",
-      "journey": "Empty or default search term triggers an alert",
+      "journey": "An empty or default search word shows a browser alert",
       "testType": "Validation",
       "priority": "Medium",
-      "preconditions": "On / ; dialog handler registered",
+      "preconditions": "On /; the test is ready to accept browser alerts",
       "testData": "Empty string; untouched default \"Search store\"",
       "steps": [
-        "Clear #small-searchterms and select header \"Search\"",
-        "Reload, leave the default \"Search store\" value and select \"Search\""
+        "Clear the header search box and click \"Search\" in the header",
+        "Reload, leave the default text \"Search store\" in the box and click \"Search\""
       ],
-      "expected": "Each time a native alert with message \"Please enter some search keyword\" appears and is accepted; URL stays /.",
+      "expected": "Each time a browser alert says \"Please enter some search keyword\" and is accepted. You stay on /.",
       "browsers": [
         "chromium",
         "firefox",
@@ -686,16 +686,16 @@
     {
       "id": "TC-25",
       "feature": "Search",
-      "journey": "Header search autocomplete suggests products",
+      "journey": "Header search suggests products as you type",
       "testType": "Positive",
       "priority": "Low",
       "preconditions": "On /",
       "testData": "prefix = \"comp\"",
       "steps": [
-        "Type \"comp\" into #small-searchterms",
-        "Wait for the suggestion list"
+        "Type \"comp\" in the header search box",
+        "Wait for the list of suggestions"
       ],
-      "expected": "Suggestions include \"Build your own computer\" and \"Computing and Internet\".",
+      "expected": "The suggestions include \"Build your own computer\" and \"Computing and Internet\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -714,16 +714,16 @@
     {
       "id": "TC-26",
       "feature": "Search",
-      "journey": "Whitespace-only search term",
+      "journey": "A search word made only of spaces",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "On /; dialog handler registered",
+      "preconditions": "On /; the test is ready to accept browser alerts",
       "testData": "whitespaceTerm = \"   \"",
       "steps": [
-        "Fill #small-searchterms with three spaces",
-        "Select header \"Search\""
+        "Type three spaces in the header search box",
+        "Click \"Search\" in the header"
       ],
-      "expected": "Not observed (Ambiguity R-22). The test records whether an alert or the minimum-length message appears, and asserts only that no product results are listed.",
+      "expected": "Not seen yet (Ambiguity R-22). The test records whether an alert or the minimum-length message appears, and only checks that no products are listed.",
       "browsers": [
         "chromium",
         "firefox",
@@ -748,10 +748,10 @@
       "preconditions": "On /",
       "testData": "None",
       "steps": [
-        "Select \"Books\" in .top-menu",
-        "Select \"Price: Low to High\" in #products-orderby"
+        "Click \"Books\" in the top menu",
+        "Choose \"Price: Low to High\" in the sort list"
       ],
-      "expected": "After the menu click: URL /books, title \"Demo Web Shop. Books\", products listed. After sorting: URL contains orderby=10; listed prices are in non-decreasing order.",
+      "expected": "After the menu click: you land on /books, the page title is \"Demo Web Shop. Books\" and products are listed. After sorting: the URL contains orderby=10 and each price is the same as or higher than the one before it.",
       "browsers": [
         "chromium",
         "firefox",
@@ -776,9 +776,9 @@
       "preconditions": "On /books",
       "testData": "None",
       "steps": [
-        "Select \"Name: Z to A\" in #products-orderby"
+        "Choose \"Name: Z to A\" in the sort list"
       ],
-      "expected": "URL contains orderby=6; product names are in descending alphabetical order (observed first \"Science\", last \"Computing and Internet\").",
+      "expected": "The URL contains orderby=6 and product names run from Z to A (seen: first \"Science\", last \"Computing and Internet\").",
       "browsers": [
         "chromium",
         "firefox",
@@ -797,16 +797,16 @@
     {
       "id": "TC-29",
       "feature": "Category listing",
-      "journey": "Page size 4 with pagination",
+      "journey": "Show 4 products per page and go to the next page",
       "testType": "Positive",
       "priority": "Medium",
       "preconditions": "On /books",
       "testData": "None",
       "steps": [
-        "Select 4 in #products-pagesize",
-        "Select \"Next\" in .pager"
+        "Choose 4 in the products-per-page list",
+        "Click \"Next\" in the page links"
       ],
-      "expected": "Page 1 lists 4 items with pager links \"2\" and \"Next\"; after Next the URL contains pagenumber=2, at least one item is listed and the pager shows \"Previous\".",
+      "expected": "Page 1 lists 4 products with the page links \"2\" and \"Next\". After Next the URL contains pagenumber=2, at least one product is listed and the page links show \"Previous\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -831,9 +831,9 @@
       "preconditions": "On /books",
       "testData": "None",
       "steps": [
-        "Select \"List\" in #products-viewmode"
+        "Choose \"List\" in the view list"
       ],
-      "expected": "URL contains viewmode=list; .product-list is present and .product-grid is absent.",
+      "expected": "The URL contains viewmode=list. Products are shown as a list, not as a grid.",
       "browsers": [
         "chromium",
         "firefox",
@@ -858,10 +858,10 @@
       "preconditions": "On /books",
       "testData": "None",
       "steps": [
-        "Select link \"Under 25.00\"",
-        "Select link \"Remove Filter\""
+        "Click the link \"Under 25.00\"",
+        "Click the link \"Remove Filter\""
       ],
-      "expected": "With the filter: URL contains price=-25, every listed price is below 25.00, \"Science\" is absent, and \"Remove Filter\" is visible. After removing: the price parameter is gone and \"Science\" is listed again.",
+      "expected": "With the filter: the URL contains price=-25, every listed price is below 25.00, \"Science\" is not listed, and \"Remove Filter\" is visible. After removing it: the price part of the URL is gone and \"Science\" is listed again.",
       "browsers": [
         "chromium",
         "firefox",
@@ -880,16 +880,16 @@
     {
       "id": "TC-32",
       "feature": "Product detail",
-      "journey": "Guest adds a product to the cart from its page",
+      "journey": "A guest adds a product to the cart from its product page",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Guest; empty cart",
+      "preconditions": "Guest; the cart is empty",
       "testData": "product = \"Computing and Internet\" (/computing-and-internet)",
       "steps": [
-        "Open /computing-and-internet (waitUntil domcontentloaded)",
-        "Select \"Add to cart\" inside .overview"
+        "Open /computing-and-internet (wait only until the page content has loaded)",
+        "Click \"Add to cart\" in the product details area"
       ],
-      "expected": "#bar-notification (class success) shows \"The product has been added to your shopping cart\"; header shows \"Shopping cart (1)\".",
+      "expected": "A success bar shows \"The product has been added to your shopping cart\" and the header shows \"Shopping cart (1)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -908,17 +908,17 @@
     {
       "id": "TC-33",
       "feature": "Product detail",
-      "journey": "Quantity 0 and non-numeric quantity are rejected",
+      "journey": "Quantity 0 and a quantity that is not a number are refused",
       "testType": "Boundary",
       "priority": "Medium",
-      "preconditions": "Guest; empty cart",
+      "preconditions": "Guest; the cart is empty",
       "testData": "qty = \"0\", then qty = \"abc\"",
       "steps": [
         "Open /computing-and-internet",
-        "Fill \"Qty:\" with 0 and select \"Add to cart\" in .overview",
-        "Fill \"Qty:\" with abc and select \"Add to cart\" again"
+        "Type 0 in \"Qty:\" and click \"Add to cart\" in the product details area",
+        "Type abc in \"Qty:\" and click \"Add to cart\" again"
       ],
-      "expected": "Each attempt: #bar-notification (class error) shows \"Quantity should be positive\"; header stays \"Shopping cart (0)\".",
+      "expected": "Each time an error bar shows \"Quantity should be positive\" and the header stays at \"Shopping cart (0)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -937,17 +937,17 @@
     {
       "id": "TC-34",
       "feature": "Product detail",
-      "journey": "Negative quantity on the product page",
+      "journey": "A negative quantity on the product page",
       "testType": "Boundary",
       "priority": "Low",
-      "preconditions": "Guest; empty cart",
+      "preconditions": "Guest; the cart is empty",
       "testData": "qty = \"-1\"",
       "steps": [
         "Open /computing-and-internet",
-        "Fill \"Qty:\" with -1",
-        "Select \"Add to cart\" in .overview"
+        "Type -1 in \"Qty:\"",
+        "Click \"Add to cart\" in the product details area"
       ],
-      "expected": "No item added: #bar-notification (class error) shows \"Quantity should be positive\"; header stays \"Shopping cart (0)\" (observed on the first run, R-23 closed).",
+      "expected": "Nothing is added: an error bar shows \"Quantity should be positive\" and the header stays at \"Shopping cart (0)\" (seen on the first run, R-23 closed).",
       "browsers": [
         "chromium",
         "firefox",
@@ -966,15 +966,15 @@
     {
       "id": "TC-35",
       "feature": "Product detail",
-      "journey": "Home \"Add to cart\" on a configurable product opens its page",
+      "journey": "\"Add to cart\" on the home page opens a product that needs options",
       "testType": "Navigation",
       "priority": "Medium",
-      "preconditions": "Guest on /",
+      "preconditions": "Guest on the home page (/)",
       "testData": "product = \"Build your own computer\"",
       "steps": [
-        "On /, select \"Add to cart\" in the product item \"Build your own computer\""
+        "On /, click \"Add to cart\" on the product \"Build your own computer\""
       ],
-      "expected": "No notification bar; URL /build-your-own-computer with h1 \"Build your own computer\"; header stays \"Shopping cart (0)\".",
+      "expected": "No notification bar appears. You land on /build-your-own-computer with the heading \"Build your own computer\". The header stays at \"Shopping cart (0)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -993,15 +993,15 @@
     {
       "id": "TC-36",
       "feature": "Product detail",
-      "journey": "Add to cart from the category listing",
+      "journey": "Add to cart from the category list",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Guest; empty cart; on /books",
+      "preconditions": "Guest; the cart is empty; on /books",
       "testData": "First listing item that has \"Add to cart\"",
       "steps": [
-        "Select \"Add to cart\" in the first .product-item that has the button"
+        "Click \"Add to cart\" on the first product in the list that has the button"
       ],
-      "expected": "#bar-notification shows \"The product has been added to your shopping cart\"; header \"Shopping cart (1)\".",
+      "expected": "The notification bar shows \"The product has been added to your shopping cart\" and the header shows \"Shopping cart (1)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1020,18 +1020,18 @@
     {
       "id": "TC-37",
       "feature": "Product detail",
-      "journey": "Add-to-cart request fails (network abort)",
+      "journey": "Adding to the cart fails because the network drops (simulated)",
       "testType": "Error Handling",
       "priority": "Medium",
-      "preconditions": "Guest; empty cart; page.route aborts the add-to-cart AJAX request (URL pattern to be confirmed at implementation, not observed)",
+      "preconditions": "Guest; the cart is empty. The test blocks the add-to-cart request (page.route; the exact request address is confirmed when the test is written, it was not seen)",
       "testData": "product = \"Computing and Internet\"",
       "steps": [
-        "Register page.route abort for the add-to-cart request",
+        "Set the test to block the add-to-cart request",
         "Open /computing-and-internet",
-        "Select \"Add to cart\" in .overview",
+        "Click \"Add to cart\" in the product details area",
         "Open /cart"
       ],
-      "expected": "A native alert shows exactly \"Failed to add the product to the cart. Please refresh the page and try one more time.\". No success bar \"The product has been added to your shopping cart\"; header stays \"Shopping cart (0)\"; /cart shows \"Your Shopping Cart is empty!\".",
+      "expected": "A browser alert shows exactly \"Failed to add the product to the cart. Please refresh the page and try one more time.\". The success bar \"The product has been added to your shopping cart\" does not appear, the header stays at \"Shopping cart (0)\" and /cart shows \"Your Shopping Cart is empty!\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1050,18 +1050,18 @@
     {
       "id": "TC-38",
       "feature": "Product detail",
-      "journey": "Retry add to cart after a simulated server error",
+      "journey": "Add to cart again after a server error (simulated)",
       "testType": "Error Handling",
       "priority": "Medium",
-      "preconditions": "Guest; empty cart; page.route fulfils the first add-to-cart request with HTTP 500",
+      "preconditions": "Guest; the cart is empty. The test makes the first add-to-cart request return a server error (HTTP 500, using page.route)",
       "testData": "product = \"Computing and Internet\"",
       "steps": [
-        "Route the add-to-cart request once to a 500 response",
-        "Select \"Add to cart\" in .overview",
-        "Remove the route",
-        "Select \"Add to cart\" again"
+        "Make the next add-to-cart request return a 500 error, once only",
+        "Click \"Add to cart\" in the product details area",
+        "Stop faking the error",
+        "Click \"Add to cart\" again"
       ],
-      "expected": "During the 500: a native alert shows exactly \"Failed to add the product to the cart. Please refresh the page and try one more time.\", no notification bar, header stays \"Shopping cart (0)\". After the retry: \"The product has been added to your shopping cart\" and header \"Shopping cart (1)\" (exactly one unit, not two).",
+      "expected": "During the error: a browser alert shows exactly \"Failed to add the product to the cart. Please refresh the page and try one more time.\", no notification bar appears and the header stays at \"Shopping cart (0)\". After trying again: \"The product has been added to your shopping cart\" and the header shows \"Shopping cart (1)\" (exactly one item, not two).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1080,17 +1080,17 @@
     {
       "id": "TC-39",
       "feature": "Product detail",
-      "journey": "Double-click on Add to cart (duplicate submission)",
+      "journey": "Double-clicking Add to cart (sending it twice)",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Guest; empty cart",
+      "preconditions": "Guest; the cart is empty",
       "testData": "product = \"Computing and Internet\"",
       "steps": [
         "Open /computing-and-internet",
-        "Double-click \"Add to cart\" in .overview",
+        "Double-click \"Add to cart\" in the product details area",
         "Open /cart"
       ],
-      "expected": "Not observed (Ambiguity R-25). Asserts consistency only: the header count equals the \"Computing and Internet\" row quantity on /cart. The count itself (1 or 2) is recorded.",
+      "expected": "Not seen yet (Ambiguity R-25). The test only checks that the numbers agree: the header count equals the quantity in the \"Computing and Internet\" row on /cart. The count itself (1 or 2) is recorded.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1109,17 +1109,17 @@
     {
       "id": "TC-40",
       "feature": "Cart (guest)",
-      "journey": "Update quantity recalculates totals",
+      "journey": "Changing the quantity updates the totals",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Guest cart holds \"Computing and Internet\" qty 1 (price 10.00 observed)",
+      "preconditions": "The guest cart has \"Computing and Internet\", quantity 1 (price 10.00 seen)",
       "testData": "qty = 3",
       "steps": [
         "Open /cart",
-        "Set the row qty input to 3",
-        "Select \"Update shopping cart\""
+        "Change the quantity on the row to 3",
+        "Click \"Update shopping cart\""
       ],
-      "expected": "Row total 30.00; \"Sub-Total: 30.00\" and \"Total: 30.00\"; header \"Shopping cart (3)\". (Totals derived as unit price x 3 if the demo price changes.)",
+      "expected": "The row total is 30.00, the cart shows \"Sub-Total: 30.00\" and \"Total: 30.00\", and the header shows \"Shopping cart (3)\". (If the demo price changes, the totals are worked out as unit price x 3.)",
       "browsers": [
         "chromium",
         "firefox",
@@ -1138,17 +1138,17 @@
     {
       "id": "TC-41",
       "feature": "Cart (guest)",
-      "journey": "Remove the only item via the Remove checkbox",
+      "journey": "Remove the only item with the Remove tick box",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "product = \"Computing and Internet\"",
       "steps": [
         "Open /cart",
-        "Tick the row Remove checkbox",
-        "Select \"Update shopping cart\""
+        "Tick the Remove box on the row",
+        "Click \"Update shopping cart\""
       ],
-      "expected": "\"Your Shopping Cart is empty!\"; header \"Shopping cart (0)\".",
+      "expected": "The cart shows \"Your Shopping Cart is empty!\" and the header shows \"Shopping cart (0)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1167,17 +1167,17 @@
     {
       "id": "TC-42",
       "feature": "Cart (guest)",
-      "journey": "Quantity 0 removes the row; quantity -1 is rejected",
+      "journey": "Quantity 0 removes the row; quantity -1 is refused",
       "testType": "Boundary",
       "priority": "Medium",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "qty = 0, then (fresh cart) -1",
       "steps": [
         "Open /cart",
-        "Set row qty to 0 and select \"Update shopping cart\"",
-        "Re-add the product, set qty to -1 and update"
+        "Change the quantity on the row to 0 and click \"Update shopping cart\"",
+        "Add the product again, change the quantity to -1 and update the cart"
       ],
-      "expected": "Quantity 0: the row is removed and the cart shows the empty message and \"Shopping cart (0)\". Quantity -1: the update is rejected and the item stays in the cart. Known defect DEF-006: -1 currently removes the item silently, so this fails.",
+      "expected": "Quantity 0: the row is removed, the cart shows the empty message and the header shows \"Shopping cart (0)\". Quantity -1: the update is refused and the item stays in the cart. Known defect DEF-006: today -1 quietly removes the item, so this test fails.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1196,17 +1196,17 @@
     {
       "id": "TC-43",
       "feature": "Cart (guest)",
-      "journey": "Checkout blocked until terms of service are accepted",
+      "journey": "Checkout is blocked until the terms of service are accepted",
       "testType": "Validation",
       "priority": "High",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "None",
       "steps": [
         "Open /cart",
-        "Leave #termsofservice unticked",
-        "Select \"Checkout\""
+        "Leave the terms of service box unticked",
+        "Click \"Checkout\""
       ],
-      "expected": "Dialog (role dialog, name \"Terms of service\") shows \"Please accept the terms of service before the next step.\"; URL stays /cart.",
+      "expected": "A pop-up window named \"Terms of service\" shows \"Please accept the terms of service before the next step.\" You stay on /cart.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1225,16 +1225,16 @@
     {
       "id": "TC-44",
       "feature": "Cart (guest)",
-      "journey": "Invalid coupon code is rejected",
+      "journey": "A wrong coupon code is refused",
       "testType": "Negative",
       "priority": "Medium",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "coupon = \"INVALIDCOUPON\"",
       "steps": [
-        "Fill input[name=discountcouponcode] with INVALIDCOUPON",
-        "Select \"Apply coupon\""
+        "Type INVALIDCOUPON in the discount code box",
+        "Click \"Apply coupon\""
       ],
-      "expected": "Message \"The coupon code you entered couldn't be applied to your order\"; totals unchanged.",
+      "expected": "The message \"The coupon code you entered couldn't be applied to your order\" appears and the totals do not change.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1253,16 +1253,16 @@
     {
       "id": "TC-45",
       "feature": "Cart (guest)",
-      "journey": "Invalid gift card code shows a gift card message, not the coupon message",
+      "journey": "A wrong gift card code shows a gift card message, not the coupon one",
       "testType": "Negative",
       "priority": "Low",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "giftCard = \"INVALIDGIFT\"",
       "steps": [
-        "Fill input[name=giftcardcouponcode] with INVALIDGIFT",
-        "Select \"Add gift card\""
+        "Type INVALIDGIFT in the gift card box",
+        "Click \"Add gift card\""
       ],
-      "expected": "An error message is shown, and it is not the coupon text \"The coupon code you entered couldn't be applied to your order\". Known defect DEF-004: it currently is, so this fails.",
+      "expected": "An error message appears, and it is not the coupon message \"The coupon code you entered couldn't be applied to your order\". Known defect DEF-004: today it is the coupon message, so this test fails.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1281,15 +1281,15 @@
     {
       "id": "TC-46",
       "feature": "Cart (guest)",
-      "journey": "Empty cart state for a new guest",
+      "journey": "A new guest sees an empty cart",
       "testType": "Edge Case",
       "priority": "Medium",
-      "preconditions": "Fresh guest context",
+      "preconditions": "New guest browser session",
       "testData": "None",
       "steps": [
         "Open /cart"
       ],
-      "expected": "\"Your Shopping Cart is empty!\"; header \"Shopping cart (0)\"; no \"Checkout\" button.",
+      "expected": "The cart shows \"Your Shopping Cart is empty!\", the header shows \"Shopping cart (0)\" and there is no \"Checkout\" button.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1308,17 +1308,17 @@
     {
       "id": "TC-47",
       "feature": "Cart (guest)",
-      "journey": "Estimate shipping lists shipping options",
+      "journey": "Estimate shipping lists the shipping options",
       "testType": "Positive",
       "priority": "Low",
-      "preconditions": "Guest cart holds one product",
+      "preconditions": "The guest cart has one product",
       "testData": "Country \"United States\", Zip \"10001\"",
       "steps": [
-        "Select Country \"United States\"",
-        "Fill \"Zip / postal code:\" with 10001",
-        "Select \"Estimate shipping\""
+        "Choose \"United States\" as the Country",
+        "Type 10001 in \"Zip / postal code:\"",
+        "Click \"Estimate shipping\""
       ],
-      "expected": "Options \"Ground (0.00)\", \"Next Day Air (0.00)\", \"2nd Day Air (0.00)\", \"In-Store Pickup (0.00)\" are listed; no error. All are 0.00 because \"Computing and Internet\" has free shipping (its product page says \"Free shipping\"). For Health Book the estimate is Ground (10.00), matching checkout.",
+      "expected": "The options \"Ground (0.00)\", \"Next Day Air (0.00)\", \"2nd Day Air (0.00)\" and \"In-Store Pickup (0.00)\" are listed, with no error. All cost 0.00 because \"Computing and Internet\" ships free (its product page says \"Free shipping\"). For Health Book the estimate is Ground (10.00), the same as at checkout.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1337,16 +1337,16 @@
     {
       "id": "TC-48",
       "feature": "Cart (guest)",
-      "journey": "Guest cart persists after a page refresh",
+      "journey": "The guest cart is kept after a page refresh",
       "testType": "Persistence",
       "priority": "Medium",
-      "preconditions": "Guest cart holds \"Computing and Internet\"",
+      "preconditions": "The guest cart has \"Computing and Internet\"",
       "testData": "None",
       "steps": [
         "Open /cart",
         "Reload the page"
       ],
-      "expected": "The \"Computing and Internet\" row is still present with qty 1; header \"Shopping cart (1)\".",
+      "expected": "The \"Computing and Internet\" row is still there with quantity 1 and the header shows \"Shopping cart (1)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1365,18 +1365,18 @@
     {
       "id": "TC-49",
       "feature": "Cart (signed in)",
-      "journey": "Signed-in customer adds an own item without touching existing items",
+      "journey": "A signed-in customer adds an item without touching other cart items",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Signed in as existingUser; \"Health Book\" not already in the account cart (pre-clean removes only known test products); record header count N",
+      "preconditions": "Signed in with the saved test account. \"Health Book\" is not already in the account's cart (the clean-up before the test removes only known test products). Note the header cart count N",
       "testData": "credentials: existingUser; product = \"Health Book\" (/health)",
       "steps": [
-        "Record header cart count N",
-        "Open /health and select \"Add to cart\" in .overview",
+        "Note the cart count N in the header",
+        "Open /health and click \"Add to cart\" in the product details area",
         "Open /cart",
-        "Cleanup (afterEach, also on failure): remove only the \"Health Book\" row"
+        "Clean up afterwards, even if the test fails: remove only the \"Health Book\" row"
       ],
-      "expected": "\"The product has been added to your shopping cart\"; header count N+1; a \"Health Book\" row with qty 1 exists. Pre-existing rows (e.g. \"14.1-inch Laptop\") are untouched. After cleanup the header count is N again.",
+      "expected": "\"The product has been added to your shopping cart\" appears, the header count is N+1, and there is a \"Health Book\" row with quantity 1. Items that were already in the cart (for example \"14.1-inch Laptop\") are not touched. After clean-up the header count is N again.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1395,20 +1395,20 @@
     {
       "id": "TC-50",
       "feature": "Cart (signed in)",
-      "journey": "Account cart persists across logout and login",
+      "journey": "The account cart is kept after logging out and back in",
       "testType": "Persistence",
       "priority": "High",
-      "preconditions": "Signed in as existingUser; count N recorded; \"Health Book\" not in the account cart",
+      "preconditions": "Signed in with the saved test account; cart count N noted; \"Health Book\" is not in the account's cart",
       "testData": "credentials: existingUser; product = \"Health Book\"",
       "steps": [
         "Add \"Health Book\" to the cart",
         "Log out",
-        "Check guest header",
+        "Check the guest header",
         "Sign in again",
         "Open /cart",
-        "Cleanup: remove only \"Health Book\""
+        "Clean up: remove only \"Health Book\""
       ],
-      "expected": "After logout the header shows \"Shopping cart (0)\". After signing in again the header count is N+1 and the \"Health Book\" row is present with qty 1.",
+      "expected": "After logging out the header shows \"Shopping cart (0)\". After signing in again the header count is N+1 and the \"Health Book\" row is there with quantity 1.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1427,18 +1427,18 @@
     {
       "id": "TC-51",
       "feature": "Cart (signed in)",
-      "journey": "Guest cart merges into the account cart on login",
+      "journey": "The guest cart joins the account cart when you sign in",
       "testType": "Persistence",
       "priority": "High",
-      "preconditions": "Signed out; \"Computing and Internet\" not in the account cart (avoids the unobserved same-product merge rule, R-26); account count N known from a prior signed-in read",
+      "preconditions": "Signed out. \"Computing and Internet\" is not in the account's cart (this avoids the unseen rule for joining two lots of the same product, R-26). The account's cart count N is known from an earlier signed-in visit",
       "testData": "credentials: existingUser; product = \"Computing and Internet\"",
       "steps": [
-        "As a guest add \"Computing and Internet\"",
+        "As a guest, add \"Computing and Internet\" to the cart",
         "Sign in",
         "Open /cart",
-        "Cleanup: remove only \"Computing and Internet\""
+        "Clean up: remove only \"Computing and Internet\""
       ],
-      "expected": "After login the header count is N+1 and the cart has a \"Computing and Internet\" row with qty 1 alongside the pre-existing rows.",
+      "expected": "After signing in the header count is N+1 and the cart has a \"Computing and Internet\" row with quantity 1, next to the items that were already there.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1457,19 +1457,19 @@
     {
       "id": "TC-52",
       "feature": "Checkout (signed in)",
-      "journey": "Signed-in checkout reaches Billing with prefilled details (stop at Billing)",
+      "journey": "Signed-in checkout opens Billing with details filled in (stop there)",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Signed in as existingUser; own item \"Health Book\" added; account has no saved address",
+      "preconditions": "Signed in with the saved test account; \"Health Book\" added by the test; the account has no saved address",
       "testData": "credentials: existingUser; product = \"Health Book\"",
       "steps": [
         "Open /cart",
-        "Select \"Checkout\" with #termsofservice unticked",
-        "Close the dialog, tick #termsofservice, select \"Checkout\"",
-        "Inspect the Billing step without selecting Continue",
-        "Cleanup: remove only \"Health Book\""
+        "Click \"Checkout\" with the terms of service box unticked",
+        "Close the pop-up window, tick the terms of service box and click \"Checkout\"",
+        "Look at the Billing step without clicking Continue",
+        "Clean up: remove only \"Health Book\""
       ],
-      "expected": "Unticked: dialog \"Terms of service\" shows \"Please accept the terms of service before the next step.\" and URL stays /cart. Ticked: URL /onepagecheckout directly (no /login/checkoutasguest), h1 \"Checkout\"; steps \"Billing Address\", \"Shipping Address\", \"Shipping Method\", \"Payment Method\", \"Payment Information\", \"Confirm Order\". Billing First name and Last name are non-empty, Email equals the existingUser email, Country shows \"Select country\". Continue is never selected (D5: nothing saved to the account).",
+      "expected": "Unticked: a pop-up window \"Terms of service\" shows \"Please accept the terms of service before the next step.\" and you stay on /cart. Ticked: you go straight to /onepagecheckout (not through /login/checkoutasguest) with the heading \"Checkout\" and the steps \"Billing Address\", \"Shipping Address\", \"Shipping Method\", \"Payment Method\", \"Payment Information\", \"Confirm Order\". On Billing, First name and Last name are filled in, Email equals the saved account's email, and Country shows \"Select country\". Continue is never clicked (D5: nothing is saved to the account).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1488,15 +1488,15 @@
     {
       "id": "TC-53",
       "feature": "Wishlist",
-      "journey": "Guest wishlist empty state",
+      "journey": "A guest sees an empty wishlist",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Fresh guest context",
+      "preconditions": "New guest browser session",
       "testData": "None",
       "steps": [
         "Open /wishlist"
       ],
-      "expected": "\"The wishlist is empty!\"; header \"Wishlist (0)\".",
+      "expected": "The page shows \"The wishlist is empty!\" and the header shows \"Wishlist (0)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1515,16 +1515,16 @@
     {
       "id": "TC-54",
       "feature": "Wishlist",
-      "journey": "Guest adds a product to the wishlist",
+      "journey": "A guest adds a product to the wishlist",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Guest; empty wishlist",
+      "preconditions": "Guest; the wishlist is empty",
       "testData": "product = \"Health Book\" (/health)",
       "steps": [
         "Open /health",
-        "Select \"Add to wishlist\""
+        "Click \"Add to wishlist\""
       ],
-      "expected": "#bar-notification (success) shows \"The product has been added to your wishlist\"; header \"Wishlist (1)\".",
+      "expected": "A success bar shows \"The product has been added to your wishlist\" and the header shows \"Wishlist (1)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1543,18 +1543,18 @@
     {
       "id": "TC-55",
       "feature": "Wishlist",
-      "journey": "Guest views the wishlist, sees the share URL and removes the item",
+      "journey": "A guest views the wishlist and its share link, then removes the item",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Guest wishlist holds \"Health Book\"",
+      "preconditions": "The guest wishlist has \"Health Book\"",
       "testData": "None",
       "steps": [
         "Open /wishlist",
-        "Read the row and share text",
-        "Tick the row Remove checkbox",
-        "Select \"Update wishlist\""
+        "Read the row and the sharing text",
+        "Tick the Remove box on the row",
+        "Click \"Update wishlist\""
       ],
-      "expected": "Row \"Health Book\" with price 10.00 and qty 1; text \"Your wishlist URL for sharing:\" followed by an https /wishlist/<guid> URL. After removal: \"The wishlist is empty!\" and header \"Wishlist (0)\". Known defect DEF-003: the URL is currently http, so this fails (soft check; the removal still runs).",
+      "expected": "The row \"Health Book\" shows price 10.00 and quantity 1. The text \"Your wishlist URL for sharing:\" is followed by an https /wishlist/<guid> link. After removing: \"The wishlist is empty!\" and the header shows \"Wishlist (0)\". Known defect DEF-003: the link is http today, so this test fails (a soft check, so the removal still runs).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1576,14 +1576,14 @@
       "journey": "Move a wishlist item to the cart",
       "testType": "Positive",
       "priority": "Low",
-      "preconditions": "Guest wishlist holds \"Health Book\"; empty cart",
+      "preconditions": "The guest wishlist has \"Health Book\"; the cart is empty",
       "testData": "None",
       "steps": [
         "Open /wishlist",
-        "Tick the row \"Add to cart\" checkbox",
-        "Select the \"Add to cart\" button"
+        "Tick the \"Add to cart\" box on the row",
+        "Click the \"Add to cart\" button"
       ],
-      "expected": "A \"Health Book\" row appears in /cart, the header cart count increases by 1, and the cart row thumbnail has width and height attributes (no layout shift). Whether the item leaves the wishlist is recorded, not asserted (R-27). Known defect DEF-008: the thumbnail has no size, so this fails (soft check).",
+      "expected": "A \"Health Book\" row appears in /cart, the header shows 1 more item in the cart, and the small product picture on the cart row has a set width and height (so the page does not jump while loading). Whether the item leaves the wishlist is recorded, not checked (R-27). Known defect DEF-008: the picture has no size set, so this test fails (soft check).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1602,18 +1602,18 @@
     {
       "id": "TC-57",
       "feature": "Wishlist",
-      "journey": "Signed-in customer adds and removes an own wishlist item",
+      "journey": "A signed-in customer adds and removes a wishlist item",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed in as existingUser; \"Health Book\" not in the account wishlist; record wishlist count W",
+      "preconditions": "Signed in with the saved test account; \"Health Book\" is not in the account's wishlist; note the wishlist count W",
       "testData": "credentials: existingUser; product = \"Health Book\"",
       "steps": [
-        "Open /health and select \"Add to wishlist\"",
+        "Open /health and click \"Add to wishlist\"",
         "Open /wishlist",
         "Tick Remove on the \"Health Book\" row only",
-        "Select \"Update wishlist\""
+        "Click \"Update wishlist\""
       ],
-      "expected": "\"The product has been added to your wishlist\"; header \"Wishlist (W+1)\"; /wishlist (h1 \"Wishlist\") has a \"Health Book\" row. After removal the header returns to \"Wishlist (W)\" and the \"Health Book\" row is gone.",
+      "expected": "\"The product has been added to your wishlist\" appears, the header shows \"Wishlist (W+1)\", and /wishlist (heading \"Wishlist\") has a \"Health Book\" row. After removing, the header goes back to \"Wishlist (W)\" and the \"Health Book\" row is gone.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1632,18 +1632,18 @@
     {
       "id": "TC-58",
       "feature": "Checkout (guest)",
-      "journey": "Guest reaches checkout via \"Checkout as Guest\"",
+      "journey": "A guest reaches checkout with \"Checkout as Guest\"",
       "testType": "Navigation",
       "priority": "High",
-      "preconditions": "Guest cart holds \"Health Book\"",
+      "preconditions": "The guest cart has \"Health Book\"",
       "testData": "product = \"Health Book\"",
       "steps": [
         "Open /cart",
-        "Tick #termsofservice",
-        "Select \"Checkout\"",
-        "Select \"Checkout as Guest\""
+        "Tick the terms of service box",
+        "Click \"Checkout\"",
+        "Click \"Checkout as Guest\""
       ],
-      "expected": "First /login/checkoutasguest?returnUrl=%2Fcart with h1 \"Welcome, Please Sign In!\" and buttons \"Checkout as Guest\", \"Register\", \"Log in\". Then /onepagecheckout with h1 \"Checkout\" and steps \"Billing Address\", \"Shipping Address\", \"Shipping Method\", \"Payment Method\", \"Payment Information\", \"Confirm Order\"; the billing new-address form is shown.",
+      "expected": "First you see /login/checkoutasguest?returnUrl=%2Fcart with the heading \"Welcome, Please Sign In!\" and the buttons \"Checkout as Guest\", \"Register\" and \"Log in\". Then /onepagecheckout opens with the heading \"Checkout\" and the steps \"Billing Address\", \"Shipping Address\", \"Shipping Method\", \"Payment Method\", \"Payment Information\", \"Confirm Order\"; the form for a new billing address is shown.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1662,16 +1662,16 @@
     {
       "id": "TC-59",
       "feature": "Checkout (guest)",
-      "journey": "Billing step required fields and email format",
+      "journey": "Billing step: required fields and email format",
       "testType": "Validation",
       "priority": "Medium",
       "preconditions": "Guest on the Billing step",
       "testData": "invalidEmail = \"not-an-email\"",
       "steps": [
-        "Select Continue in #billing-buttons-container without filling fields",
-        "Fill billing \"Email:\" with not-an-email and select Continue"
+        "Click Continue on the Billing step without filling in anything",
+        "Type not-an-email in the billing \"Email:\" field and click Continue"
       ],
-      "expected": "Billing step stays open with: \"First name is required.\", \"Last name is required.\", \"Email is required.\", \"Country is required.\", \"City is required\", \"Street address is required\", \"Zip / postal code is required\", \"Phone is required\" (last four without trailing period). With not-an-email: \"Wrong email\"; #opc-billing stays active.",
+      "expected": "The Billing step stays open and shows: \"First name is required.\", \"Last name is required.\", \"Email is required.\", \"Country is required.\", \"City is required\", \"Street address is required\", \"Zip / postal code is required\", \"Phone is required\" (the last four have no full stop at the end). With not-an-email: \"Wrong email\", and the Billing step stays open.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1690,21 +1690,21 @@
     {
       "id": "TC-60",
       "feature": "Checkout (guest)",
-      "journey": "Guest checkout steps through to the Confirm Order summary (no order placed)",
+      "journey": "Guest checkout goes up to the Confirm Order summary (no order placed)",
       "testType": "Cross-Browser",
       "priority": "High",
-      "preconditions": "Guest cart holds only \"Health Book\" qty 1; on Billing",
+      "preconditions": "The guest cart has only \"Health Book\", quantity 1; on the Billing step",
       "testData": "guestEmail (generated); guestAddress (fixed fictional)",
       "steps": [
-        "Fill billing with guestAddress and guestEmail; Continue",
-        "Shipping Address: keep the preselected address; Continue",
-        "Shipping Method: keep \"Ground (10.00)\"; Continue",
-        "Payment Method: verify COD (Payments.CashOnDelivery) is checked; Continue",
-        "Payment Information: Continue",
-        "Inspect Confirm Order; do NOT select Confirm",
-        "Cleanup: empty the guest cart"
+        "Fill in billing with the guest address and guest email, then click Continue",
+        "Shipping Address: keep the address already chosen and click Continue",
+        "Shipping Method: keep \"Ground (10.00)\" and click Continue",
+        "Payment Method: check that Cash On Delivery (Payments.CashOnDelivery) is selected, then click Continue",
+        "Payment Information: click Continue",
+        "Look at the Confirm Order step; do NOT click Confirm",
+        "Clean up: empty the guest cart"
       ],
-      "expected": "Active step moves #opc-billing to #opc-confirm_order one per Continue. Payment Information shows \"You will pay by COD\". Confirm summary: billing \"QA Automation\", \"1 Test Street\", \"Testville , New York 10001\", \"United States\"; \"Payment Method\" \"Cash On Delivery (COD)\"; \"Shipping Method\" \"Ground\"; row \"Health Book 10.00 1 10.00\"; \"Sub-Total: 10.00\", \"Shipping: (Ground) 10.00\", \"Payment method additional fee: 7.00\", \"Tax: 0.00\", \"Total: 27.00\".",
+      "expected": "Each Continue opens the next step, one at a time, from Billing to Confirm Order. Payment Information shows \"You will pay by COD\". The Confirm summary shows billing \"QA Automation\", \"1 Test Street\", \"Testville , New York 10001\", \"United States\"; \"Payment Method\" \"Cash On Delivery (COD)\"; \"Shipping Method\" \"Ground\"; the row \"Health Book 10.00 1 10.00\"; \"Sub-Total: 10.00\", \"Shipping: (Ground) 10.00\", \"Payment method additional fee: 7.00\", \"Tax: 0.00\", \"Total: 27.00\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1723,19 +1723,19 @@
     {
       "id": "TC-61",
       "feature": "Checkout (guest)",
-      "journey": "Guest places a Cash On Delivery order end to end",
+      "journey": "A guest places a Cash On Delivery order from start to finish",
       "testType": "Positive",
       "priority": "High",
-      "preconditions": "Guest cart holds only \"Health Book\" qty 1; retries disabled for this test (each attempt creates a permanent order)",
+      "preconditions": "The guest cart has only \"Health Book\", quantity 1. No retries for this test, because each try creates a real order that stays on the site",
       "testData": "guestEmail (generated); guestAddress (fixed fictional)",
       "steps": [
-        "Complete Billing, Shipping Address, Shipping Method (Ground) as a guest",
-        "Verify COD (value Payments.CashOnDelivery) is checked; never select another method",
-        "Continue through Payment Information",
-        "Select Confirm in #confirm-order-buttons-container",
-        "Select \"Click here for order details.\""
+        "As a guest, complete Billing, Shipping Address and Shipping Method (Ground)",
+        "Check that Cash On Delivery (value Payments.CashOnDelivery) is selected; never choose another payment method",
+        "Click Continue on Payment Information",
+        "Click Confirm on the Confirm Order step",
+        "Click \"Click here for order details.\""
       ],
-      "expected": "URL /checkout/completed/, h1 \"Thank you\", \"Your order has been successfully processed!\", \"Order number: <digits>\", link \"Click here for order details.\". Order details /orderdetails/<orderNumber>: h1 \"Order information\", \"Order #<orderNumber>\", \"Order Status: Pending\", \"Payment Method Cash On Delivery (COD)\", \"Shipping Method Ground\", row \"Health Book 10.00 1 10.00\", \"Sub-Total: 10.00\", \"Shipping: 10.00\", \"Payment method additional fee: 7.00\", \"Tax: 0.00\", \"Order Total: 27.00\". /cart then shows \"Your Shopping Cart is empty!\".",
+      "expected": "You land on /checkout/completed/ with the heading \"Thank you\", \"Your order has been successfully processed!\", \"Order number: <digits>\" and the link \"Click here for order details.\". The order details page /orderdetails/<orderNumber> shows the heading \"Order information\", \"Order #<orderNumber>\", \"Order Status: Pending\", \"Payment Method Cash On Delivery (COD)\", \"Shipping Method Ground\", the row \"Health Book 10.00 1 10.00\", \"Sub-Total: 10.00\", \"Shipping: 10.00\", \"Payment method additional fee: 7.00\", \"Tax: 0.00\", \"Order Total: 27.00\". /cart then shows \"Your Shopping Cart is empty!\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1754,15 +1754,15 @@
     {
       "id": "TC-62",
       "feature": "Checkout (guest)",
-      "journey": "Back link on the Shipping Address step returns to Billing",
+      "journey": "Back on the Shipping Address step returns to Billing",
       "testType": "Navigation",
       "priority": "Low",
-      "preconditions": "Guest on the Shipping Address step after a valid Billing",
+      "preconditions": "Guest on the Shipping Address step after filling in Billing correctly",
       "testData": "guestEmail (generated); guestAddress",
       "steps": [
-        "Select \"Back\" on the Shipping Address step"
+        "Click \"Back\" on the Shipping Address step"
       ],
-      "expected": "Not observed (Ambiguity R-28). Asserted after first run: #opc-billing becomes active again and no order is created.",
+      "expected": "Not seen yet (Ambiguity R-28). Checked after the first run: the Billing step opens again and no order is created.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1781,17 +1781,17 @@
     {
       "id": "TC-63",
       "feature": "My account",
-      "journey": "Customer info and account navigation (read only)",
+      "journey": "Customer info and the account menu (look only, no changes)",
       "testType": "Positive",
       "priority": "Medium",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser",
       "steps": [
-        "Select the header account link",
-        "Read the links in .block-account-navigation",
-        "Select \"Addresses\", then \"Orders\""
+        "Click the account link in the header",
+        "Read the links in the account menu",
+        "Click \"Addresses\", then \"Orders\""
       ],
-      "expected": "URL /customer/info, title \"Demo Web Shop. Account\", h1 \"My account - Customer info\", \"Your Personal Details\"; labels \"First name:\", \"Last name:\", \"Email:\" present; Email value equals the existingUser email; \"Save\" visible (not clicked). Navigation links \"Customer info\", \"Addresses\", \"Orders\", \"Downloadable products\", \"Back in stock subscriptions\", \"Reward points\", \"Change password\". Addresses opens h1 \"My account - Addresses\" with \"Add new\" (not clicked); Orders opens h1 \"My account - Orders\".",
+      "expected": "You land on /customer/info with the page title \"Demo Web Shop. Account\", the heading \"My account - Customer info\" and \"Your Personal Details\". The labels \"First name:\", \"Last name:\" and \"Email:\" are there, the Email value equals the saved account's email, and \"Save\" is visible (not clicked). The menu links are \"Customer info\", \"Addresses\", \"Orders\", \"Downloadable products\", \"Back in stock subscriptions\", \"Reward points\", \"Change password\". Addresses opens the heading \"My account - Addresses\" with \"Add new\" (not clicked); Orders opens the heading \"My account - Orders\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1810,17 +1810,17 @@
     {
       "id": "TC-64",
       "feature": "My account",
-      "journey": "Addresses, Orders and Reward points empty states",
+      "journey": "Addresses, Orders and Reward points with nothing in them",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed in; account has no addresses, no orders and no reward points (A2, R-29)",
+      "preconditions": "Signed in; the account has no addresses, no orders and no reward points (A2, R-29)",
       "testData": "credentials: existingUser",
       "steps": [
         "Open /customer/addresses",
         "Open /customer/orders",
         "Open /customer/rewardpoints"
       ],
-      "expected": "\"No addresses\" on Addresses; \"No orders\" on Orders; Reward points h1 \"My account - Reward points\" with \"Your current balance is 0 reward points (0.00).\", \"History\" and \"There is no balance history yet\". If the shared account gains data, the test reports the assumption as broken rather than failing on a defect.",
+      "expected": "Addresses shows \"No addresses\"; Orders shows \"No orders\"; Reward points has the heading \"My account - Reward points\" with \"Your current balance is 0 reward points (0.00).\", \"History\" and \"There is no balance history yet\". If the shared account gets data, the test reports that this assumption no longer holds, instead of failing as a defect.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1839,7 +1839,7 @@
     {
       "id": "TC-65",
       "feature": "My account",
-      "journey": "Change password form fields are present (never submitted)",
+      "journey": "The change password form is shown (never sent)",
       "testType": "Positive",
       "priority": "Low",
       "preconditions": "Signed in",
@@ -1847,7 +1847,7 @@
       "steps": [
         "Open /customer/changepassword"
       ],
-      "expected": "h1 \"My account - Change password\"; labels \"Old password:\", \"New password:\", \"Confirm password:\"; button \"Change password\" visible. The form is never submitted.",
+      "expected": "The heading is \"My account - Change password\", with the labels \"Old password:\", \"New password:\", \"Confirm password:\" and a visible \"Change password\" button. The form is never sent.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1866,15 +1866,15 @@
     {
       "id": "TC-66",
       "feature": "My account",
-      "journey": "Downloadable products page loads",
+      "journey": "The downloadable products page loads",
       "testType": "Edge Case",
       "priority": "Low",
-      "preconditions": "Signed in as existingUser",
+      "preconditions": "Signed in with the saved test account",
       "testData": "credentials: existingUser",
       "steps": [
         "Open /customer/downloadableproducts"
       ],
-      "expected": "The page shows its heading within 30 s. Known defect DEF-005: the page returns HTTP 200 but never renders, so this fails.",
+      "expected": "The page shows its heading within 30 seconds. Known defect DEF-005: the server answers (HTTP 200) but the page never appears, so this test fails.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1893,17 +1893,17 @@
     {
       "id": "TC-67",
       "feature": "Responsive",
-      "journey": "Mobile layout and category menu at 375x812",
+      "journey": "Mobile layout and category menu on a 375x812 screen",
       "testType": "Responsive",
       "priority": "Medium",
-      "preconditions": "Viewport 375x812 (isMobile, hasTouch where supported)",
+      "preconditions": "Screen size 375x812 (set up as a phone with touch, where the browser supports it)",
       "testData": "None",
       "steps": [
         "Open /",
-        "Measure document scrollWidth",
-        "Select #mob-menu-button"
+        "Measure the width of the page",
+        "Click the mobile menu button"
       ],
-      "expected": "scrollWidth equals 375 (no horizontal scroll); \"Register\", \"Log in\", \"Shopping cart (0)\", \"Wishlist (0)\" and #small-searchterms visible; .top-menu is hidden; #mob-menu-button visible; after selecting it .mob-top-menu shows BOOKS, COMPUTERS, ELECTRONICS, APPAREL & SHOES, DIGITAL DOWNLOADS, JEWELRY, GIFT CARDS.",
+      "expected": "The page is exactly 375 pixels wide (no sideways scrolling). \"Register\", \"Log in\", \"Shopping cart (0)\", \"Wishlist (0)\" and the search box are visible. The desktop top menu is hidden and the mobile menu button is visible. After clicking it, the mobile menu shows BOOKS, COMPUTERS, ELECTRONICS, APPAREL & SHOES, DIGITAL DOWNLOADS, JEWELRY, GIFT CARDS.",
       "browsers": [
         "chromium",
         "firefox",
