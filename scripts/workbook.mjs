@@ -1221,8 +1221,9 @@ function addCleanDefectsSheet(wb, app, data) {
       separatorDone = true;
     }
     const steps = (d.steps ?? []).map((st, i) => `${i + 1}. ${st}`).join('\n');
-    const evidence = (d.evidence ?? []).filter((e) => e.path);
-    const evidenceText = evidence.length ? evidence.map((e) => e.label).join('\n') : (d.evidence ?? []).map((e) => e.label).join('\n');
+    const evidence = (d.evidence ?? []).filter((e) => e.path && /\.(png|jpe?g|gif|webp)$/i.test(e.path));
+    // Simple, clickable evidence: the first (clearest) screenshot; other notes stay in scenarios.json.
+    const evidenceText = evidence.length ? (evidence.length === 1 ? 'Open screenshot' : `Open screenshot (${evidence.length} saved)`) : 'Checked by the tester';
     const row = bodyRow(ws, [d.id, d.title, d.severity, status(d), d.actual, d.expected, d.expectedBasis, steps,
       [...new Set([...(d.scenarios ?? []), d.failingScenario].filter(Boolean))].join(', '), browsersFor(d) || '-', evidenceText, d.foundOn ?? ''], widths);
     if (evidence.length) {
