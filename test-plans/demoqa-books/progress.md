@@ -89,3 +89,5 @@ Chromium account probably still holds suite books "Speaking JavaScript" and "Des
 - Approval re-recorded for the 9 changed scenarios. Targeted runs: each changed check failed only with its DEF message; TC-09/020/039 passed; collections empty.
 - Full run on all 3 browsers started (also re-checks firefox/webkit after the teardown hardening). Expected failures: TC-12, 013, 018, 021, 031, 035, 041 on each browser (21).
 - Full run result (2026-11-11): guest 2026-11-11_02-38-36 87 passed / 15 failed, account 2026-11-11_02-44-24 33 passed / 6 failed = 123/144; all 21 failures verified to fail only on their own DEF check. Workbook: 21 "Known defect" rows, 0 to investigate; 12 open defects (4 Medium, 8 Low), 1 rejected. Delivery Report updated with an addendum.
+
+| 2026-11-11 | **Approved** by the user after the TC-NN rename and the plain-language rewrite of all scenarios | all scenarios, recorded in scenarios.json `approval` |
