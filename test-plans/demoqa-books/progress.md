@@ -91,3 +91,5 @@ Chromium account probably still holds suite books "Speaking JavaScript" and "Des
 - Full run result (2026-11-11): guest 2026-11-11_02-38-36 87 passed / 15 failed, account 2026-11-11_02-44-24 33 passed / 6 failed = 123/144; all 21 failures verified to fail only on their own DEF check. Workbook: 21 "Known defect" rows, 0 to investigate; 12 open defects (4 Medium, 8 Low), 1 rejected. Delivery Report updated with an addendum.
 
 | 2026-11-11 | **Approved** by the user after the TC-NN rename and the plain-language rewrite of all scenarios | all scenarios, recorded in scenarios.json `approval` |
+
+| 2026-11-11 | Full run (2026-11-11_15-34-00 guest, 2026-11-11_15-40-33 account): 144 tests. 5 timeouts on Firefox/WebKit only (TC-15, 24, 25, 36, 41) were re-run on all 3 browsers (2026-11-11_15-58-41): TC-15/24/25/36 passed everywhere (temporary site slowness); TC-41 fails on all 3 browsers with DEF-012. **No browser compatibility defect.** Every failure is linked to an open defect. |

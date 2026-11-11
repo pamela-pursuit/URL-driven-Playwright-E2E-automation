@@ -1049,10 +1049,27 @@ function headerRow(ws, values) {
   return row;
 }
 
+// Website text in quotes is shown in bold without the quote marks, so cells read like plain sentences.
+function quotedToBold(text) {
+  const s = String(text);
+  if (!s.includes('"')) return s;
+  const runs = [];
+  let last = 0;
+  for (const m of s.matchAll(/"([^"\n]+)"/g)) {
+    if (m.index > last) runs.push({ text: s.slice(last, m.index) });
+    runs.push({ text: m[1], font: { bold: true } });
+    last = m.index + m[0].length;
+  }
+  if (last < s.length) runs.push({ text: s.slice(last) });
+  return { richText: runs };
+}
+const visibleText = (v) => (v && typeof v === 'object' ? (v.richText ? v.richText.map((r) => r.text).join('') : v.text ?? '') : String(v ?? ''));
+
 function bodyRow(ws, values, widths) {
-  const row = ws.addRow(values);
+  const shown = values.map((v) => (typeof v === 'string' ? quotedToBold(v) : v));
+  const row = ws.addRow(shown);
   row.eachCell({ includeEmpty: true }, (c, i) => { if (i <= values.length) { c.alignment = { vertical: 'top', wrapText: true }; c.border = box; } });
-  row.height = rowHeight(values.map((v) => (v && typeof v === 'object' ? v.text ?? '' : v)), widths);
+  row.height = rowHeight(shown.map(visibleText), widths);
   return row;
 }
 

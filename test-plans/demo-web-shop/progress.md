@@ -56,3 +56,5 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | 2026-11-11 | **Approved** by the user after the TC-NN rename and the plain-language rewrite of all scenarios, including D7 (TC-49 to 52, 57, 61, 66 now on all three browsers) | all scenarios, recorded in scenarios.json `approval` |
 
 | 2026-11-11 | **Approved** by the user ("closed, approved") after removing the "Known defect ..." sentences from TC-03, 14, 42, 45, 55, 56, 66 (wording only; the defect is shown in the Defect column) | 67 |
+
+| 2026-11-11 | Full run with D7 (runs 2026-11-11_15-09-49 guest, 2026-11-11_15-16-21 account): **199 tests, 178 passed, 21 failed**, every failure linked to an open defect. The 7 scenarios new on Firefox/WebKit pass there (TC-66 fails on all 3 browsers alike: DEF-005). **No browser compatibility defect.** TC-02 not tested on Firefox/WebKit (test-safety limit). Guest COD orders: chromium #2414481, firefox #2414482, webkit #2414484 |
