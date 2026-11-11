@@ -54,3 +54,5 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | 2026-11-10 | **D6:** accessibility out of scope (user: "dummy website"). User chose to remove the tests entirely: TC-68 to TC-70, accessibility.spec.ts and @axe-core/playwright removed; R-31 closed; DEF-009 to DEF-012 Closed. Approval re-recorded for **67** scenarios. Full run now 184 tests. TC-01 smoke passed (run 2026-11-10_14-43-13) | TC-68 to TC-70 |
 
 | 2026-11-11 | **Approved** by the user after the TC-NN rename and the plain-language rewrite of all scenarios, including D7 (TC-49 to 52, 57, 61, 66 now on all three browsers) | all scenarios, recorded in scenarios.json `approval` |
+
+| 2026-11-11 | **Approved** by the user ("closed, approved") after removing the "Known defect ..." sentences from TC-03, 14, 42, 45, 55, 56, 66 (wording only; the defect is shown in the Defect column) | 67 |
