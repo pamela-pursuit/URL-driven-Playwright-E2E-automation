@@ -2693,6 +2693,14 @@
       "expectedBasis": "Anyone could find out which email addresses have an account.",
       "evidence": [
         {
+          "label": "1. Before: an unknown email gets \"No customer account found\" (2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-002-1-before-unknown-email-message.png"
+        },
+        {
+          "label": "2. After: a real email with a wrong password gets a different message, \"The credentials provided are incorrect\" (highlighted; email blurred)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-002-2-after-real-email-different-message.png"
+        },
+        {
           "label": "TC-03 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-chromium/test-failed-1.png"
         },
@@ -2729,6 +2737,14 @@
       "actual": "The share link starts with http://demowebshop.tricentis.com/wishlist/ instead of https. The link still works, because the site sends the visitor on to the secure page, but the first visit is not secure.",
       "expectedBasis": "The site uses https, so the links it gives out should use https too.",
       "evidence": [
+        {
+          "label": "1. Before: Health Book page, about to click \"Add to wishlist\" (2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-003-1-before-add-to-wishlist.png"
+        },
+        {
+          "label": "2. After: the wishlist share link starts with http:// (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-003-2-after-share-link-http.png"
+        },
         {
           "label": "TC-55 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-chromium/test-failed-1.png"
@@ -2806,6 +2822,14 @@
       "expectedBasis": "The page is linked from My account, so it should open like the other account pages.",
       "evidence": [
         {
+          "label": "1. Before: signed in on My account, about to click \"Downloadable products\" (2026-11-11; account details blurred)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-005-1-before-downloadable-products-link.png"
+        },
+        {
+          "label": "2. After: about 30 seconds later the site error page appears (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-005-2-after-error-page.png"
+        },
+        {
           "label": "Probe 2026-11-10: HTTP 200 after 30.6 s; final page /errorpage.htm, title \"Error\" (no screenshot: signed-in pages show the account email)"
         },
         {
@@ -2838,6 +2862,14 @@
       "actual": "In both cases the item disappears from the cart and the header shows \"Shopping cart (0)\". No message explains why, so customers may not know where their item went.",
       "expectedBasis": "The item disappears without any message, and -1 is not a real quantity.",
       "evidence": [
+        {
+          "label": "1. Before: quantity -1 typed in the cart, about to click \"Update shopping cart\" (2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-006-1-before-quantity-minus-1.png"
+        },
+        {
+          "label": "2. After: the item is gone and the cart shows (0), with no message (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-006-2-after-item-removed-no-message.png"
+        },
         {
           "label": "TC-42 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-chromium/test-failed-1.png"
@@ -2873,6 +2905,14 @@
       "expectedBasis": "It should behave like the other My account pages, which ask guests to log in.",
       "evidence": [
         {
+          "label": "1. Before: as a guest, My account sends you to the Log in page (2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-007-1-before-my-account-asks-to-log-in.png"
+        },
+        {
+          "label": "2. After: as a guest, the Back in stock subscriptions page opens instead (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-007-2-after-back-in-stock-opens-for-guest.png"
+        },
+        {
           "label": "TC-14 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-chromium/test-failed-1.png"
         },
@@ -2906,6 +2946,14 @@
       "actual": "The small product pictures have no set size. When a picture finishes loading, the row changes shape and the \"Add to cart\" tick box moves, so a customer who clicks at that moment can miss it.",
       "expectedBasis": "Buttons that move while the page loads make customers click the wrong thing.",
       "evidence": [
+        {
+          "label": "1. Before: wishlist row while the picture is still loading (slow connection simulated, 2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-008-1-before-picture-loading.png"
+        },
+        {
+          "label": "2. After: the picture has loaded, the row is twice as tall and the \"Add to cart\" tick box moved down about 25 px (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-008-2-after-picture-loaded-row-moved.png"
+        },
         {
           "label": "TC-56 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-chromium/test-failed-1.png"

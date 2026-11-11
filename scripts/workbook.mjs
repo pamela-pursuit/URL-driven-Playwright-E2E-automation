@@ -1195,10 +1195,10 @@ function addTestCasesSheet(wb, data) {
 
 function addCleanDefectsSheet(wb, app, data) {
   const ws = wb.addWorksheet('Defects', { properties: { tabColor: { argb: 'FFC00000' } } });
-  const widths = [9, 34, 9, 13, 44, 36, 36, 40, 10, 16, 26, 11];
+  const widths = [9, 34, 9, 13, 44, 36, 36, 40, 10, 16, 15, 15, 11];
   ws.columns = widths.map((width) => ({ width }));
   headerRow(ws, ['ID', 'Defect', 'Severity', 'Status', 'What happens', 'What should happen', 'Why it is a defect',
-    'Steps to see it', 'Test case', 'Browsers', 'Evidence', 'Found on']);
+    'Steps to see it', 'Test case', 'Browsers', 'Before', 'After', 'Found on']);
   const workbookDir = path.dirname(paths(app).workbook);
   const status = (d) => (d.status === 'New' ? 'Open' : d.status === 'Rejected' ? 'Rejected (not a defect)' : d.status);
   const browsersFor = (d) => {
@@ -1222,15 +1222,20 @@ function addCleanDefectsSheet(wb, app, data) {
       separatorDone = true;
     }
     const steps = (d.steps ?? []).map((st, i) => `${i + 1}. ${st}`).join('\n');
-    const evidence = (d.evidence ?? []).filter((e) => e.path && /\.(png|jpe?g|gif|webp)$/i.test(e.path));
-    // Simple, clickable evidence: the first (clearest) screenshot; other notes stay in scenarios.json.
-    const evidenceText = evidence.length ? (evidence.length === 1 ? 'Open screenshot' : `Open screenshot (${evidence.length} saved)`) : 'Checked by the tester';
+    const images = (d.evidence ?? []).filter((e) => e.path && /\.(png|jpe?g|gif|webp)$/i.test(e.path));
+    // Before/After screenshots: the "1. Before" / "2. After" pair when captured, otherwise the clearest single picture.
+    const before = images.find((e) => /^1\.\s*Before/i.test(e.label ?? ''));
+    const after = images.find((e) => /^2\.\s*After/i.test(e.label ?? '')) ?? (before ? undefined : images[0]);
+    const linkText = (e, fallback) => (e ? 'Open screenshot' : fallback);
+    const noPicture = images.length ? '-' : 'Checked by the tester';
     const row = bodyRow(ws, [d.id, d.title, d.severity, status(d), d.actual, d.expected, d.expectedBasis, steps,
-      [...new Set([...(d.scenarios ?? []), d.failingScenario].filter(Boolean))].join(', '), browsersFor(d) || '-', evidenceText, d.foundOn ?? ''], widths);
-    if (evidence.length) {
-      row.getCell(11).value = { text: evidenceText, hyperlink: path.relative(workbookDir, evidence[0].path).replaceAll('\\', '/') };
-      row.getCell(11).font = { color: { argb: 'FF0563C1' }, underline: true };
-    }
+      [...new Set([...(d.scenarios ?? []), d.failingScenario].filter(Boolean))].join(', '), browsersFor(d) || '-',
+      linkText(before, before || after ? '-' : noPicture), linkText(after, noPicture), d.foundOn ?? ''], widths);
+    [[11, before], [12, after]].forEach(([col, e]) => {
+      if (!e) return;
+      row.getCell(col).value = { text: 'Open screenshot', hyperlink: path.relative(workbookDir, e.path).replaceAll('\\', '/') };
+      row.getCell(col).font = { color: { argb: 'FF0563C1' }, underline: true };
+    });
     row.getCell(3).fill = fill(d.severity === 'High' || d.severity === 'Critical' ? COLORS.High : d.severity === 'Medium' ? COLORS.Medium : COLORS.Low);
     if (!isOpen(d)) row.eachCell((c) => { c.font = { ...(c.font ?? {}), color: { argb: 'FF7F7F7F' } }; });
   }

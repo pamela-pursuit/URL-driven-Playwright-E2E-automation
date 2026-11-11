@@ -2191,6 +2191,14 @@
       "expectedBasis": "A page should not go blank just because the book list could not be loaded.",
       "evidence": [
         {
+          "label": "1. Before: the Book Store page as it should look, with the menu and search box (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-001-1-before-book-store-normal.png"
+        },
+        {
+          "label": "2. After: with the books service failing, the whole page is blank (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-001-2-after-blank-page.png"
+        },
+        {
           "label": "Probe 2026-11-11 (500, abort, empty list) on all 3 browsers",
           "path": "artifacts/demoqa-books/discovery/probes/out/021-s500-chromium.png"
         }
@@ -2218,6 +2226,14 @@
       "actual": "The button works like the browser's Back button. In a new tab, Chromium and WebKit go to an empty page, so the user leaves the shop; Firefox shows an empty list with \"Page 1 of 0\".",
       "expectedBasis": "A button called \"Back To Book Store\" should always lead to the Book Store.",
       "evidence": [
+        {
+          "label": "1. Before: Git Pocket Guide opened directly in a new Firefox tab, about to click \"Back To Book Store\" (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-002-1-before-direct-link-back-button.png"
+        },
+        {
+          "label": "2. After: Firefox shows an empty book list with \"Page 1 of 0\" (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-002-2-after-empty-book-list.png"
+        },
         {
           "label": "Probe 2026-11-11, deep link on 3 browsers",
           "path": "artifacts/demoqa-books/discovery/probes/out/019-deep-chromium.png"
@@ -2248,6 +2264,14 @@
       "actual": "About 1 to 3 seconds after the page opens, all four fields are emptied without warning. The user has to type everything again.",
       "expectedBasis": "What the user types should never be thrown away without telling them.",
       "evidence": [
+        {
+          "label": "1. Before: First Name, Last Name, UserName and Password typed right after the Register page opened (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-003-1-before-form-typed.png"
+        },
+        {
+          "label": "2. After: a few seconds later all four fields are empty, without any click (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-003-2-after-form-emptied.png"
+        },
         {
           "label": "Probe 2026-11-11 (fill early) on 3 browsers",
           "path": "artifacts/demoqa-books/discovery/probes/out/fi-chromium-testFillEarly.png"
@@ -2307,6 +2331,14 @@
       "expectedBasis": "Search boxes normally ignore extra spaces at the start and end.",
       "evidence": [
         {
+          "label": "1. Before: searching \"git\" lists Git Pocket Guide (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-005-1-before-search-git.png"
+        },
+        {
+          "label": "2. After: searching \"  git  \" (with spaces) lists no books, \"Page 1 of 0\" (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-005-2-after-search-with-spaces-empty.png"
+        },
+        {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
       ],
@@ -2334,6 +2366,14 @@
       "actual": "No books are listed, because the search only looks at Title, Author and Publisher.",
       "expectedBasis": "The ISBN identifies the book and is shown on its page.",
       "evidence": [
+        {
+          "label": "1. Before: the Git Pocket Guide page shows ISBN 9781449325862 (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-006-1-before-book-isbn.png"
+        },
+        {
+          "label": "2. After: searching 9781449325862 lists no books (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-006-2-after-isbn-search-empty.png"
+        },
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
@@ -2364,6 +2404,14 @@
       "expectedBasis": "An empty table with no message looks like a broken page.",
       "evidence": [
         {
+          "label": "1. Before: the Book Store page with the full list and the search box (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-007-1-before-book-store-search-box.png"
+        },
+        {
+          "label": "2. After: searching \"zzqx\" shows only headings and \"Page 1 of 0\", with no message (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-007-2-after-no-results-no-message.png"
+        },
+        {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
       ],
@@ -2389,6 +2437,14 @@
       "actual": "The book page shows its labels with no values and no message, so the user cannot tell what went wrong.",
       "expectedBasis": "The user is not told that the book does not exist.",
       "evidence": [
+        {
+          "label": "1. Before: a known book page (ISBN 9781449325862) shows its details (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-008-1-before-known-book-page.png"
+        },
+        {
+          "label": "2. After: the unknown ISBN 0000000000000 shows empty labels and no message (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-008-2-after-unknown-isbn-empty-page.png"
+        },
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
@@ -2448,6 +2504,14 @@
       "expectedBasis": "The same button should have the same name on every page.",
       "evidence": [
         {
+          "label": "1. Before: signed in, the Profile page button says \"Logout\" (2026-11-11; user name blurred)",
+          "path": "artifacts/demoqa-books/evidence/DEF-010-1-before-profile-logout-label.png"
+        },
+        {
+          "label": "2. After: the Book Store page button says \"Log out\" (highlighted; user name blurred)",
+          "path": "artifacts/demoqa-books/evidence/DEF-010-2-after-book-store-log-out-label.png"
+        },
+        {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
       ],
@@ -2475,6 +2539,14 @@
       "actual": "The text stops in the middle of a word: \"...for those of you with Git exp\". The site sends the text already cut off, and the page shows it as it is.",
       "expectedBasis": "A description that stops in the middle of a word looks broken.",
       "evidence": [
+        {
+          "label": "1. Before: the Book Store list, about to click \"Git Pocket Guide\" (2026-11-11)",
+          "path": "artifacts/demoqa-books/evidence/DEF-011-1-before-open-git-pocket-guide.png"
+        },
+        {
+          "label": "2. After: the Description stops mid-word at \"...with Git exp\" (highlighted)",
+          "path": "artifacts/demoqa-books/evidence/DEF-011-2-after-description-cut-off.png"
+        },
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
         }
