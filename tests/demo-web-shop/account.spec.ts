@@ -68,7 +68,7 @@ test.describe('Downloadable products', () => {
     test.setTimeout(90_000);
     await accountPage.goto('downloadableproducts');
 
-    // Known defect DEF-005: fails while the page returns 200 but never renders (R-05).
+    // Defect DEF-005: this check fails until the defect is fixed (the page returns 200 but never renders (R-05).).
     await expect(accountPage.heading, 'DEF-005: the Downloadable products page shows its heading').toBeVisible({ timeout: 30_000 });
   });
 });

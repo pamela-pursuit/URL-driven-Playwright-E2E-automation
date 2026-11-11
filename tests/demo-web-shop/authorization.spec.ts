@@ -34,7 +34,7 @@ test.describe('Authorization', () => {
   test('[TC-14] Guest is redirected to login from the back-in-stock subscriptions page', async ({ accountPage, page }) => {
     await accountPage.goto('backinstocksubscriptions');
 
-    // Known defect DEF-007: fails while the page renders for a guest instead of redirecting like TC-13.
+    // Defect DEF-007: this check fails until the defect is fixed (the page renders for a guest instead of redirecting like TC-13.).
     await expect(page, 'DEF-007: guest is redirected to login like the other /customer/* pages')
       .toHaveURL(/\/login\?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions$/i, { timeout: 5_000 });
   });

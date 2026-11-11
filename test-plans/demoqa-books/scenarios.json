@@ -594,7 +594,7 @@
       "risk": "Backend outage behaviour unspecified (R-30)",
       "requirementRef": "REQ-01",
       "executionStatus": "Failed",
-      "failureNotes": "Fails by design while DEF-001 is open (user policy: plain Failed).",
+      "failureNotes": "Fails because of defect DEF-001.",
       "specFile": "tests/demoqa-books/books.spec.ts",
       "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": "chromium: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed "
@@ -2174,7 +2174,7 @@
       "id": "DEF-001",
       "riskRef": "R-34",
       "failingScenario": "TC-21",
-      "title": "Book list goes blank with a script error when the books service returns an error",
+      "title": "Book list page goes completely blank when the book service fails",
       "severity": "Medium",
       "status": "New",
       "category": "Error handling",
@@ -2183,12 +2183,12 @@
       ],
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
-        "Make GET /BookStore/v1/Books return HTTP 500 (the test does this with a network route)",
+        "Make the book service (GET /BookStore/v1/Books) return an error, HTTP 500 (the test does this by intercepting the network call)",
         "Open https://demoqa.com/books"
       ],
-      "expected": "The page stays usable (navigation and search box visible, no rows) and ideally explains that the books could not be loaded.",
-      "actual": "The whole page goes blank (#root empty, no navigation, no search box, no message). Uncaught error on every browser, e.g. Chromium \"Cannot read properties of undefined (reading 'filter')\". A network failure instead leaves \"Loading...\" forever with no message.",
-      "expectedBasis": "Recommendation (R-30: failure behaviour is not specified). A list page should degrade gracefully rather than crash.",
+      "expected": "The page stays usable (menu and search box still shown, no books listed) and ideally explains that the books could not be loaded.",
+      "actual": "The whole page goes blank: no menu, no search box, no message. The user cannot do anything on the page. If the network fails completely, the page shows \"Loading...\" forever, with no message. Checked: on every browser the page hits an unhandled script error and the page area (#root) is empty; for example Chromium reports \"Cannot read properties of undefined (reading 'filter')\".",
+      "expectedBasis": "Our recommendation (R-30: what should happen on failure is not specified). A list page should keep working in a reduced way rather than crash.",
       "evidence": [
         {
           "label": "Probe 2026-11-11 (500, abort, empty list) on all 3 browsers",
@@ -2202,7 +2202,7 @@
     {
       "id": "DEF-002",
       "riskRef": "R-35",
-      "title": "\"Back To Book Store\" leaves the site or shows an empty list when the book page was opened directly",
+      "title": "\"Back To Book Store\" leaves the site or shows an empty list after a direct link",
       "severity": "Low",
       "status": "New",
       "category": "Navigation",
@@ -2211,12 +2211,12 @@
       ],
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
-        "Open a book detail page directly, e.g. https://demoqa.com/books?search=9781449325862 (bookmark, shared link or new tab)",
+        "Open a book page directly, for example https://demoqa.com/books?search=9781449325862 (from a bookmark, a shared link or a new tab)",
         "Click \"Back To Book Store\""
       ],
-      "expected": "The user lands on https://demoqa.com/books with the book list.",
-      "actual": "The button goes back one browser-history entry. Chromium and WebKit go to the previous page (about:blank in a new tab: blank page). Firefox stays on the detail URL and shows an empty list shell \"Page 1 of 0\". From the list (normal journey) it works.",
-      "expectedBasis": "Recommendation: a button labelled \"Back To Book Store\" should always lead to the Book Store.",
+      "expected": "The user lands on https://demoqa.com/books and sees the book list.",
+      "actual": "The button only goes back one step in the browser history, like the browser's Back button. In Chromium and WebKit it goes to the previous page; in a new tab that is about:blank, an empty page, so the user leaves the shop. Firefox stays on the book page address and shows an empty list with \"Page 1 of 0\". When the user comes from the book list (the normal way), the button works.",
+      "expectedBasis": "Our recommendation: a button labelled \"Back To Book Store\" should always lead to the Book Store.",
       "evidence": [
         {
           "label": "Probe 2026-11-11, deep link on 3 browsers",
@@ -2225,12 +2225,12 @@
       ],
       "foundOn": "2026-11-11",
       "reportedTo": "Not reported (workbook only)",
-      "nextAction": "None. No automated check (TC-19 tests the normal journey from the list)."
+      "nextAction": "None. No automated check (TC-19 tests the normal way, starting from the list)."
     },
     {
       "id": "DEF-003",
       "riskRef": "R-36",
-      "title": "Register form silently erases what the user typed when the reCAPTCHA token arrives",
+      "title": "Register form erases what the user typed, without warning, after a few seconds",
       "severity": "Medium",
       "status": "New",
       "category": "Functional / data loss",
@@ -2241,12 +2241,12 @@
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
         "Open https://demoqa.com/register",
-        "Within about 1 second, type First Name, Last Name, UserName and Password",
+        "Type First Name, Last Name, UserName and Password within about 1 second",
         "Wait about 3 seconds without clicking"
       ],
       "expected": "The typed values stay in the fields.",
-      "actual": "When the invisible reCAPTCHA v3 token arrives (about 1-3 s after load) all four fields are cleared and any validation errors or \"Please verify reCaptcha to register!\" message disappear. Clicking Register before the token shows \"Please verify reCaptcha to register!\" and sends nothing.",
-      "expectedBasis": "Recommendation: user input must not be discarded without notice.",
+      "actual": "About 1-3 s after the page opens, all four fields are emptied without warning, and any error messages, including \"Please verify reCaptcha to register!\", disappear. The user has to type everything again. This happens when the hidden robot check (invisible reCAPTCHA v3) finishes and hands the page its token. If the user clicks Register before that, the page shows \"Please verify reCaptcha to register!\" and sends nothing.",
+      "expectedBasis": "Our recommendation: what the user types must never be thrown away without telling them.",
       "evidence": [
         {
           "label": "Probe 2026-11-11 (fill early) on 3 browsers",
@@ -2255,12 +2255,12 @@
       ],
       "foundOn": "2026-11-11",
       "reportedTo": "Not reported (workbook only)",
-      "nextAction": "None. Tests wait for the token before typing; no automated check for the erase itself (timing-dependent)."
+      "nextAction": "None. The tests wait for the robot check (reCAPTCHA token) before typing. There is no automated check for the erasing itself, because it depends on timing."
     },
     {
       "id": "DEF-004",
       "riskRef": "R-37",
-      "title": "Logout does not end the session on the server",
+      "title": "Logout does not really sign the user out on the server",
       "severity": "Medium",
       "status": "New",
       "category": "Security / session",
@@ -2271,13 +2271,13 @@
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
         "Sign in",
-        "Keep a copy of the session cookies (token, userID)",
+        "Save a copy of the session cookies (token, userID)",
         "Click Logout",
         "Call GET /Account/v1/User/<userID> with the saved token"
       ],
-      "expected": "After Logout the old token is rejected (401).",
-      "actual": "Logout sends no request to the server; the old token still returns 200 with the account data. (A later login does revoke it.)",
-      "expectedBasis": "Recommendation (OWASP Session Management: invalidate the session on logout). Not stated in the requirements.",
+      "expected": "After Logout the old token no longer works (the server answers 401).",
+      "actual": "Logout does not tell the server anything, so the old token keeps working: the account data still comes back (the server answers 200). Anyone holding the old token can still read the account. Signing in again later does cancel the old token.",
+      "expectedBasis": "Our recommendation, based on OWASP Session Management (end the session on the server at logout). It is not in the requirements.",
       "evidence": [
         {
           "label": "Probe 2026-11-11 (fi-session.mjs) on 3 browsers; no screenshot (signed-in data)"
@@ -2290,7 +2290,7 @@
     {
       "id": "DEF-005",
       "riskRef": "R-19",
-      "title": "Book search does not ignore leading and trailing spaces",
+      "title": "Book search finds nothing if the text has spaces before or after it",
       "severity": "Low",
       "status": "New",
       "category": "Functional / search",
@@ -2302,9 +2302,9 @@
         "Open https://demoqa.com/books",
         "Type \"  git  \" (with spaces) in \"Type to search\""
       ],
-      "expected": "The same books as for \"git\" are listed (Git Pocket Guide).",
-      "actual": "No books are listed; the table is empty and shows \"Page 1 of 0\".",
-      "expectedBasis": "Recommendation: search input is normally trimmed. Promoted to a defect by the user (2026-11-11).",
+      "expected": "The same books are listed as for \"git\" (Git Pocket Guide).",
+      "actual": "No books are listed. The table is empty and shows \"Page 1 of 0\". A user who types an extra space by accident finds nothing.",
+      "expectedBasis": "Our recommendation: search boxes normally ignore extra spaces at the start and end. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2331,8 +2331,8 @@
         "Type the ISBN 9781449325862 in \"Type to search\""
       ],
       "expected": "Git Pocket Guide (ISBN 9781449325862) is listed.",
-      "actual": "No books are listed (search covers only Title, Author and Publisher).",
-      "expectedBasis": "Recommendation: the ISBN identifies the book and is shown on its detail page. Promoted by the user (2026-11-11).",
+      "actual": "No books are listed, because the search only looks at Title, Author and Publisher.",
+      "expectedBasis": "Our recommendation: the ISBN identifies the book and is shown on its page. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2356,12 +2356,12 @@
       ],
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
-        "Open https://demoqa.com/books and search \"zzqx\" (no match)",
-        "Or open /profile with an empty collection"
+        "Open https://demoqa.com/books and search for \"zzqx\" (no match)",
+        "Open /profile with an empty collection (a second way to see the problem)"
       ],
-      "expected": "A short message explains that there are no results / no books.",
-      "actual": "Only the column headers and \"Page 1 of 0\" are shown; no message.",
-      "expectedBasis": "Recommendation (exact wording not specified). Promoted by the user (2026-11-11).",
+      "expected": "A short message says there are no results or no books.",
+      "actual": "Only the column headings and \"Page 1 of 0\" are shown, with no message. Users may think the page is broken or still loading.",
+      "expectedBasis": "Our recommendation (the exact words are not specified). The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2369,12 +2369,12 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported (workbook only)",
-      "nextAction": "None. No automated check: the expected wording is not specified, so the tests do not invent it."
+      "nextAction": "None. No automated check: the expected words are not specified, so the tests do not make them up."
     },
     {
       "id": "DEF-008",
       "riskRef": "R-22",
-      "title": "Unknown ISBN shows an empty details page with no message",
+      "title": "Unknown ISBN shows an empty book page with no message",
       "severity": "Low",
       "status": "New",
       "category": "Error handling",
@@ -2385,9 +2385,9 @@
       "steps": [
         "Open https://demoqa.com/books?search=0000000000000"
       ],
-      "expected": "A message that the book was not found.",
-      "actual": "The detail labels render with empty values and no message; the API answers 400 (code 1205).",
-      "expectedBasis": "Recommendation (exact wording not specified). Promoted by the user (2026-11-11).",
+      "expected": "A message says that the book was not found.",
+      "actual": "The book page shows its labels with no values and no message, so the user cannot tell what went wrong. Checked: the book service (API) answers 400 (code 1205).",
+      "expectedBasis": "Our recommendation (the exact words are not specified). The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2395,12 +2395,12 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported (workbook only)",
-      "nextAction": "None. No automated check: the expected wording is not specified, so the test does not invent it."
+      "nextAction": "None. No automated check: the expected words are not specified, so the test does not make them up."
     },
     {
       "id": "DEF-009",
       "riskRef": "R-23",
-      "title": "Duplicate-add message reads \"the your collection\"",
+      "title": "Adding the same book twice shows \"the your collection\"",
       "severity": "Low",
       "status": "New",
       "category": "Content",
@@ -2413,9 +2413,9 @@
         "Add a book to the collection",
         "Add the same book again"
       ],
-      "expected": "The message reads \"...already present in your collection!\" (no \"the your\").",
-      "actual": "The alert reads \"Book already present in the your collection!\".",
-      "expectedBasis": "Grammar. Promoted by the user (2026-11-11).",
+      "expected": "The message reads \"...already present in your collection!\" (without \"the your\").",
+      "actual": "The pop-up message reads \"Book already present in the your collection!\". The grammar mistake looks careless to users.",
+      "expectedBasis": "Correct grammar. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2429,7 +2429,7 @@
     {
       "id": "DEF-010",
       "riskRef": "R-24",
-      "title": "Logout button is labelled differently on different pages",
+      "title": "Logout button has a different label on different pages",
       "severity": "Low",
       "status": "New",
       "category": "Content / consistency",
@@ -2444,8 +2444,8 @@
         "Look at the logout button on /profile and on /books"
       ],
       "expected": "The same label on every page (\"Logout\", as on /profile).",
-      "actual": "\"Logout\" on /profile, \"Log out\" on /books and book detail pages.",
-      "expectedBasis": "Consistency. Promoted by the user (2026-11-11).",
+      "actual": "The button says \"Logout\" on /profile but \"Log out\" on /books and on the book detail pages. This looks inconsistent.",
+      "expectedBasis": "Consistency. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2459,7 +2459,7 @@
     {
       "id": "DEF-011",
       "riskRef": "R-25",
-      "title": "Book description is cut off mid-word",
+      "title": "Book description stops in the middle of a word",
       "severity": "Low",
       "status": "New",
       "category": "Content / data",
@@ -2472,8 +2472,8 @@
         "Read the Description"
       ],
       "expected": "The full description, ending with a complete sentence.",
-      "actual": "The text stops mid-word: \"...for those of you with Git exp\". The API (GET /BookStore/v1/Book and /Books) already returns this 255-character text; the page does not clip it.",
-      "expectedBasis": "Recommendation. Promoted by the user (2026-11-11).",
+      "actual": "The text stops in the middle of a word: \"...for those of you with Git exp\". The page shows everything it gets: the book service (GET /BookStore/v1/Book and /Books) already sends this cut-off 255-character text.",
+      "expectedBasis": "Our recommendation. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2487,7 +2487,7 @@
     {
       "id": "DEF-012",
       "riskRef": "R-26",
-      "title": "Register request does not send the reCAPTCHA result to the server",
+      "title": "Register does not send the robot check (reCAPTCHA) result to the server",
       "severity": "Medium",
       "status": "New",
       "category": "Security",
@@ -2496,13 +2496,13 @@
       ],
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
-        "Open https://demoqa.com/register and wait for the invisible reCAPTCHA",
-        "Fill the form with the weak password \"abc\" and click Register",
-        "Inspect the POST /Account/v1/User request body"
+        "Open https://demoqa.com/register and wait for the hidden robot check (invisible reCAPTCHA)",
+        "Fill in the form with the weak password \"abc\" and click Register",
+        "Look at the data sent in the POST /Account/v1/User request"
       ],
-      "expected": "The request includes the reCAPTCHA token so the server can verify it.",
-      "actual": "The body contains only userName and password. The browser blocks the click until a token exists, but the server never receives it, so a direct API call skips the captcha.",
-      "expectedBasis": "Recommendation: captcha checks must be verified on the server. Promoted by the user (2026-11-11).",
+      "expected": "The request includes the reCAPTCHA token, so the server can check it.",
+      "actual": "The request only contains userName and password. The page does not let you click Register until the robot check is done, but the server never receives the result. So anyone who calls the server directly (through the API) skips the robot check.",
+      "expectedBasis": "Our recommendation: robot checks must be verified on the server. The user made this a defect (2026-11-11).",
       "evidence": [
         {
           "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
@@ -2525,11 +2525,11 @@
       ],
       "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
       "steps": [
-        "Open https://demoqa.com/books at 375x812"
+        "Open https://demoqa.com/books on a 375x812 screen"
       ],
       "expected": "All columns can be reached.",
-      "actual": "Not a defect: the Publisher header is clipped at first view, but the table scrolls sideways (wrapper overflow-x: auto, scrollWidth 428 vs 344); after scrolling the column is fully visible on Chromium, Firefox and WebKit.",
-      "expectedBasis": "Checked 2026-11-11 after the user asked to promote all discrepancies.",
+      "actual": "This is not a defect. At first the Publisher heading is cut off, but the table can be scrolled sideways, and after scrolling the column is fully visible on Chromium, Firefox and WebKit. Checked: the table area scrolls sideways (overflow-x: auto); its content is 428 px wide in a 344 px box (scrollWidth 428 vs 344).",
+      "expectedBasis": "Checked on 2026-11-11 after the user asked to turn all differences into defects.",
       "evidence": [
         {
           "label": "Probe 2026-11-11 at 375x812 on all 3 browsers (impl-def005-012.mjs)"
@@ -2537,7 +2537,7 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported (workbook only)",
-      "nextAction": "None. TC-47 keeps checking the first view; the column stays reachable by scrolling."
+      "nextAction": "None. TC-47 keeps checking the first view; the column can still be reached by scrolling."
     }
   ],
   "executions": [

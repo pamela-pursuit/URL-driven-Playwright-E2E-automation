@@ -29,7 +29,7 @@ test.describe('Authentication', () => {
     await expect(page).toHaveURL(/\/login$/);
     await expect(loginPage.errorSummary).toContainText(MESSAGES.loginFailed);
     await expect(header.loginLink).toBeVisible();
-    // Known defect DEF-002: fails while the summary says "No customer account found" (account enumeration).
+    // Defect DEF-002: this check fails until the defect is fixed (the summary says "No customer account found" (account enumeration).).
     await expect(loginPage.errorSummary, 'DEF-002: the message does not reveal whether the email is registered')
       .not.toContainText(MESSAGES.noCustomerAccount, { timeout: 2_000 });
   });

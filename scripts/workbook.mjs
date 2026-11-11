@@ -540,7 +540,7 @@ function plainScopeLines(data, scope, notRun) {
   const defectChecks = groups.filter((g) => g.defects.size && [...g.categories].every((c) => c === 'Failed in latest run'));
   const others = groups.filter((g) => !defectChecks.includes(g));
   if (defectChecks.length) {
-    lines.push(`• **Known defects (expected failures):** ${defectChecks.length} scenario${defectChecks.length === 1 ? '' : 's'} ` +
+    lines.push(`• **Failed because of open defects:** ${defectChecks.length} scenario${defectChecks.length === 1 ? '' : 's'} ` +
       `check bugs that are still open, so they fail until the bug is fixed. See the "Defects" sheet.`);
     for (const g of defectChecks) {
       lines.push(`    – ${g.id} ${g.journey}: checks ${[...g.defects].join(', ')} – fails on ${browserList(g.browsers)}`);
@@ -833,7 +833,7 @@ function notExecutedRows(data, scope) {
           coverage: '',
           action: !r ? 'Run the suite and sync the workbook'
             : status === 'Failed' && knownDefects(data, s.id).length
-              ? `Known defect ${knownDefects(data, s.id).join(', ')}: the test checks the correct behaviour and fails until the site is fixed (see "Defects")`
+              ? `Defect ${knownDefects(data, s.id).join(', ')}: the test checks the correct behaviour and fails until the site is fixed (see "Defects")`
             : status === 'Failed' ? 'Investigate the failure (screenshot link in "Execution Results")'
               : status === 'Flaky' ? 'Investigate the instability; it passed only on retry'
                 : 'Check why it was skipped (see the run\'s summary.md "Not run in this run")'
@@ -1009,149 +1009,226 @@ function addDefectsSheet(wb, app, data) {
   ws.dataValidations?.add?.(`D2:D${data.defects.length + 1}`, { type: 'list', allowBlank: false, formulae: [`"${DEFECT_STATUSES.join(',')}"`] });
 }
 
+// ---------- Clean 3-sheet workbook: Summary, Test Cases, Defects (all projects) ----------
+// Plain language only. A failed test is "Failed" and names the defect it found; nothing is called
+// "known" or "expected". Browsers a test case does not cover are "Not tested", with the reason.
+
+const isOpen = (d) => !['Closed', 'Rejected'].includes(d.status);
+const BROWSER_NAME = { chromium: 'Chromium', firefox: 'Firefox', webkit: 'WebKit' };
+const SEVERITY_ORDER = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+const GREY = 'FFEDEDED';
+
+function openDefectsFor(data, scenarioId) {
+  return (data.defects ?? []).filter((d) => isOpen(d) && ((d.scenarios ?? []).includes(scenarioId) || d.failingScenario === scenarioId));
+}
+
+// One test case on one browser.
+function resultOf(data, s, b) {
+  if (s.automationStatus !== 'Automated') return { text: 'Not automated', fill: GREY, kind: 'notAutomated' };
+  if (!coverageOf(s).includes(b)) return { text: 'Not tested', fill: GREY, kind: 'notTested' };
+  const r = latestPerBrowser(s, data.executions).get(b);
+  if (!r) return { text: 'Not run yet', fill: GREY, kind: 'notRun' };
+  if (r.status === 'Passed') return { text: 'Passed', fill: COLORS.Passed, kind: 'passed', runAt: r.runAt };
+  if (r.status === 'Failed') return { text: 'Failed', fill: COLORS.Failed, kind: 'failed', error: r.error, runAt: r.runAt };
+  if (r.status === 'Flaky') return { text: 'Passed on retry', fill: COLORS.Flaky, kind: 'flaky', runAt: r.runAt };
+  // A skip is not a failure: the test did not run on this browser (for example an old browser limit).
+  return { text: 'Not run', fill: GREY, kind: 'notRun', runAt: r.runAt };
+}
+
+const firstLine = (text) => String(text ?? '').replace(/\s+/g, ' ').trim().split(/(?<=\.)\s/)[0].slice(0, 220);
+const appTitle = (app) => app.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+const dateOf = (iso) => (iso ? new Date(iso).toISOString().slice(0, 10) : 'not run yet');
+const fill = (argb) => ({ type: 'pattern', pattern: 'solid', fgColor: { argb } });
+const thin = { style: 'thin', color: { argb: COLORS.border } };
+const box = { top: thin, left: thin, bottom: thin, right: thin };
+
+function headerRow(ws, values) {
+  const row = ws.addRow(values);
+  row.eachCell((c) => { c.font = { bold: true, color: { argb: COLORS.headerText } }; c.fill = fill(COLORS.header); c.alignment = { vertical: 'middle', wrapText: true }; c.border = box; });
+  row.height = 22;
+  return row;
+}
+
+function bodyRow(ws, values, widths) {
+  const row = ws.addRow(values);
+  row.eachCell({ includeEmpty: true }, (c, i) => { if (i <= values.length) { c.alignment = { vertical: 'top', wrapText: true }; c.border = box; } });
+  row.height = rowHeight(values.map((v) => (v && typeof v === 'object' ? v.text ?? '' : v)), widths);
+  return row;
+}
+
+function addSummarySheet(wb, app, data) {
+  const ws = wb.addWorksheet('Summary', { properties: { tabColor: { argb: 'FF1F3864' } } });
+  const widths = [16, 44, 18, 14, 14, 50];
+  ws.columns = widths.map((width) => ({ width }));
+  ws.views = [{ showGridLines: false }];
+  ws.pageSetup = { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 };
+  const total = widths.reduce((a, b) => a + b, 0);
+  const line = (value, font = {}, background) => {
+    const row = ws.addRow([value]);
+    ws.mergeCells(row.number, 1, row.number, widths.length);
+    const c = row.getCell(1);
+    c.font = font; c.alignment = { wrapText: true, vertical: 'top' };
+    if (background) c.fill = fill(background);
+    row.height = rowHeight([value], [total]);
+  };
+  const section = (title) => { ws.addRow([]); line(title, { bold: true, size: 13, color: { argb: COLORS.headerText } }, COLORS.header); };
+
+  const automated = data.scenarios.filter((s) => s.automationStatus === 'Automated');
+  const cells = data.scenarios.flatMap((s) => BROWSERS.map((b) => ({ s, b, r: resultOf(data, s, b) })));
+  const lastRun = data.executions.map((e) => e.runAt).sort().at(-1);
+  const failed = cells.filter((c) => c.r.kind === 'failed' || c.r.kind === 'flaky');
+  const openDefects = (data.defects ?? []).filter(isOpen);
+
+  line(`${appTitle(app)}: test summary`, { bold: true, size: 18, color: { argb: COLORS.header } });
+  line(`Website: ${data.baseUrl ?? ''}    Last test run: ${dateOf(lastRun)}    Test cases approved: ${dateOf(data.approval?.approvedAt)}`, { color: { argb: 'FF595959' } });
+
+  // Result per browser
+  section('Result');
+  headerRow(ws, ['Browser', 'Test cases', 'Passed', 'Failed', 'Not tested', 'Note']);
+  for (const b of BROWSERS) {
+    const mine = cells.filter((c) => c.b === b);
+    const n = (k) => mine.filter((c) => c.r.kind === k).length;
+    const notTested = n('notTested') + n('notAutomated') + n('notRun');
+    const failedHere = n('failed') + n('flaky');
+    const row = bodyRow(ws, [BROWSER_NAME[b], data.scenarios.length, n('passed'), failedHere, notTested,
+      failedHere ? 'See "Failed test cases" below' : notTested ? 'See "Not tested" below' : 'All passed'], widths);
+    row.getCell(3).fill = fill(COLORS.Passed);
+    if (failedHere) row.getCell(4).fill = fill(COLORS.Failed);
+  }
+  const passedAll = cells.filter((c) => c.r.kind === 'passed').length;
+  const tested = cells.filter((c) => !['notTested', 'notAutomated', 'notRun'].includes(c.r.kind)).length;
+  const totalRow = bodyRow(ws, ['Total', `${data.scenarios.length} x 3 browsers`, passedAll, failed.length, cells.length - tested,
+    `${tested} tests ran in the last run`], widths);
+  totalRow.eachCell((c) => { c.font = { bold: true }; });
+
+  // Outcome in plain words
+  section('Outcome');
+  const failedCases = [...new Map(failed.map((c) => [c.s.id, c.s])).values()];
+  const withDefect = failedCases.filter((s) => openDefectsFor(data, s.id).length);
+  const withoutDefect = failedCases.filter((s) => !openDefectsFor(data, s.id).length);
+  if (!failedCases.length) line('All tested test cases passed on every browser they were run on.', { bold: true, color: { argb: 'FF006100' } }, COLORS.Passed);
+  else {
+    line(`${failedCases.length} of ${automated.length} test cases failed. ${withDefect.length} of them found a defect in the website (listed below and on the "Defects" sheet).` +
+      (withoutDefect.length ? ` ${withoutDefect.length} failed without a logged defect and must be investigated.` : ''), { bold: true });
+  }
+  line(`${openDefects.length} open defect${openDefects.length === 1 ? '' : 's'}: ` +
+    (['Critical', 'High', 'Medium', 'Low'].map((sev) => [sev, openDefects.filter((d) => d.severity === sev).length]).filter(([, n]) => n).map(([sev, n]) => `${n} ${sev}`).join(', ') || 'none') + '.');
+
+  // Failed test cases
+  if (failedCases.length) {
+    section('Failed test cases');
+    headerRow(ws, ['Test case', 'What it checks', 'Failed on', 'Defect', '', 'Defect title']);
+    for (const s of failedCases) {
+      const browsers = failed.filter((c) => c.s.id === s.id).map((c) => BROWSER_NAME[c.b]);
+      const defects = openDefectsFor(data, s.id);
+      const row = bodyRow(ws, [s.id, s.journey, browsers.length === 3 ? 'All 3 browsers' : browsers.join(', '),
+        defects.map((d) => d.id).join(', ') || 'None yet', '', defects.map((d) => d.title).join('; ') || 'Investigate: no defect logged'], widths);
+      ws.mergeCells(row.number, 4, row.number, 5);
+      row.height = rowHeight([s.journey, defects.map((d) => d.title).join('; ')], [widths[1], widths[5]]);
+      row.getCell(4).fill = fill(defects.length ? COLORS.Failed : COLORS.Flaky);
+    }
+  }
+
+  // Not tested and why
+  const gaps = data.scenarios.filter((s) => BROWSERS.some((b) => ['notTested', 'notAutomated', 'notRun'].includes(resultOf(data, s, b).kind)));
+  section('Not tested and why');
+  if (!gaps.length) line('Nothing was left out: every test case ran on Chromium, Firefox and WebKit.', { color: { argb: 'FF006100' } }, COLORS.Passed);
+  else {
+    headerRow(ws, ['Test case', 'What it checks', 'Not tested on', 'Why', '', '']);
+    for (const s of gaps) {
+      const missing = BROWSERS.filter((b) => ['notTested', 'notAutomated', 'notRun'].includes(resultOf(data, s, b).kind)).map((b) => BROWSER_NAME[b]);
+      const reason = s.automationStatus !== 'Automated' ? `Not automated: ${firstLine(s.failureNotes)}`
+        : !s.scopeReason ? 'Not run yet' : firstLine(s.scopeReason.replace(/^Test-safety limit \([^)]*\):\s*/i, ''));
+      const row = bodyRow(ws, [s.id, s.journey, missing.length === 3 ? 'All 3 browsers' : missing.join(', '), reason, '', ''], widths);
+      ws.mergeCells(row.number, 4, row.number, 6);
+      row.height = rowHeight([s.journey, reason], [widths[1], widths[3] + widths[4] + widths[5]]);
+    }
+    line('Website compatibility on these browsers is not verified for the test cases above.', { italic: true, color: { argb: 'FF595959' } });
+  }
+
+  section('How to read this workbook');
+  line('Test Cases: every test case with its steps, the expected result and the result on Chromium, Firefox and WebKit.');
+  line('Defects: every problem found in the website, what happens, what should happen and why it counts as a defect.');
+  return ws;
+}
+
+function addTestCasesSheet(wb, data) {
+  const ws = wb.addWorksheet('Test Cases', { properties: { tabColor: { argb: 'FF2E75B6' } } });
+  const widths = [9, 16, 36, 9, 50, 46, 11, 11, 11, 10, 40];
+  ws.columns = widths.map((width) => ({ width }));
+  headerRow(ws, ['ID', 'Area', 'Test case', 'Priority', 'Steps', 'Expected result', 'Chromium', 'Firefox', 'WebKit', 'Defect', 'Notes']);
+  for (const s of data.scenarios) {
+    const results = BROWSERS.map((b) => resultOf(data, s, b));
+    const defects = openDefectsFor(data, s.id);
+    const notes = [];
+    if (s.automationStatus !== 'Automated') notes.push(`Not automated: ${firstLine(s.failureNotes)}`);
+    else if (results.some((r) => r.kind === 'notTested')) notes.push(`Not tested on ${BROWSERS.filter((b, i) => results[i].kind === 'notTested').map((b) => BROWSER_NAME[b]).join(', ')}: ${firstLine(s.scopeReason?.replace(/^Test-safety limit \([^)]*\):\s*/i, ''))}`);
+    if (results.some((r) => r.kind === 'failed') && !defects.length) notes.push(`Failed, no defect logged yet: ${firstLine(results.find((r) => r.kind === 'failed').error)}`);
+    const steps = (s.steps ?? []).map((st, i) => `${i + 1}. ${st}`).join('\n');
+    const row = bodyRow(ws, [s.id, s.feature, s.journey, s.priority, steps, s.expected, ...results.map((r) => r.text),
+      defects.map((d) => d.id).join(', '), notes.join(' ')], widths);
+    tint(row.getCell(4));
+    results.forEach((r, i) => { row.getCell(7 + i).fill = fill(r.fill); row.getCell(7 + i).alignment = { vertical: 'top', horizontal: 'center', wrapText: true }; });
+  }
+  ws.views = [{ state: 'frozen', xSplit: 3, ySplit: 1 }];
+  ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: widths.length } };
+  return ws;
+}
+
+function addCleanDefectsSheet(wb, app, data) {
+  const ws = wb.addWorksheet('Defects', { properties: { tabColor: { argb: 'FFC00000' } } });
+  const widths = [9, 34, 9, 13, 44, 36, 36, 40, 10, 16, 26, 11];
+  ws.columns = widths.map((width) => ({ width }));
+  headerRow(ws, ['ID', 'Defect', 'Severity', 'Status', 'What happens', 'What should happen', 'Why it is a defect',
+    'Steps to see it', 'Test case', 'Browsers', 'Evidence', 'Found on']);
+  const workbookDir = path.dirname(paths(app).workbook);
+  const status = (d) => (d.status === 'New' ? 'Open' : d.status === 'Rejected' ? 'Rejected (not a defect)' : d.status);
+  const browsersFor = (d) => {
+    const ids = [...new Set([...(d.scenarios ?? []), d.failingScenario].filter(Boolean))];
+    const failing = new Set();
+    for (const id of ids) {
+      const s = data.scenarios.find((x) => x.id === id);
+      if (s) for (const b of BROWSERS) if (resultOf(data, s, b).kind === 'failed') failing.add(BROWSER_NAME[b]);
+    }
+    return failing.size === 3 ? 'All 3 browsers' : failing.size ? [...failing].join(', ') : '';
+  };
+  const sorted = [...(data.defects ?? [])].sort((a, b) =>
+    (isOpen(a) ? 0 : 1) - (isOpen(b) ? 0 : 1) || (SEVERITY_ORDER[a.severity] ?? 9) - (SEVERITY_ORDER[b.severity] ?? 9) || a.id.localeCompare(b.id));
+  let separatorDone = false;
+  for (const d of sorted) {
+    if (!isOpen(d) && !separatorDone) {
+      const sep = ws.addRow(['Closed or rejected (kept for the record)']);
+      ws.mergeCells(sep.number, 1, sep.number, widths.length);
+      sep.getCell(1).font = { bold: true, color: { argb: 'FF595959' } };
+      sep.getCell(1).fill = fill(GREY);
+      separatorDone = true;
+    }
+    const steps = (d.steps ?? []).map((st, i) => `${i + 1}. ${st}`).join('\n');
+    const evidence = (d.evidence ?? []).filter((e) => e.path);
+    const evidenceText = evidence.length ? evidence.map((e) => e.label).join('\n') : (d.evidence ?? []).map((e) => e.label).join('\n');
+    const row = bodyRow(ws, [d.id, d.title, d.severity, status(d), d.actual, d.expected, d.expectedBasis, steps,
+      [...new Set([...(d.scenarios ?? []), d.failingScenario].filter(Boolean))].join(', '), browsersFor(d) || '-', evidenceText, d.foundOn ?? ''], widths);
+    if (evidence.length) {
+      row.getCell(11).value = { text: evidenceText, hyperlink: path.relative(workbookDir, evidence[0].path).replaceAll('\\', '/') };
+      row.getCell(11).font = { color: { argb: 'FF0563C1' }, underline: true };
+    }
+    row.getCell(3).fill = fill(d.severity === 'High' || d.severity === 'Critical' ? COLORS.High : d.severity === 'Medium' ? COLORS.Medium : COLORS.Low);
+    if (!isOpen(d)) row.eachCell((c) => { c.font = { ...(c.font ?? {}), color: { argb: 'FF7F7F7F' } }; });
+  }
+  ws.views = [{ state: 'frozen', xSplit: 2, ySplit: 1 }];
+  ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: widths.length } };
+  return ws;
+}
+
 async function build(app, data) {
   const wb = new ExcelJS.Workbook();
   wb.creator = 'E2E automation agent';
   wb.created = new Date();
-  wb.calcProperties.fullCalcOnLoad = true;
-
-  // First sheet: the delivery report (live summary + the stored Markdown report rendered).
-  // The delivery report text is stored in scenarios.json ("deliveryReport", set by the `report` command).
-  if (data.deliveryReport) addDeliveryReportSheet(wb, app, data, data.deliveryReport);
-  // Second sheet: full accounting of everything not executed or not passing.
-  addNotExecutedSheet(wb, data, executionScope(data));
-  // Third sheet: logged product defects (data.defects).
-  addDefectsSheet(wb, app, data);
-
-  const scenarioHeaders = [
-    'Scenario ID', 'Feature', 'User Journey', 'Test Type', 'Priority', 'Preconditions', 'Test Data', 'Steps',
-    'Expected Result', 'Browser Coverage', 'Automation Status', 'Page Object', 'Risk', 'Requirement Reference',
-    'Execution Status', 'Failure Notes', 'Spec File', 'Last Run'
-  ];
-  const cat = wb.addWorksheet('Scenario Catalogue');
-  addTable(cat, scenarioHeaders, data.scenarios.map((s) => [
-    s.id, s.feature, s.journey, s.testType, s.priority, s.preconditions ?? '', s.testData ?? '',
-    (s.steps ?? []).map((step, i) => `${i + 1}. ${step}`).join('\n'), s.expected,
-    (s.browsers?.length ? s.browsers : BROWSERS).join(', '), s.automationStatus, s.pageObject ?? '', s.risk ?? '',
-    s.requirementRef ?? '', s.executionStatus ?? 'Not Run',
-    [s.failureNotes, s.lastRunNotes].filter(Boolean).join('\n'), s.specFile ?? '', s.lastRun ?? ''
-  ]), [12, 18, 30, 14, 10, 28, 28, 48, 40, 22, 16, 24, 28, 22, 14, 40, 28, 22]);
-  cat.eachRow((row, n) => { if (n > 1) { tint(row.getCell(5)); tint(row.getCell(15)); } });
-  cat.dataValidations?.add?.(`E2:E${Math.max(2, data.scenarios.length + 1)}`, { type: 'list', allowBlank: false, formulae: [`"${PRIORITIES.join(',')}"`] });
-
-  const td = wb.addWorksheet('Test Data');
-  addTable(td, ['Key', 'Value', 'Source', 'Used By', 'Notes'], data.testData.map((d) => [
-    d.key,
-    String(d.source ?? '').startsWith('env:') ? '(from environment)'
-      : String(d.source ?? '').startsWith('credentials:') ? '(from credentials file)'
-      : d.value ?? '',
-    d.source ?? '',
-    (d.usedBy ?? []).join(', '), d.notes ?? ''
-  ]), [26, 32, 26, 28, 48]);
-
-  // Coverage summary: live COUNTIFS formulas with cached results so it reads correctly in any viewer.
-  const cov = wb.addWorksheet('Coverage Summary');
-  const n = data.scenarios.length + 1;
-  const ref = (col) => `'Scenario Catalogue'!$${col}$2:$${col}$${Math.max(2, n)}`;
-  const count = (pred) => data.scenarios.filter(pred).length;
-  cov.addRow(['Priority', ...AUTOMATION, 'Total', 'Automated %']);
-  PRIORITIES.forEach((p, i) => {
-    const r = i + 2;
-    const cells = AUTOMATION.map((a, j) => ({
-      formula: `COUNTIFS(${ref('E')},"${p}",${ref('K')},"${a}")`,
-      result: count((s) => s.priority === p && s.automationStatus === a)
-    }));
-    const total = count((s) => s.priority === p);
-    const lastCol = String.fromCharCode(66 + AUTOMATION.length - 1);
-    cov.addRow([
-      p, ...cells,
-      { formula: `SUM(B${r}:${lastCol}${r})`, result: total },
-      { formula: `IF(${String.fromCharCode(66 + AUTOMATION.length)}${r}=0,0,B${r}/${String.fromCharCode(66 + AUTOMATION.length)}${r})`, result: total ? count((s) => s.priority === p && s.automationStatus === 'Automated') / total : 0 }
-    ]);
-  });
-  cov.addRow([]);
-  cov.addRow(['Execution Status', 'Scenarios']);
-  const execHeaderRow = cov.rowCount;
-  for (const e of EXECUTION) cov.addRow([e, { formula: `COUNTIF(${ref('O')},"${e}")`, result: count((s) => (s.executionStatus ?? 'Not Run') === e) }]);
-  cov.addRow([]);
-  cov.addRow(['Test Type', 'Scenarios']);
-  const typeHeaderRow = cov.rowCount;
-  for (const t of [...new Set(data.scenarios.map((s) => s.testType))]) cov.addRow([t, { formula: `COUNTIF(${ref('D')},"${t}")`, result: count((s) => s.testType === t) }]);
-  cov.addRow([]);
-  cov.addRow(['Feature', 'Scenarios', 'High', 'Automated']);
-  const featHeaderRow = cov.rowCount;
-  for (const f of [...new Set(data.scenarios.map((s) => s.feature))]) {
-    cov.addRow([f, count((s) => s.feature === f), count((s) => s.feature === f && s.priority === 'High'), count((s) => s.feature === f && s.automationStatus === 'Automated')]);
-  }
-  cov.addRow([]);
-  // Execution scope: explains why "N of M" scenarios run and why browsers differ (see sheet "Not Executed").
-  const scope = executionScope(data);
-  cov.addRow(['Execution scope', 'Count', 'Details']);
-  const scopeHeaderRow = cov.rowCount;
-  cov.addRow(['Scenarios in catalogue', scope.total, '']);
-  cov.addRow(['Automated (run)', scope.automated.length, `${scope.automated.length} of ${scope.total} scenarios have a test and are executed`]);
-  cov.addRow(['Not automated (not run)', scope.notAutomated.length,
-    scope.notAutomated.map((s) => `${s.id} ${s.automationStatus}: ${firstSentence(s.failureNotes)}`).join('\n') || 'None']);
-  cov.addRow(['Browser-limited (by design)', scope.limited.length,
-    scope.limited.map((s) => `${s.id} runs on ${coverageOf(s).join(', ')} only: ${firstSentence(s.scopeReason)}`).join('\n') || 'None']);
-  cov.addRow(['Expected test executions per full run', scope.expectedExecutions,
-    BROWSERS.map((b) => `${b} ${scope.inScope(b).length}`).join(', ')]);
-  cov.addRow([]);
-  // Same basis as the scenario statuses: latest result per scenario and covered browser, across all runs.
-  // "Out of scope" = automated scenarios that by design do not run on this browser; each row sums to "Automated".
-  cov.addRow(['Latest result by browser (all runs)', 'Passed', 'Failed', 'Flaky', 'Skipped', 'Not run', 'Out of scope (by design)', 'Automated']);
-  const browserHeaderRow = cov.rowCount;
-  const latestRun = data.executions.map((e) => e.runAt).sort().at(-1);
-  for (const b of BROWSERS) {
-    const covered = scope.inScope(b);
-    const statuses = covered.map((s) => latestPerBrowser(s, data.executions).get(b)?.status ?? 'Not run');
-    cov.addRow([b, ...['Passed', 'Failed', 'Flaky', 'Skipped', 'Not run'].map((st) => statuses.filter((x) => x === st).length),
-      scope.automated.length - covered.length, scope.automated.length]);
-  }
-  cov.addRow([]);
-  const gaps = data.scenarios.filter((s) => s.priority === 'High' && !['Automated', 'Blocked'].includes(s.automationStatus));
-  cov.addRow(['High-priority gaps', gaps.length ? gaps.map((s) => `${s.id} (${s.automationStatus})`).join(', ') : 'None']);
-  cov.addRow(['Latest run', latestRun ?? 'Not run']);
-  styleSheet(cov, [34, 14, 14, 14, 14, 16, 22, 14], { wrap: true });
-  cov.getColumn(3).width = 14;
-  // The scope "Details" text spans the wide area to the right of the counts.
-  for (let r = scopeHeaderRow; r <= scopeHeaderRow + 5; r += 1) cov.mergeCells(r, 3, r, 8);
-  for (const r of [execHeaderRow, typeHeaderRow, featHeaderRow, scopeHeaderRow, browserHeaderRow]) {
-    cov.getRow(r).eachCell((cell) => { cell.font = { bold: true, color: { argb: COLORS.headerText } }; cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: COLORS.header } }; });
-  }
-  for (let r = 2; r <= 4; r += 1) cov.getRow(r).getCell(AUTOMATION.length + 3).numFmt = '0%';
-
-
-  const ex = wb.addWorksheet('Execution Results');
-  const executions = [...data.executions].reverse();
-  addTable(ex, ['Run At', 'Scenario ID', 'Browser', 'Status', 'Attempts', 'Duration (s)', 'Test Title', 'Spec File', 'Error', 'Screenshot', 'Run Folder'],
-    executions.map((e) => [
-      e.runAt, e.scenarioId, e.browser, e.status, e.attempts, e.durationMs == null ? '' : Number((e.durationMs / 1000).toFixed(1)),
-      e.testTitle, e.file, e.error ?? '', e.screenshot ?? '', e.runDirectory ?? ''
-    ]), [22, 12, 11, 10, 9, 11, 48, 30, 60, 22, 30]);
-  // Hyperlinks are relative to the workbook (test-plans/<app>/), so they open from any checkout.
-  const workbookDir = path.dirname(paths(app).workbook);
-  ex.eachRow((row, i) => {
-    if (i === 1) return;
-    tint(row.getCell(4));
-    const e = executions[i - 2];
-    if (e.screenshot) {
-      row.getCell(10).value = { text: 'Open screenshot', hyperlink: path.relative(workbookDir, e.screenshot).replaceAll('\\', '/') };
-      row.getCell(10).font = { color: { argb: 'FF0563C1' }, underline: true };
-    }
-    if (e.runDirectory) {
-      row.getCell(11).value = { text: e.runDirectory, hyperlink: path.relative(workbookDir, path.join(e.runDirectory, 'summary.md')).replaceAll('\\', '/') };
-      row.getCell(11).font = { color: { argb: 'FF0563C1' }, underline: true };
-    }
-  });
-
-  const risk = wb.addWorksheet('Risks and Assumptions');
-  addTable(risk, ['ID', 'Type', 'Description', 'Impact', 'Mitigation / Clarification Needed', 'Related Scenarios', 'Status'],
-    data.risks.map((r) => [r.id, r.type, r.description, r.impact ?? '', r.mitigation ?? '', (r.scenarios ?? []).join(', '), r.status ?? 'Open']),
-    [10, 14, 50, 12, 44, 20, 12]);
-
+  addSummarySheet(wb, app, data);
+  addTestCasesSheet(wb, data);
+  addCleanDefectsSheet(wb, app, data);
   await wb.xlsx.writeFile(paths(app).workbook);
-  console.log(`build: wrote ${paths(app).workbook.replaceAll('\\', '/')} (${data.scenarios.length} scenarios, ${data.executions.length} execution rows)`);
+  console.log(`build: wrote ${paths(app).workbook.replaceAll('\\', '/')} (Summary, Test Cases, Defects; ${data.scenarios.length} test cases, ${(data.defects ?? []).length} defects)`);
 }
 
 // ---------- Rename scenario IDs (e.g. DWS-061 -> TC-61), keeping each number ----------

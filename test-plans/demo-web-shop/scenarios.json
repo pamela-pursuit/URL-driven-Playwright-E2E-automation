@@ -73,7 +73,7 @@
         "Type an email that has no account in \"Email:\" and a wrong password in \"Password:\"",
         "Click \"Log in\""
       ],
-      "expected": "You stay on /login. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and the header still shows \"Log in\". The error box must not say \"No customer account found\", because that tells strangers which emails have an account. Known defect DEF-002: the site does say it today, so this test fails.",
+      "expected": "You stay on /login. The error box shows \"Login was unsuccessful. Please correct the errors and try again.\" and the header still shows \"Log in\". The error box must not say \"No customer account found\", because that tells strangers which emails have an account.",
       "browsers": [
         "chromium",
         "firefox",
@@ -385,7 +385,7 @@
       "steps": [
         "As a guest, open /customer/backinstocksubscriptions"
       ],
-      "expected": "Like the other /customer/* pages (TC-12), the guest is sent to /login?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions. Known defect DEF-007: today the page opens for guests, so this test fails.",
+      "expected": "Like the other /customer/* pages (TC-12), the guest is sent to /login?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1177,7 +1177,7 @@
         "Change the quantity on the row to 0 and click \"Update shopping cart\"",
         "Add the product again, change the quantity to -1 and update the cart"
       ],
-      "expected": "Quantity 0: the row is removed, the cart shows the empty message and the header shows \"Shopping cart (0)\". Quantity -1: the update is refused and the item stays in the cart. Known defect DEF-006: today -1 quietly removes the item, so this test fails.",
+      "expected": "Quantity 0: the row is removed, the cart shows the empty message and the header shows \"Shopping cart (0)\". Quantity -1: the update is refused and the item stays in the cart.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1262,7 +1262,7 @@
         "Type INVALIDGIFT in the gift card box",
         "Click \"Add gift card\""
       ],
-      "expected": "An error message appears, and it is not the coupon message \"The coupon code you entered couldn't be applied to your order\". Known defect DEF-004: today it is the coupon message, so this test fails.",
+      "expected": "An error message appears, and it is not the coupon message \"The coupon code you entered couldn't be applied to your order\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1554,7 +1554,7 @@
         "Tick the Remove box on the row",
         "Click \"Update wishlist\""
       ],
-      "expected": "The row \"Health Book\" shows price 10.00 and quantity 1. The text \"Your wishlist URL for sharing:\" is followed by an https /wishlist/<guid> link. After removing: \"The wishlist is empty!\" and the header shows \"Wishlist (0)\". Known defect DEF-003: the link is http today, so this test fails (a soft check, so the removal still runs).",
+      "expected": "The row \"Health Book\" shows price 10.00 and quantity 1. The text \"Your wishlist URL for sharing:\" is followed by an https /wishlist/<guid> link. After removing: \"The wishlist is empty!\" and the header shows \"Wishlist (0)\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -1583,7 +1583,7 @@
         "Tick the \"Add to cart\" box on the row",
         "Click the \"Add to cart\" button"
       ],
-      "expected": "A \"Health Book\" row appears in /cart, the header shows 1 more item in the cart, and the small product picture on the cart row has a set width and height (so the page does not jump while loading). Whether the item leaves the wishlist is recorded, not checked (R-27). Known defect DEF-008: the picture has no size set, so this test fails (soft check).",
+      "expected": "A \"Health Book\" row appears in /cart, the header shows 1 more item in the cart, and the small product picture on the cart row has a set width and height (so the page does not jump while loading). Whether the item leaves the wishlist is recorded, not checked (R-27).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1874,7 +1874,7 @@
       "steps": [
         "Open /customer/downloadableproducts"
       ],
-      "expected": "The page shows its heading within 30 seconds. Known defect DEF-005: the server answers (HTTP 200) but the page never appears, so this test fails.",
+      "expected": "The page shows its heading within 30 seconds.",
       "browsers": [
         "chromium",
         "firefox",
@@ -2637,7 +2637,7 @@
     {
       "id": "DEF-001",
       "riskRef": "R-13",
-      "title": "Cart shipping estimate shows Ground 0.00 but checkout charges Ground 10.00 for the same address",
+      "title": "Cart shipping estimate shows Ground 0.00 but checkout charges Ground 10.00",
       "severity": "High",
       "status": "Rejected",
       "category": "Functional (pricing)",
@@ -2648,16 +2648,16 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "As a guest, add a product to the cart (the tests use Health Book, 10.00)",
+        "Add a product to the cart as a guest (the tests use Health Book, 10.00)",
         "Open /cart",
-        "Under Estimate shipping, select Country \"United States\", enter Zip / postal code \"10001\" and select \"Estimate shipping\"",
-        "Note the Ground price",
-        "Select Checkout, continue as guest, and enter a billing address in New York 10001, United States",
-        "At Shipping Method, note the Ground price; continue to Confirm Order"
+        "Choose Country \"United States\" under Estimate shipping, type Zip / postal code \"10001\" and click \"Estimate shipping\"",
+        "Write down the Ground price",
+        "Click Checkout, continue as a guest, and enter a billing address in New York 10001, United States",
+        "Write down the Ground price on the Shipping Method step, then continue to Confirm Order"
       ],
-      "expected": "The cart estimate shows the same Ground price that checkout charges for the same address (10.00).",
-      "actual": "Not a defect (re-checked 2026-11-10, reported by the user). The comparison used two different products. TC-47 estimated shipping for \"Computing and Internet\", which has free shipping (its product page says \"Free shipping\"): every option 0.00, cart total 10.00. Checkout (TC-60) used Health Book. For Health Book the estimate is Ground (10.00), Next Day Air (40.00), 2nd Day Air (20.00), the same as checkout.",
-      "expectedBasis": "Recommendation (not in the requirements): a shipping estimate should match the checkout charge. Confirm with the product owner whether the estimate is meant to be indicative only.",
+      "expected": "For the same address, the cart estimate shows the same Ground price that checkout charges (10.00).",
+      "actual": "This is not a defect. The two prices came from two different products. The cart estimate (TC-47) used \"Computing and Internet\", which ships for free (its product page says \"Free shipping\"), so every option showed 0.00 and the cart total was 10.00. Checkout (TC-60) used Health Book. For Health Book the estimate shows Ground (10.00), Next Day Air (40.00) and 2nd Day Air (20.00), the same as checkout. Checked: 2026-11-10, after the user reported it.",
+      "expectedBasis": "Our recommendation, not a written requirement: the shipping estimate should match what checkout charges. Ask the product owner whether the estimate is only meant as a rough guide.",
       "evidence": [
         {
           "label": "Re-probe 2026-11-10: Health Book estimate Ground (10.00); Computing and Internet estimate 0.00 with \"Free shipping\" on its product page"
@@ -2665,12 +2665,12 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet (site owner / product owner)",
-      "nextAction": "None. Logged in error: the estimate and checkout agree for the same product."
+      "nextAction": "Nothing to do. It was logged by mistake: for the same product, the estimate and checkout agree."
     },
     {
       "id": "DEF-002",
       "riskRef": "R-14",
-      "title": "Login error message reveals whether an email address is registered (account enumeration)",
+      "title": "Login message tells anyone whether an email address has an account",
       "severity": "Medium",
       "status": "New",
       "category": "Security",
@@ -2682,14 +2682,14 @@
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
         "Open /login",
-        "Enter an email that is not registered (for example qa.unknown+<timestamp>@example.test) and any password; select \"Log in\"",
-        "Note the message",
-        "Enter a registered email with a wrong password; select \"Log in\"",
-        "Note the message"
+        "Type an email that has no account (for example qa.unknown+<timestamp>@example.test) and any password, then click \"Log in\"",
+        "Write down the message",
+        "Type an email that has an account with a wrong password, then click \"Log in\"",
+        "Write down the message"
       ],
-      "expected": "Both attempts show the same generic message (for example \"Login was unsuccessful\" with no hint whether the email exists).",
-      "actual": "Unknown email: \"No customer account found\". Registered email with wrong password: \"The credentials provided are incorrect\". An attacker can tell which emails have accounts. (Empty fields also show \"No customer account found\".) Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus an independent probe): an unknown email still gets \"No customer account found\"; the known email with a wrong password gets \"The credentials provided are incorrect\" (TC-02).",
-      "expectedBasis": "Recommendation: OWASP Authentication Cheat Sheet (generic authentication error messages). Not stated in the requirements; product decision needed (Q-NB2).",
+      "expected": "Both attempts show the same general message (for example \"Login was unsuccessful\"), with no hint about whether the email has an account.",
+      "actual": "If the email has no account, the shop says \"No customer account found\". If the email has an account but the password is wrong, it says \"The credentials provided are incorrect\". So anyone can find out which email addresses have accounts, which helps attackers. Leaving both fields empty also shows \"No customer account found\". Checked: 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers and by a separate direct check, with the same two messages (TC-02).",
+      "expectedBasis": "Our recommendation, based on the OWASP Authentication Cheat Sheet (login errors should not say which part was wrong). It is not in the requirements; the product owner needs to decide (Q-NB2).",
       "evidence": [
         {
           "label": "TC-03 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2705,13 +2705,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet (site owner / product owner)",
-      "nextAction": "Report as a security observation; if the messages are unified, update TC-02 to TC-04.",
+      "nextAction": "Report it as a security finding. If the two messages are made the same, update TC-02 to TC-04.",
       "failingScenario": "TC-03"
     },
     {
       "id": "DEF-003",
       "riskRef": "R-15",
-      "title": "Wishlist share URL uses http instead of https",
+      "title": "Wishlist share link starts with http instead of the secure https",
       "severity": "Low",
       "status": "New",
       "category": "Security",
@@ -2720,13 +2720,13 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "As a guest, add a product to the wishlist (the tests use Health Book)",
+        "Add a product to the wishlist as a guest (the tests use Health Book)",
         "Open /wishlist",
-        "Read the URL after \"Your wishlist URL for sharing:\""
+        "Read the link after \"Your wishlist URL for sharing:\""
       ],
-      "expected": "The share URL uses https, like the rest of the site (optionally with HSTS so http is never used).",
-      "actual": "The share URL is http://demowebshop.tricentis.com/wishlist/<guid>. Re-checked 2026-11-10: the http URL answers 301 Moved Permanently to the same https URL, so the link works, but the first request (including the wishlist guid) is sent unencrypted. The site sends no Strict-Transport-Security header, so browsers do not upgrade it automatically. Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus a probe): the page is served over https, but the share text reads \"http://demowebshop.tricentis.com/wishlist/<guid>\".",
-      "expectedBasis": "Recommendation: the site is served over https, so shared links should be too. Not stated in the requirements.",
+      "expected": "The share link uses the secure https, like the rest of the site (ideally the site also tells browsers to always use https, a setting called HSTS).",
+      "actual": "The share link is http://demowebshop.tricentis.com/wishlist/<guid>. The link still works, because the site forwards it to the same https address. But the first request, including the wishlist code (guid), travels unencrypted, and the site does not tell browsers to switch to https by themselves (no Strict-Transport-Security header). Checked: 2026-11-10, the http link forwards (301 Moved Permanently) to the same https link; also 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers and by a direct check: the page itself uses https, but the share text reads \"http://demowebshop.tricentis.com/wishlist/<guid>\".",
+      "expectedBasis": "Our recommendation, not a written requirement: the site uses https, so links it gives out should use https too.",
       "evidence": [
         {
           "label": "TC-55 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2739,13 +2739,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet (site owner / product owner)",
-      "nextAction": "Report to the site owner (Low): generate https share links and consider HSTS.",
+      "nextAction": "Report to the site owner (Low): make share links use https and consider turning on HSTS.",
       "failingScenario": "TC-55"
     },
     {
       "id": "DEF-004",
       "riskRef": "R-12",
-      "title": "Invalid gift card code shows the coupon error message",
+      "title": "Wrong gift card code shows an error message about a coupon",
       "severity": "Low",
       "status": "New",
       "category": "Content / validation message",
@@ -2754,14 +2754,22 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "As a guest, add a product to the cart",
+        "Add a product to the cart as a guest",
         "Open /cart",
-        "In the gift card field, enter \"INVALIDGIFT\" and select \"Add gift card\""
+        "Type \"INVALIDGIFT\" in the gift card box and click \"Add gift card\""
       ],
-      "expected": "A message that refers to the gift card (exact text to be defined by the product owner).",
-      "actual": "\"The coupon code you entered couldn't be applied to your order\" (the same text as an invalid coupon). Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus a probe with the same cart): an invalid coupon and an invalid gift card both show \"The coupon code you entered couldn't be applied to your order\", each in its own box. Note: this is probably the shop platform's (nopCommerce) default wording, which calls gift cards \"gift card coupon codes\"; it is a wording defect, not a functional one.",
-      "expectedBasis": "Recommendation: error text should name the field the user filled in. The exact wording is not specified.",
+      "expected": "The message talks about the gift card (the product owner decides the exact words).",
+      "actual": "If you type a wrong gift card code, the shop says \"The coupon code you entered couldn't be applied to your order\". This is the same message as for a wrong coupon code. The message talks about a coupon, so customers may think they used the wrong box. Nothing else goes wrong; only the wording is the problem. The shop software (nopCommerce) probably uses this wording by default, because it calls gift cards \"gift card coupon codes\". Checked: 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers, and by a direct check with the same cart: a wrong coupon and a wrong gift card both show \"The coupon code you entered couldn't be applied to your order\", each under its own box.",
+      "expectedBasis": "Our recommendation: an error message should name the box the customer filled in. The exact words are not specified.",
       "evidence": [
+        {
+          "label": "1. Before: INVALIDGIFT typed in the Gift Cards box (2026-11-11)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-004-1-before-gift-card-typed.png"
+        },
+        {
+          "label": "2. After: the coupon message appears under Gift Cards (highlighted)",
+          "path": "artifacts/demo-web-shop/evidence/DEF-004-2-after-coupon-message-under-gift-cards.png"
+        },
         {
           "label": "TC-45 failing check (chromium, run 2026-11-10_16-05-39)",
           "path": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-chromium/test-failed-1.png"
@@ -2773,13 +2781,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet (site owner / product owner)",
-      "nextAction": "Report to the site owner; if a gift-card message is introduced, update the TC-45 assertion.",
+      "nextAction": "Report to the site owner. If a gift card message is added, update the check in TC-45.",
       "failingScenario": "TC-45"
     },
     {
       "id": "DEF-005",
       "riskRef": "R-05",
-      "title": "Downloadable products page fails with the site error page after about 30 s (signed-in customer)",
+      "title": "Downloadable products page shows an error page after about 30 s (signed in)",
       "severity": "Medium",
       "status": "New",
       "category": "Functional",
@@ -2789,12 +2797,12 @@
       "environment": "https://demowebshop.tricentis.com (public shared demo); signed in with the test account; Chromium",
       "steps": [
         "Sign in as a customer",
-        "Open My account and select \"Downloadable products\" (/customer/downloadableproducts)",
+        "Open My account and click \"Downloadable products\" (/customer/downloadableproducts)",
         "Wait for the page to load"
       ],
-      "expected": "The page loads with its heading and the customer's downloadable products, or a message that there are none, within normal page load time (other My account pages load in about 2 s).",
-      "actual": "Checked in detail 2026-11-10 (Chromium, signed in): the server takes about 30 s, then the browser is sent to /errorpage.htm, a generic page titled \"Error\" (\"... If you continue to receive this message, please try again in a little while. Thank you for your patience.\"). That error page returns HTTP 200, which is why earlier checks saw 200 but no heading. No account navigation or page content is shown. Reproduced every time: discovery 2026-11-05 (3 of 3), re-probe 2026-11-10 (3 of 3), TC-66 runs 2026-11-10_15-39-16 and 2026-11-10_16-05-39. /customer/orders loads in about 2 s in the same session.",
-      "expectedBasis": "Recommendation: the page is linked from My account, so it should load like the other account pages. Expected content is not specified (requirements.md).",
+      "expected": "The page loads in normal time (other My account pages take about 2 s). It shows its heading and the customer's downloadable products, or a message that there are none.",
+      "actual": "The page waits about 30 s and then shows the site's general error page (/errorpage.htm, titled \"Error\": \"... If you continue to receive this message, please try again in a little while. Thank you for your patience.\"). No account menu or page content is shown, so the customer cannot reach their downloads. In the same session, /customer/orders loads in about 2 s. The error page itself loads normally (HTTP 200), which is why earlier checks saw no error code but also no heading. Checked: 2026-11-10 in detail on Chromium, signed in. It happens every time: discovery 2026-11-05 (3 of 3), re-check 2026-11-10 (3 of 3), and TC-66 runs 2026-11-10_15-39-16 and 2026-11-10_16-05-39.",
+      "expectedBasis": "Our recommendation: the page is linked from My account, so it should load like the other account pages. What it should show is not specified (requirements.md).",
       "evidence": [
         {
           "label": "Probe 2026-11-10: HTTP 200 after 30.6 s; final page /errorpage.htm, title \"Error\" (no screenshot: signed-in pages show the account email)"
@@ -2806,13 +2814,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "None (defects are tracked in this workbook only). TC-66 fails while the page errors.",
+      "nextAction": "None (defects are tracked in this workbook only). TC-66 fails while the page shows the error.",
       "failingScenario": "TC-66"
     },
     {
       "id": "DEF-006",
       "riskRef": "R-11",
-      "title": "Cart quantity 0 or -1 silently removes the item with no message",
+      "title": "Cart quantity 0 or -1 removes the item without any message",
       "severity": "Medium",
       "status": "New",
       "category": "Functional / validation",
@@ -2821,13 +2829,13 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "As a guest, add a product to the cart",
-        "Open /cart, set the quantity to 0 and select \"Update shopping cart\"",
-        "Add the product again, set the quantity to -1 and select \"Update shopping cart\""
+        "Add a product to the cart as a guest",
+        "Open /cart, set the quantity to 0 and click \"Update shopping cart\"",
+        "Add the product again, set the quantity to -1 and click \"Update shopping cart\""
       ],
-      "expected": "A validation message for 0 and negative quantities (for example \"Quantity must be 1 or more\"), or, if 0 is meant to remove the item, a confirmation that it was removed. -1 should never be accepted.",
-      "actual": "In both cases the row disappears, the header shows \"Shopping cart (0)\", and no message is shown. Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus a probe): quantity -1 removes the row and the cart shows \"Your Shopping Cart is empty!\" with no message. Also observed: quantity \"abc\" is ignored silently (row kept, no message). Note: removing items with quantity 0 or less is how the shop platform (nopCommerce) handles updates by default; the defect is that -1 is accepted with no feedback.",
-      "expectedBasis": "User decision 2026-11-10: treat the silent removal as a defect. The exact message is not specified.",
+      "expected": "For 0 or a negative quantity, the shop shows a message (for example \"Quantity must be 1 or more\"). If 0 is meant to remove the item, the shop confirms that the item was removed. -1 should never be accepted.",
+      "actual": "In both cases the item disappears from the cart, the header shows \"Shopping cart (0)\", and no message explains why. Customers may not understand where their item went. Typing \"abc\" as the quantity is also ignored without a message (the item stays). The shop software (nopCommerce) removes items with quantity 0 or less by default; the problem is that -1 is accepted with no feedback. Checked: 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers and by a direct check: quantity -1 removes the item and the cart shows \"Your Shopping Cart is empty!\" with no message.",
+      "expectedBasis": "The user decided on 2026-11-10 to treat the silent removal as a defect. The exact message is not specified.",
       "evidence": [
         {
           "label": "TC-42 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2840,13 +2848,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner; if the behaviour changes, update TC-42.",
+      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner. If the behaviour changes, update TC-42.",
       "failingScenario": "TC-42"
     },
     {
       "id": "DEF-007",
       "riskRef": "R-21",
-      "title": "Back-in-stock subscriptions page opens for guests while other account pages require login",
+      "title": "Back-in-stock page opens for guests, but other account pages ask to log in",
       "severity": "Low",
       "status": "New",
       "category": "Authorization",
@@ -2855,13 +2863,13 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "Sign out (guest)",
+        "Sign out, so you are a guest",
         "Open /customer/backinstocksubscriptions",
-        "For comparison, open /customer/info"
+        "Open /customer/info to compare"
       ],
-      "expected": "Like the other /customer/* pages, a guest is redirected to /login?ReturnUrl=...",
-      "actual": "The page renders for a guest with the heading \"My account - Back in stock subscriptions\" and \"You are not currently subscribed to any Back In Stock notification lists\". /customer/info redirects to login. No customer data was exposed. Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus a probe): /customer/backinstocksubscriptions returns 200 for a guest, while /customer/info redirects to /login?ReturnUrl=%2fcustomer%2finfo.",
-      "expectedBasis": "User decision 2026-11-10: treat as a defect. Consistency with the other /customer/* pages (observed).",
+      "expected": "Like the other /customer/* pages, the guest is sent to the login page (/login?ReturnUrl=...).",
+      "actual": "A guest can open the page. It shows the heading \"My account - Back in stock subscriptions\" and \"You are not currently subscribed to any Back In Stock notification lists\". /customer/info sends the guest to the login page instead. No customer data was shown. Checked: 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers and by a direct check: /customer/backinstocksubscriptions loads for a guest (HTTP 200), while /customer/info sends the guest to /login?ReturnUrl=%2fcustomer%2finfo.",
+      "expectedBasis": "The user decided on 2026-11-10 to treat this as a defect. It should behave like the other /customer/* pages (as seen on the site).",
       "evidence": [
         {
           "label": "TC-14 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2874,13 +2882,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner; if the page starts redirecting, update TC-14.",
+      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner. If the page starts sending guests to the login page, update TC-14.",
       "failingScenario": "TC-14"
     },
     {
       "id": "DEF-008",
       "riskRef": "R-36",
-      "title": "Cart and wishlist thumbnails have no width or height, so the page shifts while images load",
+      "title": "Cart and wishlist pictures make the page jump while they load",
       "severity": "Low",
       "status": "New",
       "category": "UI",
@@ -2889,13 +2897,13 @@
       ],
       "environment": "https://demowebshop.tricentis.com (public shared demo); guest; Chromium, Firefox and WebKit",
       "steps": [
-        "As a guest, add a product to the wishlist",
+        "Add a product to the wishlist as a guest",
         "Open /wishlist in Firefox with the cache cleared (or on a slow connection)",
-        "Watch the row controls while the thumbnail loads"
+        "Watch the buttons and boxes in the row while the small picture loads"
       ],
-      "expected": "Controls stay in place while images load (images have width and height set).",
-      "actual": "The thumbnail has no width or height. When it loads, the \"Add to cart\" checkbox moves about 24.5 px, so a click at that moment can miss it (reproduced by probe F2c). Re-verified 2026-11-10 (run 2026-11-10_16-05-39, all 3 browsers, plus a probe): cart and wishlist thumbnails have no width/height attributes and no CSS size; the box is 34x136 when the image has not loaded and 80x68 once it has, so the layout shifts. Note: the test checks the width/height attributes; a CSS-only fix would also remove the shift and would need the test adjusted.",
-      "expectedBasis": "User decision 2026-11-10: treat as a defect. Reserving image space avoids layout shift (Core Web Vitals, CLS).",
+      "expected": "Buttons and boxes stay in place while pictures load (each picture has its width and height set).",
+      "actual": "The small product pictures have no set size. When a picture finishes loading, the row changes shape and the \"Add to cart\" checkbox moves about 24.5 px. A customer who clicks at that moment can miss it (reproduced by check F2c). Checked: 2026-11-10 in run 2026-11-10_16-05-39 on all 3 browsers and by a direct check: cart and wishlist pictures have no width/height attributes and no CSS size; the picture box is 34x136 before the image loads and 80x68 after, so the layout shifts. Note for testers: the test looks for the width/height attributes; a fix done only in CSS would also stop the jump but would need the test changed.",
+      "expectedBasis": "The user decided on 2026-11-10 to treat this as a defect. Saving space for pictures stops the page from jumping (Core Web Vitals, CLS).",
       "evidence": [
         {
           "label": "TC-56 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2908,13 +2916,13 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner; the tests already wait for images, so no test change is needed.",
+      "nextAction": "Confirmed as a defect by the user on 2026-11-10. Report to the site owner. The tests already wait for pictures to load, so no test change is needed.",
       "failingScenario": "TC-56"
     },
     {
       "id": "DEF-009",
       "riskRef": "R-31",
-      "title": "Form fields and dropdowns have no accessible name (screen readers cannot identify them)",
+      "title": "Form fields and dropdowns have no name for screen readers",
       "severity": "High",
       "status": "Closed",
       "category": "Accessibility",
@@ -2922,11 +2930,11 @@
       "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium; name checks on all three browsers",
       "steps": [
         "Open /, /login, /books, a product page and /cart (with one item)",
-        "Inspect the controls listed under Actual Result with a screen reader or the browser accessibility tree"
+        "Check the fields listed under Actual Result with a screen reader or the browser's accessibility view"
       ],
-      "expected": "Every form field and dropdown has an accessible name (a visible label, aria-label or aria-labelledby).",
-      "actual": "No accessible name (axe 'label' and 'select-name', impact critical): header search (#small-searchterms) and newsletter email (#newsletter-email) on every page; listing \"Sort by\", \"Display per page\" and \"View as\" selects; cart quantity, remove checkbox, coupon code, gift card code, and the terms of service checkbox that is needed to check out.",
-      "expectedBasis": "WCAG 2.1 Level A: 1.3.1 Info and Relationships and 4.1.2 Name, Role, Value. No WCAG target is agreed yet (R-31).",
+      "expected": "Every form field and dropdown has a name that screen readers can read out (a visible label, aria-label or aria-labelledby).",
+      "actual": "Screen readers cannot tell users what these fields are for: the search box at the top (#small-searchterms) and the newsletter email box (#newsletter-email) on every page; the \"Sort by\", \"Display per page\" and \"View as\" dropdowns on product lists; and in the cart the quantity box, the remove checkbox, the coupon code box, the gift card code box, and the terms of service checkbox that customers must tick to check out. Checked: automated accessibility scan (axe rules 'label' and 'select-name', impact critical).",
+      "expectedBasis": "WCAG 2.1 Level A: 1.3.1 Info and Relationships and 4.1.2 Name, Role, Value. No WCAG target has been agreed yet (R-31).",
       "evidence": [
         {
           "label": "TC-70 axe report with full results per page (chromium, 2026-11-10)",
@@ -2939,12 +2947,12 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69, TC-70, removed on 2026-11-10 (D6)."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69 and TC-70, which were removed on 2026-11-10 (D6)."
     },
     {
       "id": "DEF-010",
       "riskRef": "R-31",
-      "title": "Pages do not declare a language (<html> has no lang attribute)",
+      "title": "Pages do not say which language they are in (<html> has no lang attribute)",
       "severity": "Medium",
       "status": "Closed",
       "category": "Accessibility",
@@ -2952,11 +2960,11 @@
       "environment": "https://demowebshop.tricentis.com; guest; all three browsers",
       "steps": [
         "Open any page (checked: /, /login, /books, a product page, /cart)",
-        "Inspect the <html> element"
+        "Look at the <html> element in the page code"
       ],
-      "expected": "<html lang=\"en\"> (or the page language), so screen readers use the correct pronunciation.",
-      "actual": "The <html> element has no lang attribute on all five pages (axe 'html-has-lang', impact serious).",
-      "expectedBasis": "WCAG 2.1 Level A: 3.1.1 Language of Page. No WCAG target is agreed yet (R-31).",
+      "expected": "The page states its language, for example <html lang=\"en\">, so screen readers pronounce the words correctly.",
+      "actual": "None of the five pages says which language it is in, so screen readers may read the text with the wrong pronunciation. The <html> element has no lang attribute. Checked: automated accessibility scan (axe rule 'html-has-lang', impact serious).",
+      "expectedBasis": "WCAG 2.1 Level A: 3.1.1 Language of Page. No WCAG target has been agreed yet (R-31).",
       "evidence": [
         {
           "label": "TC-70 axe report with full results per page (chromium, 2026-11-10)",
@@ -2969,12 +2977,12 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69, TC-70, removed on 2026-11-10 (D6)."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69 and TC-70, which were removed on 2026-11-10 (D6)."
     },
     {
       "id": "DEF-011",
       "riskRef": "R-31",
-      "title": "Home page image links have no text alternative",
+      "title": "Home page picture links have no text for screen readers",
       "severity": "Medium",
       "status": "Closed",
       "category": "Accessibility",
@@ -2982,11 +2990,11 @@
       "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium",
       "steps": [
         "Open /",
-        "Inspect the slider banner link to tricentis.com/speed and the banner link to academy.tricentis.com"
+        "Check the slider banner link to tricentis.com/speed and the banner link to academy.tricentis.com"
       ],
-      "expected": "Each link has discernible text, for example alt text on its image.",
-      "actual": "Both links contain only an image without a text alternative, so screen readers announce no link purpose (axe 'link-name', impact serious, 2 elements).",
-      "expectedBasis": "WCAG 2.1 Level A: 2.4.4 Link Purpose (In Context) and 4.1.2 Name, Role, Value. No WCAG target is agreed yet (R-31).",
+      "expected": "Each link has text that says where it goes, for example alt text on its picture.",
+      "actual": "Both links contain only a picture with no text, so screen readers cannot tell users where the links go. Checked: automated accessibility scan (axe rule 'link-name', impact serious, 2 elements).",
+      "expectedBasis": "WCAG 2.1 Level A: 2.4.4 Link Purpose (In Context) and 4.1.2 Name, Role, Value. No WCAG target has been agreed yet (R-31).",
       "evidence": [
         {
           "label": "TC-70 axe report with full results per page (chromium, 2026-11-10)",
@@ -2995,23 +3003,23 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported yet",
-      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-70, removed on 2026-11-10 (D6)."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-70, which was removed on 2026-11-10 (D6)."
     },
     {
       "id": "DEF-012",
       "riskRef": "R-31",
-      "title": "Page structure: no main landmark, content outside landmarks, no h1 on the home page, heading order, empty table header",
+      "title": "Page layout is hard to move around with a screen reader (regions, headings)",
       "severity": "Low",
       "status": "Closed",
       "category": "Accessibility",
       "scenarios": [],
       "environment": "https://demowebshop.tricentis.com; guest; axe scan on Chromium",
       "steps": [
-        "Run an axe scan (or inspect headings and landmarks) on /, /login, /books, a product page and /cart"
+        "Run an accessibility scan with axe (or check the headings and page regions) on /, /login, /books, a product page and /cart"
       ],
-      "expected": "Each page has one main landmark with content inside landmarks, the home page has an h1, heading levels do not skip, and table headers have text.",
-      "actual": "No main landmark on all five pages ('landmark-one-main'); 26 to 49 elements per page outside landmarks ('region'); no h1 on the home page ('page-has-heading-one'); the cart \"Information\" h3 skips a heading level ('heading-order'); the cart picture column header is empty ('empty-table-header'). axe impact moderate or minor.",
-      "expectedBasis": "Mostly axe-core best-practice rules; the h1 and heading order relate to WCAG 2.1 1.3.1 and 2.4.6. No WCAG target is agreed yet (R-31).",
+      "expected": "Each page has one main region and all content sits inside page regions, the home page has a main heading (h1), heading levels do not skip, and table headers have text.",
+      "actual": "Screen reader users cannot easily jump around these pages: none of the five pages marks its main region ('landmark-one-main'); 26 to 49 items per page sit outside any page region ('region'); the home page has no main heading h1 ('page-has-heading-one'); in the cart the \"Information\" h3 heading skips a level ('heading-order'); and the cart's picture column has an empty header ('empty-table-header'). Checked: automated accessibility scan (axe), impact moderate or minor.",
+      "expectedBasis": "Mostly axe-core good-practice rules; the h1 and heading order relate to WCAG 2.1 1.3.1 and 2.4.6. No WCAG target has been agreed yet (R-31).",
       "evidence": [
         {
           "label": "TC-70 axe report with full results per page (chromium, 2026-11-10)",
@@ -3020,12 +3028,12 @@
       ],
       "foundOn": "2026-11-10",
       "reportedTo": "Not reported yet",
-      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69, TC-70, removed on 2026-11-10 (D6)."
+      "nextAction": "None: accessibility is out of scope for this demo site (user decision D6, 2026-11-10). Kept for the record only. Found by TC-69 and TC-70, which were removed on 2026-11-10 (D6)."
     },
     {
       "id": "DEF-013",
       "riskRef": "R-30",
-      "title": "Keyboard: on Firefox, Tab from the top of the login page does not reach the Email field",
+      "title": "Keyboard: on Firefox, Tab from the top of the login page misses the Email field",
       "severity": "Low",
       "status": "Rejected",
       "category": "Accessibility (keyboard)",
@@ -3033,10 +3041,10 @@
       "environment": "https://demowebshop.tricentis.com/login; Playwright Firefox, Chromium and WebKit",
       "steps": [
         "Open /login",
-        "Press Tab repeatedly from the top of the page and count presses until the Email field has focus"
+        "Press Tab again and again from the top of the page and count the presses until the Email field is selected"
       ],
-      "expected": "The Email field can be reached with Tab in every browser, ideally with few presses (for example via a skip link).",
-      "actual": "Not a site defect (re-checked 2026-11-10 on all three browsers). The Email field has autofocus, so it already has focus when the page loads. The test pressed Tab from there and walked the whole page: Chromium wrapped back to Email after 54 presses, WebKit after 10 (it skips links). Headless Firefox moved focus out of the page into the browser UI after the last link (the single nopCommerce footer link) and never returned, so the test reported 'not reached'.",
+      "expected": "Keyboard users can reach the Email field with Tab in every browser, ideally with few presses (for example through a skip link).",
+      "actual": "This is not a site defect. The Email field is already selected when the login page opens (autofocus). The test then pressed Tab from there and went through the whole page: Chromium came back to Email after 54 presses, WebKit after 10 (it skips links). Firefox, running without a window (headless), moved focus out of the page into the browser's own controls after the last link (the single nopCommerce footer link) and never came back, so the test reported 'not reached'. Checked: 2026-11-10 on all three browsers.",
       "expectedBasis": "WCAG 2.1 Level A: 2.1.1 Keyboard and 2.4.1 Bypass Blocks.",
       "evidence": [
         {
@@ -3045,7 +3053,7 @@
       ],
       "foundOn": "2026-11-05",
       "reportedTo": "Not reported yet",
-      "nextAction": "None for the site. TC-68 fixed to count 0 presses when Email already has focus (login.page.ts tabToEmail). Found by TC-68, removed on 2026-11-10 (D6)."
+      "nextAction": "Nothing to change on the site. TC-68 was fixed to count 0 presses when Email is already selected (login.page.ts tabToEmail). Found by TC-68, which was removed on 2026-11-10 (D6)."
     }
   ],
   "executions": [
