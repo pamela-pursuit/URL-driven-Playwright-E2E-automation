@@ -58,3 +58,7 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | 2026-11-11 | **Approved** by the user ("closed, approved") after removing the "Known defect ..." sentences from TC-03, 14, 42, 45, 55, 56, 66 (wording only; the defect is shown in the Defect column) | 67 |
 
 | 2026-11-11 | Full run with D7 (runs 2026-11-11_15-09-49 guest, 2026-11-11_15-16-21 account): **199 tests, 178 passed, 21 failed**, every failure linked to an open defect. The 7 scenarios new on Firefox/WebKit pass there (TC-66 fails on all 3 browsers alike: DEF-005). **No browser compatibility defect.** TC-02 not tested on Firefox/WebKit (test-safety limit). Guest COD orders: chromium #2414481, firefox #2414482, webkit #2414484 |
+
+| 2026-11-11 | D8: TC-02 (wrong password) now runs on all three browsers, always in a final separate pass (tag @runs-last). Firefox and WebKit run 2026-11-11_16-26: 2 passed; valid sign-in afterwards OK (no lockout). TC-13 renamed "After logging in, you go back to the page you wanted". Defect column now only shown on failed test cases. | |
+
+**Run plan from now on:** guest pass (`--workers=3`), account pass with `--grep-invert @runs-last` (`--workers=1`), then the last pass `--grep @runs-last --workers=1`.

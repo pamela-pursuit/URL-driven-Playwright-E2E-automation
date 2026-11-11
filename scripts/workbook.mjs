@@ -1176,7 +1176,8 @@ function addTestCasesSheet(wb, data) {
   headerRow(ws, ['ID', 'Area', 'Test case', 'Priority', 'Steps', 'Expected result', 'Chromium', 'Firefox', 'WebKit', 'Defect', 'Notes']);
   for (const s of data.scenarios) {
     const results = BROWSERS.map((b) => resultOf(data, s, b));
-    const defects = openDefectsFor(data, s.id);
+    // A defect is shown only next to a test case that actually failed; passing tests show none.
+    const defects = results.some((r) => r.kind === 'failed') ? openDefectsFor(data, s.id) : [];
     const notes = [];
     if (s.automationStatus !== 'Automated') notes.push(`Not automated: ${firstLine(s.failureNotes)}`);
     else if (results.some((r) => r.kind === 'notTested')) notes.push(`Not tested on ${BROWSERS.filter((b, i) => results[i].kind === 'notTested').map((b) => BROWSER_NAME[b]).join(', ')}: ${firstLine(s.scopeReason?.replace(/^Test-safety limit \([^)]*\):\s*/i, ''))}`);

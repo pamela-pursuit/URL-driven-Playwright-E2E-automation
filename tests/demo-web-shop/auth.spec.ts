@@ -1,4 +1,4 @@
-import { chromiumOnly, expect, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, test } from '../../fixtures/demo-web-shop.fixture';
 import { INVALID, MESSAGES, unknownEmail, wrongLoginValue } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -68,11 +68,11 @@ test.describe('Authentication', () => {
     await expect(loginPage.errorSummary).toContainText(MESSAGES.noCustomerAccount);
   });
 
-  // Lockout protection (R-04): one wrong-password attempt per run, never retried, Chromium only.
+  // Wrong password on the shared account (user decision 2026-11-11): one attempt per browser, never retried,
+  // and run LAST in its own pass (tag @runs-last) so a possible lockout cannot affect the other signed-in tests.
   test.describe('Wrong password for the existing account', () => {
-    chromiumOnly('Chromium only (R-04): one wrong-password attempt per run against the shared account');
     test.describe.configure({ retries: 0 });
-    test('[TC-02] Known email with a wrong password is rejected', async ({ loginPage, header, existingUser, loginCircuitBreaker, page }) => {
+    test('[TC-02] Known email with a wrong password is rejected', { tag: '@runs-last' }, async ({ loginPage, header, existingUser, loginCircuitBreaker, page }) => {
       // Do not add a further rejected attempt if existingUser was already rejected in this run.
       loginCircuitBreaker.ensureClosed();
       await loginPage.open();

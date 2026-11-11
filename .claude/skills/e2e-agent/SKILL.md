@@ -210,6 +210,8 @@ brief is all the context it gets.
 4. Never start a run the user has not confirmed in this conversation.
 
 ### Phase 4: Validation loop
+Tests tagged `@runs-last` (for example a wrong-password attempt on a shared account, which could lock it) always run in a **final separate pass** after every other test: run the main passes with `--grep-invert @runs-last`, then `--grep @runs-last --workers=1`.
+
 9. **test-executor:** runs tsc, then targeted, then per-browser, then the
    full matrix, then syncs the workbook.
 10. For any failure, the **failure-investigator** diagnoses it, the
