@@ -35,12 +35,14 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 | #2411261 | run 2026-11-05_15-27-19 | Pass A re-run |
 | #2411276 | run 2026-11-05_15-59-08 | Final full run |
 | #2411680 | run 2026-11-06_13-14-06 | Re-run requested by the user (2026-11-06) |
+| #2414441 | run 2026-11-11_12-34-20 | Full run confirmed by the user ("Run all", 2026-11-11) |
 
 ## Re-runs
 
 | Date | Runs | Result |
 | --- | --- | --- |
 | 2026-11-06 | 2026-11-06_13-14-06 (guest, --workers=3), 2026-11-06_13-21-14 (account, --workers=1) | 190 passed, 0 failed, 14 skipped (Chromium-only by design); code unchanged since df75acb |
+| 2026-11-11 | 2026-11-11_12-34-20 (guest, --workers=3), 2026-11-11_12-41-39 (account, --workers=1) | 166 passed, 19 failed, 16 skipped by design. All 19 failures are the deliberate checks for the 7 open defects (error names the DEF id); no other failures. 67 approved scenarios, 185 tests; guest COD order #2414441 |
 
 ## Scenario approval
 
