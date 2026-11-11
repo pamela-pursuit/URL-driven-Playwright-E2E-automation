@@ -80,7 +80,7 @@ export class DemoqaRegisterPage {
 
   /**
    * Submits a form that the server must reject. Returns the status and the request body's JSON
-   * keys only (DQB-041 records whether a captcha field is sent, R-26).
+   * keys only (TC-41 records whether a captcha field is sent, R-26).
    */
   async submitExpectingRejection(): Promise<{ status: number; bodyKeys: string[] }> {
     // R-07 guard: never submit a value that satisfies the server rule (that could create an account).

@@ -117,12 +117,12 @@ export class DemoWebShopCheckoutPage {
       .locator('.cart-total-right');
   }
 
-  /** Secret-safe comparison of the prefilled billing Email (DWS-052). */
+  /** Secret-safe comparison of the prefilled billing Email (TC-52). */
   async billingEmailShows(email: string): Promise<boolean> {
     return (await this.billingField('Email:').inputValue()).trim() === email;
   }
 
-  /** Raw navigation with no ready wait (DWS-015 expects a redirect to /cart). */
+  /** Raw navigation with no ready wait (TC-15 expects a redirect to /cart). */
   async goto(): Promise<void> {
     await this.page.goto('onepagecheckout', { waitUntil: 'domcontentloaded' });
   }
@@ -147,7 +147,7 @@ export class DemoWebShopCheckoutPage {
     await this.waitForStep('shipping', 'shipping');
   }
 
-  /** DWS-059: client-side validation keeps the billing step open. */
+  /** TC-59: client-side validation keeps the billing step open. */
   async continueBillingExpectingErrors(): Promise<void> {
     await this.refuseWhenSignedIn();
     await this.#continueButton('billing').click();
@@ -184,7 +184,7 @@ export class DemoWebShopCheckoutPage {
     await this.waitForStep('confirm_order', 'confirm-order');
   }
 
-  /** Arrange composite for DWS-060 / DWS-061: billing to the Confirm Order summary (guest only). */
+  /** Arrange composite for TC-60 / TC-61: billing to the Confirm Order summary (guest only). */
   async proceedToConfirmAsGuest(guest: GuestCustomer): Promise<void> {
     await this.fillBillingAddress(guest);
     await this.continueBilling();
@@ -197,7 +197,7 @@ export class DemoWebShopCheckoutPage {
   }
 
   /**
-   * DWS-061 only. Re-checks COD on the radio and in the summary, clicks Confirm once and
+   * TC-61 only. Re-checks COD on the radio and in the summary, clicks Confirm once and
    * waits for the completion page. It never clicks again.
    */
   async confirmCashOnDeliveryOrder(): Promise<DemoWebShopOrderCompletedPage> {

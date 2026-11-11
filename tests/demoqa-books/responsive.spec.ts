@@ -10,7 +10,7 @@ test.describe('Responsive layout at 375x812', () => {
     isMobile: async ({ browserName }, use) => use(browserName !== 'firefox')
   });
 
-  test('[DQB-047] Book list on a 375x812 viewport', async ({ booksPage }) => {
+  test('[TC-47] Book list on a 375x812 viewport', async ({ booksPage }) => {
     await booksPage.open();
 
     await expect(booksPage.menu.link('Book Store')).toBeHidden();
@@ -27,7 +27,7 @@ test.describe('Responsive layout at 375x812', () => {
     expect(await booksPage.documentScrollWidth(), 'no page-level horizontal scroll').toBeLessThanOrEqual(MOBILE_VIEWPORT.width);
   });
 
-  test('[DQB-048] Login page on a 375x812 viewport', async ({ loginPage }) => {
+  test('[TC-48] Login page on a 375x812 viewport', async ({ loginPage }) => {
     await loginPage.open();
 
     await expect(loginPage.userNameInput).toBeVisible();

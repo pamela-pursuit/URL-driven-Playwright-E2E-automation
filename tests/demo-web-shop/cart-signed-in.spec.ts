@@ -1,4 +1,4 @@
-import { chromiumOnly, expect, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, test } from '../../fixtures/demo-web-shop.fixture';
 import { MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -10,10 +10,9 @@ test.use({ trace: 'off' });
 // test and its guard throws if any other row (e.g. "14.1-inch Laptop") changes. Assertions are
 // relative to the baseline count N.
 test.describe('Signed-in cart', () => {
-  chromiumOnly();
   test(
-    '[DWS-049] Signed-in customer adds an own item without touching existing items',
-    { tag: ['@mutates-account', '@chromium-only'] },
+    '[TC-49] Signed-in customer adds an own item without touching existing items',
+    { tag: ['@mutates-account'] },
     async ({ accountCartCleaner, productPage, cartPage, header }) => {
       const { cartCount: n } = accountCartCleaner.baseline;
       const before = await test.step('Record the rows already in the cart', async () => {
@@ -40,8 +39,8 @@ test.describe('Signed-in cart', () => {
   );
 
   test(
-    '[DWS-050] Account cart persists across logout and login',
-    { tag: ['@mutates-account', '@chromium-only'] },
+    '[TC-50] Account cart persists across logout and login',
+    { tag: ['@mutates-account'] },
     async ({ accountCartCleaner, productPage, cartPage, header, signInAsExistingUser }) => {
       const { cartCount: n } = accountCartCleaner.baseline;
       await productPage.open(PRODUCTS.healthBook.path);
@@ -59,8 +58,8 @@ test.describe('Signed-in cart', () => {
   );
 
   test(
-    '[DWS-051] Guest cart merges into the account cart on login',
-    { tag: ['@mutates-account', '@chromium-only'] },
+    '[TC-51] Guest cart merges into the account cart on login',
+    { tag: ['@mutates-account'] },
     async ({ accountCartCleaner, productPage, cartPage, header, signInAsExistingUser }) => {
       const { cartCount: n } = accountCartCleaner.baseline;
       const before = await test.step('Record the rows already in the cart', async () => {

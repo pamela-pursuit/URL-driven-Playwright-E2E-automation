@@ -10,7 +10,7 @@ test.use({ trace: 'off' });
 test.describe('Profile collection', () => {
   test.use({ viewport: DESKTOP_VIEWPORT });
 
-  test('[DQB-034] Signed-in user adds a book to their collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage, page }) => {
+  test('[TC-34] Signed-in user adds a book to their collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage, page }) => {
     void signedIn;
     test.slow();
     const book = OWN_BOOKS.add;
@@ -32,7 +32,7 @@ test.describe('Profile collection', () => {
     await expect(profilePage.deleteIcon(book.isbn)).toBeVisible();
   });
 
-  test('[DQB-035] Adding a book already in the collection is refused', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-009' } }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage }) => {
+  test('[TC-35] Adding a book already in the collection is refused', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-009' } }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage }) => {
     void signedIn;
     test.slow();
     const book = OWN_BOOKS.duplicate;
@@ -56,7 +56,7 @@ test.describe('Profile collection', () => {
     await expect(profilePage.table.row(book.title)).toHaveCount(1);
   });
 
-  test('[DQB-036] Added book stays after reload and after signing in again', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, ownedBooks, profilePage }) => {
+  test('[TC-36] Added book stays after reload and after signing in again', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, ownedBooks, profilePage }) => {
     test.slow();
     const book = OWN_BOOKS.persist;
     await test.step('Arrange: fresh login and the book added once', async () => {
@@ -83,7 +83,7 @@ test.describe('Profile collection', () => {
     await expect(profile.table.cell(book.title, 'Publisher')).toHaveText(book.publisher);
   });
 
-  test('[DQB-037] Cancelling the delete confirmation keeps the book', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage, apiLog, alerts }) => {
+  test('[TC-37] Cancelling the delete confirmation keeps the book', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage, apiLog, alerts }) => {
     void signedIn;
     test.slow();
     const book = OWN_BOOKS.cancel;
@@ -112,7 +112,7 @@ test.describe('Profile collection', () => {
     expect(alerts.unexpected(), 'no native alert').toEqual([]);
   });
 
-  test('[DQB-038] Signed-in user deletes one book from the collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage }) => {
+  test('[TC-38] Signed-in user deletes one book from the collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage }) => {
     void signedIn;
     test.slow();
     const book = OWN_BOOKS.delete;
@@ -134,7 +134,7 @@ test.describe('Profile collection', () => {
     await expect(profilePage.table.row(book.title)).toHaveCount(0);
   });
 
-  test('[DQB-039] Profile with an empty collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage }) => {
+  test('[TC-39] Profile with an empty collection', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, profilePage }) => {
     test.slow();
     await test.step('Arrange: remove leftovers of the suite\'s own books only', async () => {
       for (const book of Object.values(OWN_BOOKS)) {

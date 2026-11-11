@@ -33,7 +33,7 @@ export class DemoWebShopSearchPage {
     return this.productTitles.filter({ hasText: new RegExp(`^\\s*${escapeRegExp(name)}\\s*$`) });
   }
 
-  /** Direct URL /search?q=<term> (DWS-023). */
+  /** Direct URL /search?q=<term> (TC-23). */
   async open(term: string): Promise<this> {
     await this.page.goto(`search?q=${encodeURIComponent(term)}`, { waitUntil: 'domcontentloaded' });
     await this.heading.waitFor();

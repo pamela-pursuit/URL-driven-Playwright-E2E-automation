@@ -8,7 +8,7 @@ test.use({ trace: 'off' });
 test.describe('Book Store navigation', () => {
   test.use({ viewport: DESKTOP_VIEWPORT });
 
-  test('[DQB-042] New User opens the register page', async ({ loginPage, page }) => {
+  test('[TC-42] New User opens the register page', async ({ loginPage, page }) => {
     await loginPage.open();
     const register = await loginPage.openRegister();
 
@@ -16,7 +16,7 @@ test.describe('Book Store navigation', () => {
     await expect(register.heading).toBeVisible();
   });
 
-  test('[DQB-043] Back to Login returns from the register page', async ({ registerPage, page }) => {
+  test('[TC-43] Back to Login returns from the register page', async ({ registerPage, page }) => {
     await registerPage.open();
     const login = await registerPage.backToLogin();
 
@@ -24,7 +24,7 @@ test.describe('Book Store navigation', () => {
     await expect(login.heading).toBeVisible();
   });
 
-  test('[DQB-044] Signed-out profile links lead to login and register', async ({ profilePage, page }) => {
+  test('[TC-44] Signed-out profile links lead to login and register', async ({ profilePage, page }) => {
     await profilePage.goto();
     const login = await profilePage.openSignedOutLink('login');
     await expect(page).toHaveURL(/\/login$/);
@@ -36,7 +36,7 @@ test.describe('Book Store navigation', () => {
     await expect(register.heading).toBeVisible();
   });
 
-  test('[DQB-045] Book Store Application menu links open their pages', async ({ booksPage, page }) => {
+  test('[TC-45] Book Store Application menu links open their pages', async ({ booksPage, page }) => {
     await booksPage.open();
     const menu = booksPage.menu;
 
@@ -53,7 +53,7 @@ test.describe('Book Store navigation', () => {
     await expect(menu.item('Profile')).toHaveClass(/\bactive\b/);
   });
 
-  test('[DQB-046] Go To Book Store leads from the profile to the book list', { tag: [ACCOUNT_TAG] }, async ({ signedIn, profilePage, page }) => {
+  test('[TC-46] Go To Book Store leads from the profile to the book list', { tag: [ACCOUNT_TAG] }, async ({ signedIn, profilePage, page }) => {
     void signedIn;
     await profilePage.openSignedIn();
 

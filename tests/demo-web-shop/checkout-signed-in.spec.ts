@@ -1,4 +1,4 @@
-import { chromiumOnly, expect, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, test } from '../../fixtures/demo-web-shop.fixture';
 import { CHECKOUT_STEP_TITLES, MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -9,10 +9,9 @@ test.use({ trace: 'off' });
 // D5: signed-in checkout stops at Billing. Continue is never selected (continueBilling() throws
 // while signed in), so nothing is saved to the account.
 test.describe('Signed-in checkout', () => {
-  chromiumOnly();
   test(
-    '[DWS-052] Signed-in checkout reaches Billing with prefilled details',
-    { tag: ['@mutates-account', '@chromium-only'] },
+    '[TC-52] Signed-in checkout reaches Billing with prefilled details',
+    { tag: ['@mutates-account'] },
     async ({ accountCartCleaner, productPage, cartPage, existingUser, page }) => {
       void accountCartCleaner;
       await test.step('Arrange: add "Health Book" and open the cart', async () => {

@@ -7,7 +7,7 @@ const REGISTER_URL = /\/register$/;
 test.describe('Register form validation', () => {
   test.use({ viewport: DESKTOP_VIEWPORT });
 
-  test('[DQB-040] Register form submitted with all fields empty', async ({ registerPage, apiLog, page }) => {
+  test('[TC-40] Register form submitted with all fields empty', async ({ registerPage, apiLog, page }) => {
     await registerPage.open();
     await registerPage.submitEmpty();
 
@@ -19,7 +19,7 @@ test.describe('Register form validation', () => {
     expect(apiLog.count('POST', '/Account/v1/User'), 'no register request').toBe(0);
   });
 
-  test('[DQB-041] Register with a weak password shows the server rule message', { annotation: { type: 'issue', description: 'DEF-012' } }, async ({ registerPage, page }) => {
+  test('[TC-41] Register with a weak password shows the server rule message', { annotation: { type: 'issue', description: 'DEF-012' } }, async ({ registerPage, page }) => {
     const form = {
       firstName: REGISTER.firstName,
       lastName: REGISTER.lastName,

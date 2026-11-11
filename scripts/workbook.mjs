@@ -34,7 +34,7 @@ const RISK_TYPES = ['Risk', 'Assumption', 'Ambiguity', 'Blocker', 'Discrepancy',
 // Defect log ("defects" in scenarios.json, "Defects" sheet).
 const DEFECT_SEVERITIES = ['Critical', 'High', 'Medium', 'Low'];
 const DEFECT_STATUSES = ['New', 'Needs confirmation', 'Reported', 'In progress', 'Fixed', 'Verified', 'Closed', 'Rejected'];
-const ID_PATTERN = /\[([A-Z][A-Z0-9]*-\d{3,})\]/;
+const ID_PATTERN = /\[([A-Z][A-Z0-9]*-\d{2,})\]/;
 const SECRET_HINT = /password|passwd|secret|token|api[-_]?key|bearer/i;
 
 function parseArgs(argv) {
@@ -44,10 +44,12 @@ function parseArgs(argv) {
     if (rest[i] === '--app') args.app = rest[++i];
     else if (rest[i] === '--from') args.from = rest[++i];
     else if (rest[i] === '--print') args.print = true;
+    else if (rest[i] === '--prefix') args.prefix = rest[++i];
+    else if (rest[i] === '--digits') args.digits = Number(rest[++i]);
     else throw new Error(`Unknown argument: ${rest[i]}`);
   }
-  if (!['validate', 'sync', 'build', 'scope', 'report', 'review', 'approve', 'all'].includes(command) || !args.app) {
-    throw new Error('Usage: node scripts/workbook.mjs <validate|sync|build|scope|report|review|approve|all> --app <name> [--from report.md | --print]');
+  if (!['validate', 'sync', 'build', 'scope', 'report', 'review', 'approve', 'rename-ids', 'all'].includes(command) || !args.app) {
+    throw new Error('Usage: node scripts/workbook.mjs <validate|sync|build|scope|report|review|approve|rename-ids|all> --app <name> [--from report.md | --print] [--prefix TC --digits 2]');
   }
   if (command === 'report' && !args.from && !args.print) {
     throw new Error('report needs --from <file.md> (store the delivery report and rebuild) or --print (output the stored report)');
@@ -162,7 +164,7 @@ async function validate(app, data) {
   for (const s of data.scenarios) {
     const where = s.id ?? '(missing id)';
     for (const key of required) if (s[key] === undefined || s[key] === '' || (Array.isArray(s[key]) && !s[key].length)) errors.push(`${where}: missing ${key}`);
-    if (s.id && !/^[A-Z][A-Z0-9]*-\d{3,}$/.test(s.id)) errors.push(`${where}: id must look like ABC-001`);
+    if (s.id && !/^[A-Z][A-Z0-9]*-\d{2,}$/.test(s.id)) errors.push(`${where}: id must look like TC-01`);
     if (ids.has(s.id)) errors.push(`${where}: duplicate id`);
     ids.add(s.id);
     if (s.priority && !PRIORITIES.includes(s.priority)) errors.push(`${where}: priority must be one of ${PRIORITIES.join(', ')}`);
@@ -176,9 +178,18 @@ async function validate(app, data) {
     if (['Blocked', 'Manual', 'Not Automatable'].includes(s.automationStatus) && !s.failureNotes) {
       errors.push(`${where}: ${s.automationStatus} requires failureNotes explaining why it is not automated`);
     }
-    // Reports must be able to say why a scenario does not run on every browser.
-    if (s.automationStatus === 'Automated' && s.browsers?.length && s.browsers.length < BROWSERS.length && !s.scopeReason) {
-      errors.push(`${where}: runs on ${s.browsers.join(', ')} only; scopeReason must explain why`);
+    // Browser compatibility rule (all projects): every scenario runs on all browsers. A limit is only allowed
+    // as a user-approved test-safety limit (side effects on shared data), and it is reported as an
+    // unverified-compatibility gap. A site failure in a browser is a "Browser compatibility" defect and the
+    // test keeps running (and failing) on that browser - it may never be used as a reason to limit coverage.
+    if (s.automationStatus === 'Automated' && s.browsers?.length && s.browsers.length < BROWSERS.length) {
+      if (!s.scopeReason) {
+        errors.push(`${where}: runs on ${s.browsers.join(', ')} only; scopeReason must explain why`);
+      } else if (!/^Test-safety limit/i.test(s.scopeReason)) {
+        errors.push(`${where}: a browser limit must be a user-approved "Test-safety limit ..." (scopeReason); a site failure in a browser is a Browser compatibility defect, not a limit`);
+      } else if (/DEF-\d+/.test(s.scopeReason)) {
+        errors.push(`${where}: do not limit browsers because of a defect (${s.scopeReason.match(/DEF-\d+/)[0]}); keep the test on every browser so the defect stays visible`);
+      }
     }
   }
   for (const d of data.testData) {
@@ -484,6 +495,67 @@ function splitTableRow(line) {
   return line.trim().replace(/^\|/, '').replace(/\|$/, '').split(/(?<!\\)\|/).map((c) => c.trim());
 }
 
+// Plain-language summary of what ran, what did not, and why - short lines, grouped by scenario.
+function plainScopeLines(data, scope, notRun) {
+  const lines = [];
+  const all = BROWSERS.length;
+  const browserList = (list) => (list.length === all ? `all ${all} browsers` : list.join(', '));
+  const cap = (b) => b.charAt(0).toUpperCase() + b.slice(1);
+
+  // Scenarios
+  if (!scope.notAutomated.length) {
+    lines.push(`• **Scenarios:** all ${scope.total} scenarios are automated.`);
+  } else {
+    lines.push(`• **Scenarios:** ${scope.automated.length} of ${scope.total} are automated. Not automated: ` +
+      scope.notAutomated.map((s) => `${s.id} (${s.automationStatus.toLowerCase()})`).join(', ') + '.');
+  }
+
+  // Browsers
+  if (!scope.limited.length) {
+    lines.push(`• **Browsers:** every scenario runs on Chromium, Firefox and WebKit, so a full run is **${scope.expectedExecutions} tests**.`);
+  } else {
+    lines.push(`• **Browsers:** ${scope.automated.length - scope.limited.length} scenarios run on all ${all} browsers. ` +
+      `${scope.limited.length} run${scope.limited.length === 1 ? 's' : ''} on fewer browsers to protect shared test data: ` +
+      scope.limited.map((s) => `${s.id} (${s.browsers.map(cap).join(', ')} only)`).join(', ') +
+      `. Their compatibility on the other browsers is **not checked yet**. A full run is **${scope.expectedExecutions} tests**.`);
+  }
+
+  // Latest results, grouped by scenario
+  const problems = notRun.filter((r) => !['Not automated', 'Out of scope by design'].includes(r.category));
+  const passed = scope.expectedExecutions - problems.length;
+  if (!problems.length) {
+    lines.push(`• **Latest results:** all ${scope.expectedExecutions} tests passed.`);
+    return lines;
+  }
+  lines.push(`• **Latest results:** ${passed} of ${scope.expectedExecutions} tests passed; ${problems.length} did not.`);
+  const byScenario = new Map();
+  for (const r of problems) {
+    const g = byScenario.get(r.id) ?? { id: r.id, journey: r.journey, browsers: [], defects: new Set(), categories: new Set() };
+    g.browsers.push(r.browser);
+    g.categories.add(r.category);
+    for (const d of String(r.reason ?? '').match(/DEF-\d+/g) ?? []) g.defects.add(d);
+    byScenario.set(r.id, g);
+  }
+  const groups = [...byScenario.values()];
+  const defectChecks = groups.filter((g) => g.defects.size && [...g.categories].every((c) => c === 'Failed in latest run'));
+  const others = groups.filter((g) => !defectChecks.includes(g));
+  if (defectChecks.length) {
+    lines.push(`• **Known defects (expected failures):** ${defectChecks.length} scenario${defectChecks.length === 1 ? '' : 's'} ` +
+      `check bugs that are still open, so they fail until the bug is fixed. See the "Defects" sheet.`);
+    for (const g of defectChecks) {
+      lines.push(`    – ${g.id} ${g.journey}: checks ${[...g.defects].join(', ')} – fails on ${browserList(g.browsers)}`);
+    }
+  }
+  if (others.length) {
+    lines.push(`• **Needs investigation:** ${others.length} scenario${others.length === 1 ? '' : 's'} did not pass for another reason:`);
+    for (const g of others) {
+      lines.push(`    – ${g.id} ${g.journey}: ${[...g.categories].join(', ').toLowerCase()} on ${browserList(g.browsers)}`);
+    }
+  }
+  lines.push('• Per-browser detail with filters: sheet "Not Executed".');
+  return lines;
+}
+
 function addDeliveryReportSheet(wb, app, data, md) {
   const ws = wb.addWorksheet('Delivery Report', { properties: { tabColor: { argb: 'FF1F3864' } } });
   ws.columns = REPORT_COLS.map((width) => ({ width }));
@@ -526,7 +598,9 @@ function addDeliveryReportSheet(wb, app, data, md) {
       const n = (x) => st.filter((y) => y === x).length;
       return [`${b[0].toUpperCase()}${b.slice(1)}`, `${n('Passed')} passed, ${n('Failed')} failed, ${n('Flaky')} flaky, ${n('Not run')} not run; ${scope.automated.length - covered.length} out of scope by design (of ${scope.automated.length} automated)`];
     }),
-    ['Why counts differ', `${scope.limited.length} scenarios run on fewer browsers by design and ${scope.notAutomated.length} are not automated. See "Not executed and why" below and the "Not Executed" sheet.`],
+    ['Why counts differ', (!scope.limited.length && !scope.notAutomated.length)
+      ? 'They do not: every scenario is automated and runs on all 3 browsers.'
+      : `${scope.notAutomated.length} scenario(s) not automated, ${scope.limited.length} run on fewer browsers to protect shared test data. See "Not executed and why" below.`],
     ['Latest run', latestRun],
     ['Open risks', `${openRisks} of ${data.risks.length} (see "Risks and Assumptions")`],
     ['Defects', defectSummary(data.defects)]
@@ -556,13 +630,7 @@ function addDeliveryReportSheet(wb, app, data, md) {
   const possible = data.scenarios.length * BROWSERS.length;
   const problems = notRun.filter((r) => !['Not automated', 'Out of scope by design'].includes(r.category));
   mergedRow('Not executed and why', { font: { bold: true, size: 13, color: { argb: COLORS.headerText } }, fill: COLORS.header, height: 24 });
-  mergedRow(richText(
-    `**Why ${scope.automated.length} of ${scope.total} scenarios run:** ${scope.notAutomated.length} scenarios are not automated (listed below). ` +
-    `**Why ${scope.expectedExecutions} tests, not ${possible}:** ${possible} possible (${scope.total} scenarios x ${BROWSERS.length} browsers) ` +
-    `- ${scope.notAutomated.length * BROWSERS.length} not automated - ${possible - scope.notAutomated.length * BROWSERS.length - scope.expectedExecutions} out of scope by design ` +
-    `= **${scope.expectedExecutions}** (${BROWSERS.map((b) => `${b} ${scope.inScope(b).length}`).join(', ')}). ` +
-    `**Problems in the latest results:** ${problems.length ? problems.map((p) => `${p.id} on ${p.browser} (${p.category})`).join(', ') : 'none'}. ` +
-    'Per-browser detail and filters: sheet "Not Executed".'));
+  for (const line of plainScopeLines(data, scope, notRun)) mergedRow(richText(line), { indent: 1 });
   const grouped = new Map();
   for (const r of notRun) {
     const key = `${r.id}|${r.category}`;
@@ -799,7 +867,8 @@ function addNotExecutedSheet(wb, data, scope) {
     cell.font = font;
     cell.alignment = { wrapText: true, vertical: 'top' };
     if (fill) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } };
-    row.height = rowHeight([value], [fullWidth]);
+    const visible = typeof value === 'string' ? value : (value?.richText ?? []).map((r) => r.text).join('');
+    row.height = rowHeight([visible], [fullWidth]);
   };
   const band = (value) => text(value, { bold: true, size: 12, color: { argb: COLORS.headerText } }, COLORS.header);
 
@@ -808,12 +877,16 @@ function addNotExecutedSheet(wb, data, scope) {
     { italic: true, color: { argb: 'FF595959' } });
   ws.addRow([]);
 
-  band(`Why ${scope.automated.length} of ${scope.total} scenarios run`);
-  text(`${scope.total} scenarios are in the catalogue. ${scope.automated.length} are automated and executed. ${scope.notAutomated.length} are not automated: ` +
-    (scope.notAutomated.map((s) => `${s.id} (${s.automationStatus}): ${firstSentence(s.failureNotes)}`).join(' ') || 'none.'));
+  band(scope.notAutomated.length ? `Why ${scope.automated.length} of ${scope.total} scenarios run` : `All ${scope.total} scenarios run`);
+  text(scope.notAutomated.length
+    ? `${scope.automated.length} of ${scope.total} scenarios are automated. Not automated: ` +
+      scope.notAutomated.map((s) => `${s.id} (${s.automationStatus.toLowerCase()}): ${firstSentence(s.failureNotes)}`).join(' ')
+    : `Every scenario in the catalogue is automated and runs.`);
   ws.addRow([]);
 
-  band(`Why a full run is ${scope.expectedExecutions} tests, not ${possible} (${scope.total} scenarios x ${BROWSERS.length} browsers)`);
+  band(scope.expectedExecutions === possible
+    ? `A full run is ${scope.expectedExecutions} tests (${scope.total} scenarios x ${BROWSERS.length} browsers, nothing left out)`
+    : `Why a full run is ${scope.expectedExecutions} tests, not ${possible} (${scope.total} scenarios x ${BROWSERS.length} browsers)`);
   const math = [
     ['Possible tests', `${scope.total} scenarios x ${BROWSERS.length} browsers`, possible],
     ['minus not automated', `${scope.notAutomated.length} scenarios x ${BROWSERS.length} browsers`, -notAutomatedPairs],
@@ -848,11 +921,16 @@ function addNotExecutedSheet(wb, data, scope) {
   }
   ws.addRow([]);
 
-  band('Problems in the latest results (failed, flaky, or should have run but did not)');
-  text(problems.length
-    ? `${problems.length} problem(s): ${problems.map((p) => `${p.id} on ${p.browser} (${p.category})`).join(', ')}. Details are in the table below.`
-    : 'None. Every automated scenario passed on every browser in its coverage in the latest results.',
-  { bold: true, color: { argb: problems.length ? 'FF9C0006' : 'FF006100' } }, problems.length ? COLORS.Failed : COLORS.Passed);
+  band('Latest results');
+  if (!problems.length) {
+    text('All tests passed in the latest results.', { bold: true, color: { argb: 'FF006100' } }, COLORS.Passed);
+  } else {
+    // Same grouped, plain-language lines as the Delivery Report (skip the scenario/browser lines and the pointer).
+    for (const line of plainScopeLines(data, scope, rows).filter((l) => !/^• \*\*(Scenarios|Browsers):/.test(l) && !l.includes('sheet "Not Executed"'))) {
+      text(richText(line), {});
+    }
+    text('Every failing test is listed in the table below.', { italic: true, color: { argb: 'FF595959' } });
+  }
   ws.addRow([]);
 
   band(`Every scenario/browser not executed or not passing (${rows.length} rows: ${count('Not automated')} not automated, ${count('Out of scope by design')} out of scope by design, ${problems.length} problems)`);
@@ -1076,6 +1154,57 @@ async function build(app, data) {
   console.log(`build: wrote ${paths(app).workbook.replaceAll('\\', '/')} (${data.scenarios.length} scenarios, ${data.executions.length} execution rows)`);
 }
 
+// ---------- Rename scenario IDs (e.g. DWS-061 -> TC-61), keeping each number ----------
+// Updates the catalogue (scenarios, executions, defects, risks, test data, stored report, approval) and the
+// app's code and plan files. Approval is carried over only for scenarios whose content did not change.
+async function renameIds(app, data, prefix, digits) {
+  if (!/^[A-Z][A-Z0-9]*$/.test(prefix)) throw new Error('--prefix must be upper-case letters/digits, e.g. TC');
+  const map = new Map();
+  for (const s of data.scenarios) {
+    const m = s.id.match(/^([A-Z][A-Z0-9]*)-0*(\d+)$/);
+    if (!m) throw new Error(`cannot parse id ${s.id}`);
+    const next = `${prefix}-${m[2].padStart(digits, '0')}`;
+    if ([...map.values()].includes(next)) throw new Error(`id collision: ${s.id} -> ${next}`);
+    map.set(s.id, next);
+  }
+  const oldPrefixes = [...new Set([...map.keys()].map((id) => id.split('-')[0]))];
+  const pattern = new RegExp(`\\b(${oldPrefixes.join('|')})-0*(\\d+)\\b`, 'g');
+  // Numbers are kept, so retired scenarios in the history (e.g. a removed DWS-068) map the same way.
+  const swap = (text) => text.replace(pattern, (whole, pre, num) => `${prefix}-${String(Number(num)).padStart(digits, '0')}`);
+
+  // Approval: unchanged content keeps its approval under the new id; changed content stays pending.
+  const before = Object.fromEntries(data.scenarios.map((s) => [s.id, scenarioFingerprint(s)]));
+  const approved = data.approval?.scenarios ?? null;
+
+  const renamed = JSON.parse(swap(JSON.stringify(data)));
+  if (renamed.code) renamed.code = prefix;
+  if (approved) {
+    renamed.approval.scenarios = {};
+    for (const s of renamed.scenarios) {
+      const oldId = [...map].find(([, v]) => v === s.id)[0];
+      if (approved[oldId] && approved[oldId] === before[oldId]) renamed.approval.scenarios[s.id] = scenarioFingerprint(s);
+      else if (approved[oldId]) renamed.approval.scenarios[s.id] = 'changed-before-rename';
+    }
+  }
+  Object.assign(data, renamed);
+  await saveCatalogue(app, data);
+
+  const roots = [path.join('tests', app), path.join('pages', app), path.join('test-plans', app),
+    path.join('fixtures', `${app}.fixture.ts`), path.join('test-data', `${app}.data.ts`)];
+  let filesChanged = 0;
+  for (const root of roots) {
+    if (!existsSync(root)) continue;
+    const files = root.endsWith('.ts') ? [root] : (await readdir(root, { recursive: true, withFileTypes: true }))
+      .filter((e) => e.isFile() && /\.(ts|md)$/.test(e.name)).map((e) => path.join(e.parentPath ?? e.path, e.name));
+    for (const f of files) {
+      const text = await readFile(f, 'utf8');
+      const next = swap(text);
+      if (next !== text) { await writeFile(f, next); filesChanged += 1; }
+    }
+  }
+  console.log(`rename-ids: ${map.size} scenarios renamed (${[...map][0].join(' -> ')} ... ${[...map].at(-1).join(' -> ')}); ${filesChanged} code/plan files updated`);
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const { command, app } = args;
@@ -1094,6 +1223,7 @@ async function main() {
     printReview(data);
     if (approvalPending(approvalDiff(data))) process.exitCode = 3; // 3 = user approval needed
   }
+  if (command === 'rename-ids') await renameIds(app, data, args.prefix ?? 'TC', args.digits ?? 2);
   if (command === 'approve') {
     data.approval = {
       approvedAt: new Date().toISOString(),

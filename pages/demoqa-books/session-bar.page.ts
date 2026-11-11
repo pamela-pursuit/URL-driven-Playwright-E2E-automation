@@ -23,7 +23,7 @@ export class DemoqaSessionBar {
     return ((await this.userNameValue.textContent()) ?? '').trim() === expected;
   }
 
-  /** DQB-033: returns the URL reached after "Log out" so the spec can record it (R-28). */
+  /** TC-33: returns the URL reached after "Log out" so the spec can record it (R-28). */
   async logOut(): Promise<string> {
     await this.logoutButton.click();
     await this.logoutButton.waitFor({ state: 'hidden' });

@@ -21,7 +21,7 @@ test.describe('Authentication and session', () => {
 
   // Guest tests.
 
-  test('[DQB-022] Guest on a book detail page cannot add it to a collection', async ({ bookDetailPage }) => {
+  test('[TC-22] Guest on a book detail page cannot add it to a collection', async ({ bookDetailPage }) => {
     await bookDetailPage.open(BOOKS.gitPocketGuide.isbn);
 
     await expect(bookDetailPage.session.loginButton).toBeVisible();
@@ -31,7 +31,7 @@ test.describe('Authentication and session', () => {
     await expect(bookDetailPage.session.userNameValue).toHaveCount(0);
   });
 
-  test('[DQB-023] Guest opening the profile sees the signed-out message', async ({ profilePage, page }) => {
+  test('[TC-23] Guest opening the profile sees the signed-out message', async ({ profilePage, page }) => {
     const response = await profilePage.goto();
 
     expect(response.status()).toBe(200);
@@ -46,7 +46,7 @@ test.describe('Authentication and session', () => {
     await expect(profilePage.deleteAllBooksButton).toHaveCount(0);
   });
 
-  test('[DQB-027] Unknown user name is rejected', async ({ loginPage, page }) => {
+  test('[TC-27] Unknown user name is rejected', async ({ loginPage, page }) => {
     await loginPage.open();
     const outcome = await loginPage.signIn(fakeUserName(), wrongLoginValue());
 
@@ -56,7 +56,7 @@ test.describe('Authentication and session', () => {
     await expect(loginPage.errorMessage).toHaveText(MESSAGES.loginInvalid);
   });
 
-  test('[DQB-028] Login submitted with both fields empty', async ({ loginPage, page }) => {
+  test('[TC-28] Login submitted with both fields empty', async ({ loginPage, page }) => {
     await loginPage.open();
     await loginPage.submitEmpty();
 
@@ -66,7 +66,7 @@ test.describe('Authentication and session', () => {
     await expect(page).toHaveURL(LOGIN_URL);
   });
 
-  test('[DQB-029] Login submitted with only a user name', async ({ loginPage, apiLog, page }) => {
+  test('[TC-29] Login submitted with only a user name', async ({ loginPage, apiLog, page }) => {
     await loginPage.open();
     await loginPage.submitWithUserNameOnly(fakeUserName());
 
@@ -79,7 +79,7 @@ test.describe('Authentication and session', () => {
   // Signed-in tests (cached session, K2).
 
   test(
-    '[DQB-024] Signed-in user sees account controls on a book detail page',
+    '[TC-24] Signed-in user sees account controls on a book detail page',
     { tag: [ACCOUNT_TAG] },
     async ({ signedIn, bookDetailPage }) => {
       await bookDetailPage.open(BOOKS.gitPocketGuide.isbn);
@@ -95,7 +95,7 @@ test.describe('Authentication and session', () => {
     }
   );
 
-  test('[DQB-030] Session survives a reload of the profile page', { tag: [ACCOUNT_TAG] }, async ({ signedIn, profilePage, page }) => {
+  test('[TC-30] Session survives a reload of the profile page', { tag: [ACCOUNT_TAG] }, async ({ signedIn, profilePage, page }) => {
     await profilePage.openSignedIn();
     await profilePage.reload();
 
@@ -106,7 +106,7 @@ test.describe('Authentication and session', () => {
     await expect(profilePage.signedOutMessage).toHaveCount(0);
   });
 
-  test('[DQB-031] Signed-in user sees their name on the book list', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-010' } }, async ({ signedIn, booksPage }) => {
+  test('[TC-31] Signed-in user sees their name on the book list', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-010' } }, async ({ signedIn, booksPage }) => {
     await booksPage.open();
 
     expect(await booksPage.session.userNameMatches(signedIn.account.userName), "User Name shows the browser's account").toBe(true);
@@ -120,7 +120,7 @@ test.describe('Authentication and session', () => {
 
   // Fresh-login tests (the real login form; never the cached cookies).
 
-  test('[DQB-025] Registered user signs in with valid credentials', { tag: [ACCOUNT_TAG] }, async ({ account, freshLogin, page }) => {
+  test('[TC-25] Registered user signs in with valid credentials', { tag: [ACCOUNT_TAG] }, async ({ account, freshLogin, page }) => {
     const profile = await freshLogin();
 
     await expect(page).toHaveURL(PROFILE_URL);
@@ -129,7 +129,7 @@ test.describe('Authentication and session', () => {
     await expect(profile.booksHeading).toBeVisible();
   });
 
-  test('[DQB-032] Logout from the profile ends the session', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, profilePage, page }) => {
+  test('[TC-32] Logout from the profile ends the session', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, profilePage, page }) => {
     const profile = await freshLogin();
     await profile.logOut();
 
@@ -139,7 +139,7 @@ test.describe('Authentication and session', () => {
     await expect(profilePage.signedOutMessage).toHaveText(MESSAGES.signedOut);
   });
 
-  test('[DQB-033] Log out from the book list ends the session', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, booksPage, profilePage, page }) => {
+  test('[TC-33] Log out from the book list ends the session', { tag: [ACCOUNT_TAG] }, async ({ freshLogin, booksPage, profilePage, page }) => {
     await freshLogin();
     await booksPage.open();
 
@@ -157,7 +157,7 @@ test.describe('Authentication and session', () => {
     test.describe.configure({ retries: 0 });
 
     test(
-      '[DQB-026] Real user name with a wrong password is rejected',
+      '[TC-26] Real user name with a wrong password is rejected',
       { tag: [ACCOUNT_TAG] },
       async ({ account, loginCircuitBreaker, wrongPasswordBudget, loginPage, page }) => {
         loginCircuitBreaker.ensureClosed();

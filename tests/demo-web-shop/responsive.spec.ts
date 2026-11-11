@@ -10,7 +10,7 @@ test.describe('Responsive layout', () => {
     isMobile: async ({ browserName }, use) => use(browserName !== 'firefox')
   });
 
-  test('[DWS-067] Mobile layout shows the category menu at 375x812', async ({ homePage, header }) => {
+  test('[TC-67] Mobile layout shows the category menu at 375x812', async ({ homePage, header }) => {
     await homePage.open();
 
     expect(await homePage.documentScrollWidth()).toBe(MOBILE_VIEWPORT.width);

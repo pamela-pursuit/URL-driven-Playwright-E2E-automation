@@ -1,4 +1,4 @@
-import { chromiumOnly, expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
 import { ACCOUNT_NAVIGATION, HEADINGS, MESSAGES } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -8,7 +8,7 @@ test.use({ trace: 'off' });
 
 // Read-only: no form on these pages is ever submitted (requirements section 6).
 test.describe('My account', () => {
-  test('[DWS-063] Customer info and account navigation are shown read-only', async ({ signedIn, accountPage, existingUser, page }) => {
+  test('[TC-63] Customer info and account navigation are shown read-only', async ({ signedIn, accountPage, existingUser, page }) => {
     await signedIn.header.openAccount();
 
     await expect(page).toHaveURL(/\/customer\/info$/);
@@ -32,7 +32,7 @@ test.describe('My account', () => {
     await expect(accountPage.heading).toHaveText(HEADINGS.orders);
   });
 
-  test('[DWS-064] Addresses, Orders and Reward points show empty states', async ({ signedIn, accountPage }) => {
+  test('[TC-64] Addresses, Orders and Reward points show empty states', async ({ signedIn, accountPage }) => {
     void signedIn;
     recordObservation('assumption', 'ASSUMPTION-01: existingUser has no addresses, no orders and 0 reward points (R-29)');
 
@@ -49,7 +49,7 @@ test.describe('My account', () => {
     await expect(accountPage.pageBody, 'ASSUMPTION-01 broken: reward points history exists').toContainText(MESSAGES.rewardPointsNoHistory);
   });
 
-  test('[DWS-065] Change password form fields are present', async ({ signedIn, accountPage }) => {
+  test('[TC-65] Change password form fields are present', async ({ signedIn, accountPage }) => {
     void signedIn;
     await accountPage.open('changepassword');
 
@@ -62,9 +62,8 @@ test.describe('My account', () => {
 });
 
 test.describe('Downloadable products', () => {
-  chromiumOnly('Chromium only: known defect DEF-005 (the page never renders); one browser shows it without three 30 s waits');
 
-  test('[DWS-066] Downloadable products page loads', async ({ signedIn, accountPage }) => {
+  test('[TC-66] Downloadable products page loads', async ({ signedIn, accountPage }) => {
     void signedIn;
     test.setTimeout(90_000);
     await accountPage.goto('downloadableproducts');

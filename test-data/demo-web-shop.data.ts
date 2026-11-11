@@ -45,7 +45,7 @@ export const MESSAGES = {
   /** Implementation probe P1: native alert when the add-to-cart AJAX call fails (abort or 500). */
   addToCartFailedAlert: 'Failed to add the product to the cart. Please refresh the page and try one more time.',
 
-  /** Generic error page of the shared demo server (first full run, DWS-050 teardown). */
+  /** Generic error page of the shared demo server (first full run, TC-50 teardown). */
   serverError: "We're sorry, an internal error occurred.",
 
   cartEmpty: 'Your Shopping Cart is empty!',

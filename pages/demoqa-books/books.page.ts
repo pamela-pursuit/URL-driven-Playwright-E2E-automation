@@ -23,7 +23,7 @@ export class DemoqaBooksPage {
     this.searchBox = page.getByPlaceholder('Type to search');
   }
 
-  /** Returns the document response (DQB-001 asserts status and no redirect). */
+  /** Returns the document response (TC-01 asserts status and no redirect). */
   async open(): Promise<Response> {
     const navigation: { document: Response | null } = { document: null };
     await responseAfterNavigation(
@@ -42,7 +42,7 @@ export class DemoqaBooksPage {
   }
 
   /**
-   * DQB-021: the list request is routed to fail, so no row or search-box wait here (the spec
+   * TC-21: the list request is routed to fail, so no row or search-box wait here (the spec
    * asserts what is shown; the app currently crashes to a blank page, DEF-001).
    */
   async openExpectingNoRows(): Promise<void> {

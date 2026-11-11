@@ -2,7 +2,7 @@ import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fi
 import { INVALID, LISTING, MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 test.describe('Product page', () => {
-  test('[DWS-032] Guest adds a product to the cart from its page', async ({ productPage, header }) => {
+  test('[TC-32] Guest adds a product to the cart from its page', async ({ productPage, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     await productPage.addToCart();
 
@@ -10,7 +10,7 @@ test.describe('Product page', () => {
     await expect(header.cartLink).toHaveText('Shopping cart (1)');
   });
 
-  test('[DWS-033] Quantity 0 and non-numeric quantity are rejected', async ({ productPage, header }) => {
+  test('[TC-33] Quantity 0 and non-numeric quantity are rejected', async ({ productPage, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     for (const qty of INVALID.qty) {
       await test.step(`Quantity "${qty}"`, async () => {
@@ -22,7 +22,7 @@ test.describe('Product page', () => {
     }
   });
 
-  test('[DWS-034] Negative quantity on the product page adds nothing', async ({ productPage, header }) => {
+  test('[TC-34] Negative quantity on the product page adds nothing', async ({ productPage, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     await productPage.setQuantity(INVALID.negativeQty);
     await productPage.addToCart();
@@ -32,7 +32,7 @@ test.describe('Product page', () => {
     await expect(header.cartLink).toHaveText('Shopping cart (0)');
   });
 
-  test('[DWS-035] Home Add to cart on a configurable product opens its page', async ({ homePage, header, page }) => {
+  test('[TC-35] Home Add to cart on a configurable product opens its page', async ({ homePage, header, page }) => {
     await homePage.open();
     const product = await homePage.openProductViaAddToCart(PRODUCTS.buildYourOwnComputer.name);
 
@@ -42,7 +42,7 @@ test.describe('Product page', () => {
     await expect(header.cartLink).toHaveText('Shopping cart (0)');
   });
 
-  test('[DWS-036] Add to cart from the category listing', async ({ categoryPage, header }) => {
+  test('[TC-36] Add to cart from the category listing', async ({ categoryPage, header }) => {
     await categoryPage.open(LISTING.slug);
     const name = await categoryPage.addFirstAvailableProductToCart();
     recordObservation('listing-product', `added "${name}"`);
@@ -51,7 +51,7 @@ test.describe('Product page', () => {
     await expect(header.cartLink).toHaveText('Shopping cart (1)');
   });
 
-  test('[DWS-039] Double-click on Add to cart keeps header and cart consistent', async ({ productPage, cartPage, header }) => {
+  test('[TC-39] Double-click on Add to cart keeps header and cart consistent', async ({ productPage, cartPage, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     await productPage.doubleClickAddToCart();
     await cartPage.open();

@@ -4,7 +4,7 @@ import { MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 // The failure handler raises a native alert (implementation probe P1, R-24 closed). Waiting for it
 // is the synchronisation point, and its exact text is asserted.
 test.describe('Network resilience', () => {
-  test('[DWS-037] Aborted add-to-cart request leaves the cart empty', async ({ productPage, cartPage, cartNetwork, header }) => {
+  test('[TC-37] Aborted add-to-cart request leaves the cart empty', async ({ productPage, cartPage, cartNetwork, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     const { fired } = await cartNetwork.abortNext('details');
     const alert = await productPage.clickAddToCartExpectingAlert();
@@ -17,7 +17,7 @@ test.describe('Network resilience', () => {
     await expect(cartPage.content).toHaveText(MESSAGES.cartEmpty);
   });
 
-  test('[DWS-038] Add to cart succeeds on retry after a simulated 500', async ({ productPage, cartPage, cartNetwork, header }) => {
+  test('[TC-38] Add to cart succeeds on retry after a simulated 500', async ({ productPage, cartPage, cartNetwork, header }) => {
     await productPage.open(PRODUCTS.computingAndInternet.path);
     await test.step('First attempt: HTTP 500', async () => {
       const { fired } = await cartNetwork.failNextWith(500, 'details');

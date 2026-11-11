@@ -35,7 +35,7 @@ interface Row {
   skipReason: string;
 }
 
-const ID_PATTERN = /\[([A-Z][A-Z0-9]*-\d{3,})\]/;
+const ID_PATTERN = /\[([A-Z][A-Z0-9]*-\d{2,})\]/;
 
 function slug(text: string, max = 60): string {
   return text

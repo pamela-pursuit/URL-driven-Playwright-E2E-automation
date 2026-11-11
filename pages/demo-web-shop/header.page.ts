@@ -84,7 +84,7 @@ export class DemoWebShopHeader {
     return message;
   }
 
-  /** DWS-026: reports whether the search raised an alert or navigated. */
+  /** TC-26: reports whether the search raised an alert or navigated. */
   async searchAndObserve(term: string): Promise<SearchObservation> {
     await this.searchInput.fill(term);
     const outcome = Promise.race([

@@ -72,7 +72,7 @@ export class DemoWebShopRegisterPage {
     await this.confirmPassword.press('Tab');
   }
 
-  /** DWS-020: valid form with an email that already exists. No account can be created. */
+  /** TC-20: valid form with an email that already exists. No account can be created. */
   async attemptDuplicateRegistration(data: { firstName: string; lastName: string; email: string; password: string }): Promise<void> {
     await this.firstName.fill(data.firstName);
     await this.lastName.fill(data.lastName);

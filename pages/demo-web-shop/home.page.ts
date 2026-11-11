@@ -30,7 +30,7 @@ export class DemoWebShopHomePage {
     return this;
   }
 
-  /** DWS-035: the home "Add to cart" of a configurable product navigates to its page. */
+  /** TC-35: the home "Add to cart" of a configurable product navigates to its page. */
   async openProductViaAddToCart(name: string): Promise<DemoWebShopProductPage> {
     await navigateBy(this.page, () => this.productItemAddToCart(name).click(), /\/[^/]+$/);
     const product = new DemoWebShopProductPage(this.page);
@@ -38,7 +38,7 @@ export class DemoWebShopHomePage {
     return product;
   }
 
-  /** document.documentElement.scrollWidth, for the no-horizontal-scroll check (DWS-067). */
+  /** document.documentElement.scrollWidth, for the no-horizontal-scroll check (TC-67). */
   async documentScrollWidth(): Promise<number> {
     return this.page.evaluate(() => document.documentElement.scrollWidth);
   }

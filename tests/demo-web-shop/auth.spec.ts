@@ -8,7 +8,7 @@ test.use({ trace: 'off' });
 
 test.describe('Authentication', () => {
   test.describe('Existing account', () => {
-    test('[DWS-001] Registered customer signs in with valid credentials', async ({ signInAsExistingUser, header, existingUser, page }) => {
+    test('[TC-01] Registered customer signs in with valid credentials', async ({ signInAsExistingUser, header, existingUser, page }) => {
       await test.step('Sign in as existingUser on /login', async () => {
         await signInAsExistingUser();
       });
@@ -21,7 +21,7 @@ test.describe('Authentication', () => {
     });
   });
 
-  test('[DWS-003] Unknown email is rejected without revealing that the account does not exist', async ({ loginPage, header, page }) => {
+  test('[TC-03] Unknown email is rejected without revealing that the account does not exist', async ({ loginPage, header, page }) => {
     await loginPage.open();
     const outcome = await loginPage.signIn(unknownEmail(), wrongLoginValue());
 
@@ -34,7 +34,7 @@ test.describe('Authentication', () => {
       .not.toContainText(MESSAGES.noCustomerAccount, { timeout: 2_000 });
   });
 
-  test('[DWS-004] Login with both fields empty shows the server summary', async ({ loginPage, page }) => {
+  test('[TC-04] Login with both fields empty shows the server summary', async ({ loginPage, page }) => {
     await loginPage.open();
     await loginPage.submitEmpty();
 
@@ -44,7 +44,7 @@ test.describe('Authentication', () => {
     await expect(loginPage.emailFieldError).toHaveCount(0);
   });
 
-  test('[DWS-005] Malformed email is flagged client-side', async ({ loginPage, page }) => {
+  test('[TC-05] Malformed email is flagged client-side', async ({ loginPage, page }) => {
     await loginPage.open();
     await loginPage.enterEmailAndBlur(INVALID.loginEmail);
     await expect(loginPage.emailFieldError).toHaveText(MESSAGES.invalidEmailLogin);
@@ -56,7 +56,7 @@ test.describe('Authentication', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 
-  test('[DWS-006] Whitespace-only email does not sign the user in', async ({ loginPage, header, page }) => {
+  test('[TC-06] Whitespace-only email does not sign the user in', async ({ loginPage, header, page }) => {
     await loginPage.open();
     const outcome = await loginPage.signIn(INVALID.whitespaceEmail, wrongLoginValue());
 
@@ -72,7 +72,7 @@ test.describe('Authentication', () => {
   test.describe('Wrong password for the existing account', () => {
     chromiumOnly('Chromium only (R-04): one wrong-password attempt per run against the shared account');
     test.describe.configure({ retries: 0 });
-    test('[DWS-002] Known email with a wrong password is rejected', async ({ loginPage, header, existingUser, loginCircuitBreaker, page }) => {
+    test('[TC-02] Known email with a wrong password is rejected', async ({ loginPage, header, existingUser, loginCircuitBreaker, page }) => {
       // Do not add a further rejected attempt if existingUser was already rejected in this run.
       loginCircuitBreaker.ensureClosed();
       await loginPage.open();

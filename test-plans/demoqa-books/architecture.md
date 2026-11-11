@@ -1,7 +1,7 @@
 # Architecture: demoqa-books
 
 Implementation blueprint for the Playwright TypeScript suite covering
-`test-plans/demoqa-books/scenarios.json` (DQB-001 to DQB-048, 48 approved scenarios, all on
+`test-plans/demoqa-books/scenarios.json` (TC-01 to TC-48, 48 approved scenarios, all on
 Chromium, Firefox and WebKit).
 
 Inputs: `discovery.md` (exact texts in sections 3 and 4, API calls in section 6, locator candidates
@@ -22,13 +22,13 @@ Labels used below:
 | # | Decision | Choice | Why |
 | --- | --- | --- | --- |
 | K1 | Accounts | One account per browser (I2). A **worker-scoped `browserAccount`** maps the project name to the role (`chromium` to `existingUser`, `firefox` to `firefoxUser`, `webkit` to `webkitUser`) and calls `getAccount('demoqa-books', role, { required: ['userName', 'password'] })` for **that role only**. | A missing role fails only the browser that needs it. Values never leave the fixture except through secret-safe helpers (K6). |
-| K2 | Login strategy | **One UI login per worker, kept in memory.** A lazy worker fixture `accountSession` signs in through `/login` in its own context, captures the four demoqa.com session cookies, closes that context, and keeps the cookies in memory only (never written to disk). The test-scoped `signedIn` fixture adds those cookies to the test's context, opens `/profile` and checks the signed-in state; if the session is no longer valid it signs in again once (self-healing). | Limits logins (redirect takes 3.9 to 5.1 s, R-12, and the lockout policy is unknown, R-06). Session state is cookies only; localStorage holds no session data (discovery 3.3), so cookies are a complete storageState. No disk `storageState` file, no setup project and no `playwright.config.ts` change. Tests that must exercise the real login (DQB-025, 032, 033, 036) use `freshLogin` instead and never touch the cached cookies. |
+| K2 | Login strategy | **One UI login per worker, kept in memory.** A lazy worker fixture `accountSession` signs in through `/login` in its own context, captures the four demoqa.com session cookies, closes that context, and keeps the cookies in memory only (never written to disk). The test-scoped `signedIn` fixture adds those cookies to the test's context, opens `/profile` and checks the signed-in state; if the session is no longer valid it signs in again once (self-healing). | Limits logins (redirect takes 3.9 to 5.1 s, R-12, and the lockout policy is unknown, R-06). Session state is cookies only; localStorage holds no session data (discovery 3.3), so cookies are a complete storageState. No disk `storageState` file, no setup project and no `playwright.config.ts` change. Tests that must exercise the real login (TC-25, 032, 033, 036) use `freshLogin` instead and never touch the cached cookies. |
 | K3 | Serialisation | Every test that uses an account is **tagged `@account`**. Run plan: guest pass `--grep-invert @account --workers=3`; account pass `--grep @account --workers=1`. A single invocation with the config default (`workers: 1`) is also correct. In addition, a **per-role cross-process mutex** (`accountLock`, a lock file in the run folder) makes every `@account` test wait until no other worker uses the same browser's account. | `workers: 1` in the account pass is the primary guarantee. The mutex is defence in depth: if someone runs the account tests with more workers, tests on the same account wait instead of colliding; tests on different accounts may overlap safely. |
-| K4 | Wrong-password budget | DQB-026 is the **only** test that sends a real user name with a wrong value. It runs in its own `describe` with `retries: 0`, is the **last test** in `auth.spec.ts` (after DQB-025 has shown the stored credential works), checks the per-role login circuit breaker first, and writes a per-role run marker `.demoqa-books-<role>-wrong-password-used`. If the marker already exists, it throws instead of trying again (protects against `--repeat-each` and against re-running the test in the same run). All other negative logins use `fakeUserName()`. | R-06 and Q-NB1: one attempt per account per run. |
+| K4 | Wrong-password budget | TC-26 is the **only** test that sends a real user name with a wrong value. It runs in its own `describe` with `retries: 0`, is the **last test** in `auth.spec.ts` (after TC-25 has shown the stored credential works), checks the per-role login circuit breaker first, and writes a per-role run marker `.demoqa-books-<role>-wrong-password-used`. If the marker already exists, it throws instead of trying again (protects against `--repeat-each` and against re-running the test in the same run). All other negative logins use `fakeUserName()`. | R-06 and Q-NB1: one attempt per account per run. |
 | K5 | Collection cleanup | `ownedBooks` fixture. `claim(book)` checks the book is in `OWN_BOOKS` (the five scenario books), removes it if left over (single-row delete, `OK`, alert "Book deleted."), and registers it for teardown removal (which also runs after a failure). A guard snapshots all rows before each removal and throws if any other row disappears. There is no code path for "Delete All Books" or "Delete Account", and a network guard aborts any `DELETE` except `DELETE /BookStore/v1/Book`. | Q-NB4, Q-NB5, R-05, R-08. UI removal because the request shape of `DELETE /BookStore/v1/Book` was not captured (Q-NB4 allows API cleanup only after that). |
 | K6 | Secrets in artifacts | (a) Account values are typed with a **React-safe `fillSecretValue()`** (evaluate with the native value setter; no `Fill "<value>"` step titles). (b) `trace: 'off'` at file level in the three files that use accounts (`auth`, `collection`, `navigation`). (c) Account tests inject a **CSS mask** (black box) over the signed-in user name and the login UserName input, so the automatic screenshots (`screenshot: 'on'`) and failure videos do not show the user name. (d) Comparisons return booleans (`userNameMatches()`); no `toHaveText(userName)`. | Mirrors demo-web-shop P9, with one change: demo-web-shop's `fillAccountValue` sets `element.value` directly, which **React ignores** (the value tracker sees no change), so it cannot be reused on demoqa. Config-level screenshots cannot be given a `mask`, so the mask is applied in the page through CSS. Artifacts stay git-ignored in any case. |
 | K7 | Readiness (R-01) | No sleeps. Every `open()` waits for its page's data response (where one exists) and a ready locator, **plus a hydration check**: the anchor control has React's internal props attached (`__reactProps$*` or `__reactEventHandlers$*` key on the DOM node; probe P1). Inputs are filled with `fillAndConfirm()` (fill, then poll `inputValue()` and refill if the value was lost, bounded by `toPass`). Empty-submit clicks are retried with `toPass` only while no `is-invalid` class appears (the client sends no request on an empty submit, so a repeat click is harmless). `/register` additionally waits for the invisible reCAPTCHA v3 token (see 10.1, R-01). Response waits tied to a navigation are armed only after the main frame commits, so a response of the previous page is never taken. | Discovery 8: input typed or the first click right after load was lost in 2 runs. |
-| K8 | Third-party traffic | Auto fixture `blockThirdParty` on the context: requests whose host matches `THIRD_PARTY_BLOCKLIST` (suffix match) are fulfilled with an empty 200. **reCAPTCHA (`www.google.com`, `www.gstatic.com`) is allowed**, and demoqa.com is never matched. | R-03. Blocking the captcha could change the client behaviour that DQB-041 asserts (the request is sent without a token) and requirements section 6 forbids disabling it. |
+| K8 | Third-party traffic | Auto fixture `blockThirdParty` on the context: requests whose host matches `THIRD_PARTY_BLOCKLIST` (suffix match) are fulfilled with an empty 200. **reCAPTCHA (`www.google.com`, `www.gstatic.com`) is allowed**, and demoqa.com is never matched. | R-03. Blocking the captcha could change the client behaviour that TC-41 asserts (the request is sent without a token) and requirements section 6 forbids disabling it. |
 | K9 | Native alerts | `DemoqaAlerts` broker: one `page.on('dialog')` listener per page. Page objects arm an expectation **before** the click (`acceptNext(action)`) and get the message back; any dialog that arrives without an armed expectation is accepted and recorded as "unexpected". | R-02. Avoids the double-accept error that happens when a `waitForEvent('dialog')` and a separate listener both handle the same dialog. |
 | K10 | Spec file names | The `specFile` values in scenarios.json are used unchanged (`books`, `auth`, `collection`, `register`, `navigation`, `responsive`). | Workbook traceability (same as demo-web-shop K7). |
 | K11 | Viewport | Desktop specs set `test.use({ viewport: DESKTOP_VIEWPORT })` (1280x900, Q-NB8). The config's device defaults are 1280x720. `responsive.spec.ts` sets 375x812. | Discovery was made at 1280x900; the fixed-footer overlap (R-13) depends on height. |
@@ -60,12 +60,12 @@ test-data/
   demoqa-books.data.ts    BOOKS, OWN_BOOKS, catalogue orders, MESSAGES, SEARCH, viewports, ROLE_BY_PROJECT,
                           SESSION_COOKIES, API matchers, THIRD_PARTY_BLOCKLIST, ACCOUNT_TAG, generators
 tests/demoqa-books/
-  books.spec.ts           DQB-001..021                     guest
-  auth.spec.ts            DQB-022..033                     mixed (022, 023, 027, 028, 029 guest; 024, 025, 026, 030..033 @account)
-  collection.spec.ts      DQB-034..039                     @account
-  register.spec.ts        DQB-040, 041                     guest
-  navigation.spec.ts      DQB-042..046                     mixed (046 @account)
-  responsive.spec.ts      DQB-047, 048                     guest
+  books.spec.ts           TC-01..021                     guest
+  auth.spec.ts            TC-22..033                     mixed (022, 023, 027, 028, 029 guest; 024, 025, 026, 030..033 @account)
+  collection.spec.ts      TC-34..039                     @account
+  register.spec.ts        TC-40, 041                     guest
+  navigation.spec.ts      TC-42..046                     mixed (046 @account)
+  responsive.spec.ts      TC-47, 048                     guest
 ```
 
 Page object class names follow the `pageObject` values already in scenarios.json (`DemoqaBooksPage`,
@@ -94,7 +94,7 @@ Import rules:
 - **Navigation.** `open()` calls `page.goto('<relative path>', { waitUntil: 'domcontentloaded' })`
   (`'books'`, `` `books?search=${isbn}` ``, `'login'`, `'register'`, `'profile'`) and then the page's
   ready wait. Never an absolute URL or a leading `/`; `BASE_URL` is `https://demoqa.com/`.
-  Where a scenario asserts the HTTP status (DQB-001, DQB-023), `open()` returns the `Response`.
+  Where a scenario asserts the HTTP status (TC-01, TC-23), `open()` returns the `Response`.
 - **In-app navigation.** `Promise.all([page.waitForURL(re, { waitUntil: 'domcontentloaded' }), locator.click()])`,
   then the target page's ready wait, then return the target page object. `page.reload` always passes
   `{ waitUntil: 'domcontentloaded' }`. Nothing waits on `load` or `networkidle`.
@@ -139,7 +139,7 @@ Same markup on `/books` and `/profile` (plain `<table>`, discovery 3.1 and 3.5).
 | `table` | `page.getByRole('table')` | Verified single table. |
 | `columnHeader(name)` | `table.getByRole('columnheader', { name: new RegExp('^' + escapeRegExp(name)) })` | R-10: the accessible name gains the arrow after sorting, so an exact name stops matching (verified timeout). |
 | `sortIndicator(column, 'asc' \| 'desc')` | `columnHeader(column).getByLabel('sorted-asc' \| 'sorted-desc')` | Verified `aria-label` on a span. `getByLabel` matches `aria-label`. |
-| `anySortIndicator` | `table.getByLabel(/^sorted-(asc\|desc)$/)` | For "no indicator" checks (DQB-015 click 3, DQB-017). |
+| `anySortIndicator` | `table.getByLabel(/^sorted-(asc\|desc)$/)` | For "no indicator" checks (TC-15 click 3, TC-17). |
 | `bookRows` | `table.getByRole('row').filter({ has: page.getByRole('cell') })` | Data rows only (the header row has `columnheader` cells). Probe P5: no empty padding rows. |
 | `row(title)` | `bookRows.filter({ has: page.getByRole('link', { name: title, exact: true }) })` | Verified pattern (discovery 7). |
 | `titleLink(title)` | `table.getByRole('link', { name: title, exact: true })` | Verified. |
@@ -165,7 +165,7 @@ Methods:
 
 - `userNameMatches(expected): Promise<boolean>`: waits for `userNameValue` to be visible, then a
   secret-safe comparison.
-- `logOut(): Promise<string>` (DQB-033): click `logoutButton`, wait for `logoutButton` to be hidden
+- `logOut(): Promise<string>` (TC-33): click `logoutButton`, wait for `logoutButton` to be hidden
   and `loginButton` to be visible (both `/books` as a guest and `/login` have one), return
   `page.url()` for the spec to record (R-28: landing URL not observed).
 
@@ -191,14 +191,14 @@ Composes `table: DemoqaBooksTable`, `session: DemoqaSessionBar`, `menu: DemoqaSi
 | Locator | Strategy | Notes |
 | --- | --- | --- |
 | `searchBox` | `page.getByPlaceholder('Type to search')` | Verified; no label. `#searchBox` fallback. |
-| `menuToggle` | **Probe P8** (hamburger at 375 px; not needed by any assertion) | DQB-047 only checks that menu links are hidden. |
+| `menuToggle` | **Probe P8** (hamburger at 375 px; not needed by any assertion) | TC-47 only checks that menu links are hidden. |
 
 Methods:
 
 | Method | Returns | Synchronisation |
 | --- | --- | --- |
 | `open()` | `Response` | Arms `page.waitForResponse(API.booksList)` (GET `/BookStore/v1/Books`), `goto('books')`, awaits the response, `table.waitForRows()`, `waitForHydration(searchBox)`. |
-| `openExpectingNoRows()` | `void` | DQB-021: `goto('books')`, then `searchBox` visible and hydrated. The spec awaits the route's `fired` promise. No row wait. |
+| `openExpectingNoRows()` | `void` | TC-21: `goto('books')`, then `searchBox` visible and hydrated. The spec awaits the route's `fired` promise. No row wait. |
 | `search(term)` | `void` | `fillAndConfirm(searchBox, term)`. Filtering is client-side and immediate; specs assert with web-first assertions. |
 | `clearSearch()` | `void` | `fillAndConfirm(searchBox, '')`. |
 | `reload()` | `void` | `page.reload(dcl)` and the same waits as `open()`. |
@@ -215,15 +215,15 @@ Composes `session: DemoqaSessionBar`.
 | `websiteLink` | `wrapper('website').getByRole('link')` | Verified link. Never followed. |
 | `backButton` | `page.getByRole('button', { name: 'Back To Book Store', exact: true })` | Verified. Duplicate id `addNewRecordButton` avoided (R-08). |
 | `addToCollectionButton` | `page.getByRole('button', { name: 'Add To Your Collection', exact: true })` | Verified, same duplicate id avoided. |
-| `alertRegion` | `page.getByRole('alert')` | For the "no user-facing error" check (DQB-020). |
-| `text(value)` | `page.getByText(value)` | Generic text presence for absence checks of the API message (DQB-020). |
+| `alertRegion` | `page.getByRole('alert')` | For the "no user-facing error" check (TC-20). |
+| `text(value)` | `page.getByText(value)` | Generic text presence for absence checks of the API message (TC-20). |
 
 Methods:
 
 | Method | Returns | Synchronisation |
 | --- | --- | --- |
 | `open(isbn)` | `void` | Arms `waitForResponse(API.bookByIsbn(isbn))`, `goto(`books?search=${isbn}`)`, awaits it, then waits until `fieldValue('title')` has non-empty text (`expect.poll` on `textContent`), then `waitForHydration(backButton)`. |
-| `openUnknown(isbn)` | `number` (status) | DQB-020: same arming; returns the response status; waits for `wrapper('title')` and `backButton` visible. Does not wait for a value. |
+| `openUnknown(isbn)` | `number` (status) | TC-20: same arming; returns the response status; waits for `wrapper('title')` and `backButton` visible. Does not wait for a value. |
 | `addToCollection()` | `{ message: string; status: number }` | `alerts.acceptNext(...)` around the click, together with `waitForResponse(API.addBooks)` (POST `/BookStore/v1/Books`). Returns the alert text and status (201 or 400). Probe P12: order of response and alert. |
 | `backToBookStore()` | `DemoqaBooksPage` | Click, `waitForURL(/\/books$/)`, then the list ready wait (rows). |
 
@@ -270,7 +270,7 @@ Methods:
 | `open()` | `this` | `goto('register')`, heading, `waitForHydration(registerButton)`. |
 | `submitEmpty()` | `void` | Same `toPass` click loop as login, waiting for `input.is-invalid`. |
 | `fillForm({ firstName, lastName, userName, password })` | `void` | `fillAndConfirm` on each (non-secret: static names, `fakeUserName()`, `"abc"`). |
-| `submitExpectingRejection()` | `{ status: number; bodyKeys: string[] }` | **Guard first** (section 3.10). Arms `waitForResponse(API.createUser)`, clicks, returns the status and the request body's JSON **keys only** (DQB-041 records whether a captcha field is present, R-26). |
+| `submitExpectingRejection()` | `{ status: number; bodyKeys: string[] }` | **Guard first** (section 3.10). Arms `waitForResponse(API.createUser)`, clicks, returns the status and the request body's JSON **keys only** (TC-41 records whether a captcha field is present, R-26). |
 | `backToLogin()` | `DemoqaLoginPage` | Click, `waitForURL(/\/login$/)`, login ready wait. |
 
 ### 3.9 `DemoqaProfilePage` (`profile.page.ts`, `/profile`)
@@ -297,7 +297,7 @@ Methods:
 
 | Method | Returns | Synchronisation |
 | --- | --- | --- |
-| `goto()` | `Response` | Raw `goto('profile')` plus `signedOutMessage.or(booksHeading).first().waitFor()`. Used by guest checks (DQB-023, 044) and by `signedIn`. |
+| `goto()` | `Response` | Raw `goto('profile')` plus `signedOutMessage.or(booksHeading).first().waitFor()`. Used by guest checks (TC-23, 044) and by `signedIn`. |
 | `openSignedIn()` | `this` | Arms `waitForResponse(API.accountUser)` (GET `/Account/v1/User/<id>`), `goto('profile')`, awaits it, `booksHeading` and `userNameValue` visible, `waitForHydration(logoutButton)`. Rows are then final (the collection comes from that response). |
 | `reload()` | `void` | Same waits after `page.reload(dcl)`. |
 | `isSignedIn(): Promise<boolean>` | | After `goto()`: `userNameValue.isVisible()`. |
@@ -307,7 +307,7 @@ Methods:
 | `confirmDelete(title)` | `{ message: string; status: number }` | `alerts.acceptNext` around the `dialogOk` click, together with `waitForResponse(API.deleteBook)` (DELETE `/BookStore/v1/Book`); then `table.row(title)` hidden. |
 | `removeOwnBook(book)` | `{ removed: boolean }` | Cleanup primitive used only by `ownedBooks` (section 4.4). |
 | `logOut()` | `DemoqaLoginPage` | Click `logoutButton`, `waitForURL(/\/login$/)` (verified target), login ready wait. |
-| `goToBookStore()` | `string` (URL) | DQB-046: click, wait for the URL to leave `/profile`, return `page.url()` (R-29). If it is `/books`, also wait for rows. |
+| `goToBookStore()` | `string` (URL) | TC-46: click, wait for the URL to leave `/profile`, return `page.url()` (R-29). If it is `/books`, also wait for rows. |
 | `openSignedOutLink(name)` | `DemoqaLoginPage \| DemoqaRegisterPage` | Click, `waitForURL`, target ready wait. |
 
 ### 3.10 Safety guards (they throw; they are not assertions)
@@ -326,7 +326,7 @@ Methods:
   `Error('R-07: refusing to submit a password that satisfies the server rule')` if the password
   matches `STRONG_PASSWORD_RULE` (the verified `pattern`, discovery 3.4). The fake user name plus
   `"abc"` is the only data ever submitted.
-- **Wrong-password budget** (DQB-026): run marker per role (K4).
+- **Wrong-password budget** (TC-26): run marker per role (K4).
 
 ## 4. Fixtures (`fixtures/demoqa-books.fixture.ts`)
 
@@ -381,7 +381,7 @@ type WorkerFixtures = { browserAccount: BrowserAccount; accountSession: AccountS
 | `ownedBooks` | test, `{ timeout: 90_000 }` | `account`, `accountSession`, `context`, `profilePage`, `bookDetailPage` | `claim(book)`: guard `OWN_BOOKS`; ensure the page is signed in (if `/profile` shows the signed-out message, `accountSession.apply(context)`); `profilePage.openSignedIn()`; `removeOwnBook(book)` (setup removal of a leftover, annotation `cleanup` with the title if removed); remember the book. `addViaUi(book)`: `bookDetailPage.open(isbn)`, `addToCollection()`; if the message is not `MESSAGES.bookAdded`, throw `Error('Setup could not add "<title>": <message>')`. **Teardown (always):** ensure signed in (apply cookies; refresh once if the cookies were invalidated), `openSignedIn()`, `removeOwnBook` for every claimed book. |
 | `apiLog` | test | `page` | `page.on('request')` for demoqa.com paths under `/Account/` and `/BookStore/`; stores method + path only, user-id segments replaced. No bodies, headers or query values (except `ISBN`). |
 | `booksApi` | test | `page` | `failListWith(status)`: `page.route(API_GLOB.booksList, handler, { times: 1 })` where the handler fulfils `{ status, body: '{}' , contentType: 'application/json' }` only for `GET` (a `POST` to the same path is `route.continue()`d) and resolves `fired`. Teardown: `page.unrouteAll({ behavior: 'ignoreErrors' })`. |
-| `pageErrors` | test | `page` | Records `pageerror` messages; `mark()` and `sinceMark()` window them (DQB-014: errors from blocked ad code before the action do not count). |
+| `pageErrors` | test | `page` | Records `pageerror` messages; `mark()` and `sinceMark()` window them (TC-14: errors from blocked ad code before the action do not count). |
 
 Exported helpers (not fixtures):
 
@@ -393,7 +393,7 @@ Exported helpers (not fixtures):
 ### 4.3 Login count per browser per full run
 
 1 cached session login (plus at most one refresh after a fresh login or a token rotation, probe P3),
-DQB-025 (1), DQB-032 (1), DQB-033 (1), DQB-036 (2): **about 6 to 8 successful logins and exactly 1
+TC-25 (1), TC-32 (1), TC-33 (1), TC-36 (2): **about 6 to 8 successful logins and exactly 1
 wrong-password attempt per account**.
 
 ### 4.4 `removeOwnBook(book)` (inside `DemoqaProfilePage`, called only by `ownedBooks`)
@@ -410,7 +410,7 @@ wrong-password attempt per account**.
 
 | Role | Project | Required fields | Used by |
 | --- | --- | --- | --- |
-| `existingUser` | chromium | `userName`, `password` | DQB-024, 025, 026, 030 to 039, 046 |
+| `existingUser` | chromium | `userName`, `password` | TC-24, 025, 026, 030 to 039, 046 |
 | `firefoxUser` | firefox | `userName`, `password` | same |
 | `webkitUser` | webkit | `userName`, `password` | same |
 
@@ -429,7 +429,7 @@ No secrets. Every text is verified in discovery.md unless marked Derived.
 | `AUTHORS_ASC` | **Derived**: Addy Osmani, Axel Rauschmayer, Eric Elliott, Glenn Block et al., Kyle Simpson, Marijn Haverbeke, Nicholas C. Zakas, Richard E. Silverman (verified first and last). |
 | `GIT_POCKET_GUIDE_DETAIL` | `isbn '9781449325862'`, `title 'Git Pocket Guide'`, `subTitle 'A Working Introduction'`, `author 'Richard E. Silverman'`, `publisher "O'Reilly Media"`, `totalPages '234'`, `website 'http://chimera.labs.oreilly.com/books/1230000000561/index.html'` (record only; scenario asserts presence). |
 | `OWN_BOOKS` | `{ add: BOOKS.gitPocketGuide, duplicate: learningJsPatterns, persist: speakingJs, cancel: designingApis, delete: youDontKnowJs }` (one per collection test, scenarios.json testData). |
-| `SEARCH` | `title 'git'`, `titleUpper 'GIT'`, `author 'Kyle'`, `publisher "O'Reilly Media"`, `partial 'script'`, `apostrophe "Don't"`, `noMatch 'zzzznotabook'`, `padded '  git  '`, `isbn '9781449325862'`, `regex '(.*'`. Expected results: `SEARCH_EXPECTED.publisher` = the six O'Reilly titles, `.partial` = the five titles of DQB-007. |
+| `SEARCH` | `title 'git'`, `titleUpper 'GIT'`, `author 'Kyle'`, `publisher "O'Reilly Media"`, `partial 'script'`, `apostrophe "Don't"`, `noMatch 'zzzznotabook'`, `padded '  git  '`, `isbn '9781449325862'`, `regex '(.*'`. Expected results: `SEARCH_EXPECTED.publisher` = the six O'Reilly titles, `.partial` = the five titles of TC-07. |
 | `UNKNOWN_ISBN` | `'0000000000'`. |
 | `MESSAGES` | `loginInvalid 'Invalid username or password!'`; `bookAdded 'Book added to your collection.'`; `bookAlreadyPresent 'Book already present in the your collection!'` (exact, R-23); `bookDeleted 'Book deleted.'`; `deleteDialogTitle 'Delete Book'`; `deleteDialogBody 'Do you want to delete this book?'`; `signedOut 'Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.'`; `weakPassword "Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer."`; `isbnNotAvailable 'ISBN supplied is not available in Books Collection!'` (API body; used only for an absence check); `pageOfOne 'Page 1 of 1'`; `pageOfZero 'Page 1 of 0'`; `logoutList 'Log out'`; `logoutProfile 'Logout'`. |
 | `REGISTER` | `firstName 'QA'`, `lastName 'Automation'`, `weakPassword 'abc'`. |
@@ -448,9 +448,9 @@ No secrets. Every text is verified in discovery.md unless marked Derived.
   server (search, sort and detail are reads; the register submit is always rejected; the unknown-user
   login touches no account). They are safe at any worker count and across browsers.
 - **Account isolation.** One account per browser (I2). Same-account tests run one at a time (K3).
-  Each collection test uses its own book and removes only that book before and after (K5). DQB-039
+  Each collection test uses its own book and removes only that book before and after (K5). TC-39
   removes leftovers of all five own books, never anything else.
-- **Shared public catalogue (R-04, R-15).** Assertions name books. A catalogue change fails DQB-001 and
+- **Shared public catalogue (R-04, R-15).** Assertions name books. A catalogue change fails TC-01 and
   the order checks with a clear diff; classify outages (navigation timeouts, 5xx) as environment
   failures.
 - **API setup and cleanup.** Not used in the baseline: the `DELETE /BookStore/v1/Book` and
@@ -470,7 +470,7 @@ No secrets. Every text is verified in discovery.md unless marked Derived.
   The `account` fixture enforces it.
 - Collection tests call `test.slow()` (login, setup add, cleanup).
 - Order inside `auth.spec.ts`: guest tests (022, 023, 027, 028, 029), signed-in tests (024, 030, 031),
-  fresh-login tests (025, 032, 033), then DQB-026 last in `test.describe('Wrong password for the browser account', () => { test.describe.configure({ retries: 0 }); ... })`.
+  fresh-login tests (025, 032, 033), then TC-26 last in `test.describe('Wrong password for the browser account', () => { test.describe.configure({ retries: 0 }); ... })`.
 - Arrange steps go in `test.step('Arrange: ...')`; assertions are web-first in the spec.
 
 ### 7.2 Guest vs account
@@ -533,54 +533,54 @@ Titles start with `[DQB-nnn]` (`lib/artifact-reporter.ts` ID pattern). "Acct" = 
 
 | ID | Spec | Test title | Fixtures / notes |
 | --- | --- | --- | --- |
-| DQB-001 | books | `[DQB-001] Guest sees the 8-book catalogue on the Book Store` | booksPage; `open()` response status 200 and `request().redirectedFrom()` null; headers by `columnHeader`; `titleLinks` `toHaveText(CATALOGUE_TITLES)`; href; row cells |
-| DQB-002 | books | `[DQB-002] All 8 books fit on one page and the pager is disabled` | `pageInfo`, `previousButton`/`nextButton` `toBeDisabled` |
-| DQB-003 | books | `[DQB-003] Search by part of a title` | `toHaveText(['Git Pocket Guide'])`; URL `/books$` |
-| DQB-004 | books | `[DQB-004] Search ignores letter case` | |
-| DQB-005 | books | `[DQB-005] Search by author name` | row author cell "Kyle Simpson" |
-| DQB-006 | books | `[DQB-006] Search by publisher` | count 6; the two No Starch titles count 0 |
-| DQB-007 | books | `[DQB-007] Search matches a fragment inside a word` | `toHaveText(SEARCH_EXPECTED.partial)` |
-| DQB-008 | books | `[DQB-008] Search term with an apostrophe` | |
-| DQB-009 | books | `[DQB-009] Search with no matching book shows an empty table` | headers visible, `titleLinks` count 0, `pageInfo` "Page 1 of 0"; annotation R-21 |
-| DQB-010 | books | `[DQB-010] Clearing the search restores the full list` | |
-| DQB-011 | books | `[DQB-011] Search text is not kept after a reload` | `searchBox` `toHaveValue('')` after `reload()` |
-| DQB-012 | books | `[DQB-012] Search with surrounding spaces is not trimmed` | annotation R-19 |
-| DQB-013 | books | `[DQB-013] Searching by ISBN finds no book` | annotation R-20 |
-| DQB-014 | books | `[DQB-014] Search with regular-expression characters keeps the page usable` | `pageErrors.mark()` before typing, `sinceMark()` empty after; clear restores 8 |
-| DQB-015 | books | `[DQB-015] Title sort cycles ascending, descending and original order` | `TITLES_ASC`, `TITLES_DESC`, `CATALOGUE_TITLES`; indicators; `anySortIndicator` count 0 |
-| DQB-016 | books | `[DQB-016] Author sort orders rows by author ascending` | `columnCells('Author')` `toHaveText(AUTHORS_ASC)` |
-| DQB-017 | books | `[DQB-017] Image column is not sortable` | |
-| DQB-018 | books | `[DQB-018] Guest opens a book and sees its details` | `openBook`; `fieldValue` per field; description `not.toBeEmpty()` (R-25); `websiteLink` visible |
-| DQB-019 | books | `[DQB-019] Back To Book Store returns to the list` | `bookDetailPage.open`, `backToBookStore()` |
-| DQB-020 | books | `[DQB-020] Detail URL with an unknown ISBN shows empty fields` | `openUnknown` status 400; title value `toHaveText('')`; `alertRegion` and `text(MESSAGES.isbnNotAvailable)` count 0; annotation R-22 |
-| DQB-021 | books | `[DQB-021] Book list when the books service fails` | `booksApi.failListWith(500)` before `openExpectingNoRows()`; await `fired`; `titleLinks` count 0; `searchBox` visible; record `pageInfo` text and `alerts.unexpected()` (R-30) |
-| DQB-022 | auth | `[DQB-022] Guest on a book detail page cannot add it to a collection` | guest; `session.loginButton` and `backButton` visible; `addToCollectionButton` count 0; `session.userNameLabel` count 0 |
-| DQB-023 | auth | `[DQB-023] Guest opening the profile sees the signed-out message` | `profilePage.goto()` status 200, URL `/profile$`; message text; links' `href`; `table.table`, `logoutButton`, `deleteAccountButton`, `deleteAllBooksButton` count 0 |
-| DQB-024 | auth | `[DQB-024] Signed-in user sees account controls on a book detail page` | Acct; `signedIn`; `userNameMatches`; `logoutButton` `toHaveText('Log out')`; add/back visible; `loginButton` count 0 |
-| DQB-025 | auth | `[DQB-025] Registered user signs in with valid credentials` | Acct; `freshLogin()`; URL `/profile$` (15 s); `userNameMatches`; "Logout"; `booksHeading` |
-| DQB-026 | auth | `[DQB-026] Real user name with a wrong password is rejected` | Acct; last test, own describe, `retries: 0`; breaker `ensureClosed()`, then the per-role wrong-password marker (K4); `signIn(account.userName, wrongLoginValue())` gives `'rejected'`; `errorMessage` `toHaveText(MESSAGES.loginInvalid)`; URL `/login$`; `passwordInput` `toHaveValue(wrong)`; `sessionCookieNames` lacks `token` |
-| DQB-027 | auth | `[DQB-027] Unknown user name is rejected` | guest; `fakeUserName()`, `wrongLoginValue()`; URL `/login$`; `errorMessage` `toHaveText(/\S/)`; `recordObservation('R-18', text)`; exact text asserted only after confirmation (section 10) |
-| DQB-028 | auth | `[DQB-028] Login submitted with both fields empty` | guest; `submitEmpty()`; both inputs `toHaveClass(/is-invalid/)`; `errorText()` is `''` |
-| DQB-029 | auth | `[DQB-029] Login submitted with only a user name` | guest; `apiLog.count('POST', '/Account/v1/Login')` is 0; user name input `not.toHaveClass(/is-invalid/)` |
-| DQB-030 | auth | `[DQB-030] Session survives a reload of the profile page` | Acct; `signedIn`; `profilePage.reload()`; `signedOutMessage` count 0 |
-| DQB-031 | auth | `[DQB-031] Signed-in user sees their name on the book list` | Acct; `signedIn`, then `booksPage.open()`; "Log out" text; `loginButton` count 0 |
-| DQB-032 | auth | `[DQB-032] Logout from the profile ends the session` | Acct; `freshLogin()`; `logOut()`; URL `/login$`; `sessionCookieNames` `toEqual([])` (via `expect.poll`); `profilePage.goto()` message |
-| DQB-033 | auth | `[DQB-033] Log out from the book list ends the session` | Acct; `freshLogin()`; `booksPage.open()`; `session.logOut()` URL recorded (R-28); `token` absent; profile message |
-| DQB-034 | collection | `[DQB-034] Signed-in user adds a book to their collection` | Acct; `signedIn`, `ownedBooks.claim(OWN_BOOKS.add)`; `addToCollection()` message `bookAdded`, status 201; URL unchanged; profile row cells; `deleteIcon` visible |
-| DQB-035 | collection | `[DQB-035] Adding a book already in the collection is refused` | Acct; claim + `addViaUi(duplicate)`; second add message `bookAlreadyPresent` (status 400); `table.row(title)` count 1 |
-| DQB-036 | collection | `[DQB-036] Added book stays after reload and after signing in again` | Acct; `freshLogin()`, claim + `addViaUi(persist)`; row; `reload()`; `logOut()`; `freshLogin()`; row with author and publisher (R-31) |
-| DQB-037 | collection | `[DQB-037] Cancelling the delete confirmation keeps the book` | Acct; claim + add (cancel); dialog title/body/OK/Cancel; `cancelDelete()`; `apiLog.count('DELETE', '/BookStore/v1/Book')` 0; `alerts.unexpected()` empty; row visible |
-| DQB-038 | collection | `[DQB-038] Signed-in user deletes one book from the collection` | Acct; claim + add (delete); `confirmDelete` message `bookDeleted`, status 204; row hidden; `reload()`; row count 0 |
-| DQB-039 | collection | `[DQB-039] Profile with an empty collection` | Acct; `signedIn`; claim all five `OWN_BOOKS` (leftover removal only); `userNameMatches`; five headers; buttons visible (never clicked); if foreign rows exist: `recordObservation('R-16', titles)` and `test.skip(true, 'R-16: ...')` **after** the other checks; else rows 0 and "Page 1 of 0" (R-21) |
-| DQB-040 | register | `[DQB-040] Register form submitted with all fields empty` | guest; `submitEmpty()`; four inputs `is-invalid`; `errorMessage` empty; URL `/register$`; `apiLog` POST `/Account/v1/User` count 0 |
-| DQB-041 | register | `[DQB-041] Register with a weak password shows the server rule message` | guest; `fillForm` (fake name, "abc"); `submitExpectingRejection()` status 400; `errorMessage` `toHaveText(MESSAGES.weakPassword)`; four `toHaveValue`; URL; record `bodyKeys` (R-26) |
-| DQB-042 | navigation | `[DQB-042] New User opens the register page` | guest; `openRegister()`; URL; heading |
-| DQB-043 | navigation | `[DQB-043] Back to Login returns from the register page` | guest |
-| DQB-044 | navigation | `[DQB-044] Signed-out profile links lead to login and register` | guest; `openSignedOutLink('login')`, `goto()`, `openSignedOutLink('register')` |
-| DQB-045 | navigation | `[DQB-045] Book Store Application menu links open their pages` | guest; `menu.open(...)` three times; `item(name)` `toHaveClass(/\bactive\b/)` |
-| DQB-046 | navigation | `[DQB-046] Go To Book Store leads from the profile to the book list` | Acct; `signedIn`; `goToBookStore()` URL recorded (R-29); then `toHaveURL(/\/books$/)` and 8 titles |
-| DQB-047 | responsive | `[DQB-047] Book list on a 375x812 viewport` | guest; `test.use({ viewport: MOBILE_VIEWPORT, hasTouch: true, isMobile: browserName !== 'firefox' })` (function override as in demo-web-shop DWS-067); menu links hidden; search and Login visible; Image/Title/Author `toBeInViewport()`; Publisher `not.toBeInViewport()` (R-27); `documentScrollWidth` at most 375 |
-| DQB-048 | responsive | `[DQB-048] Login page on a 375x812 viewport` | guest; same `test.use`; fields and Login visible; menu collapsed; scroll width |
+| TC-01 | books | `[TC-01] Guest sees the 8-book catalogue on the Book Store` | booksPage; `open()` response status 200 and `request().redirectedFrom()` null; headers by `columnHeader`; `titleLinks` `toHaveText(CATALOGUE_TITLES)`; href; row cells |
+| TC-02 | books | `[TC-02] All 8 books fit on one page and the pager is disabled` | `pageInfo`, `previousButton`/`nextButton` `toBeDisabled` |
+| TC-03 | books | `[TC-03] Search by part of a title` | `toHaveText(['Git Pocket Guide'])`; URL `/books$` |
+| TC-04 | books | `[TC-04] Search ignores letter case` | |
+| TC-05 | books | `[TC-05] Search by author name` | row author cell "Kyle Simpson" |
+| TC-06 | books | `[TC-06] Search by publisher` | count 6; the two No Starch titles count 0 |
+| TC-07 | books | `[TC-07] Search matches a fragment inside a word` | `toHaveText(SEARCH_EXPECTED.partial)` |
+| TC-08 | books | `[TC-08] Search term with an apostrophe` | |
+| TC-09 | books | `[TC-09] Search with no matching book shows an empty table` | headers visible, `titleLinks` count 0, `pageInfo` "Page 1 of 0"; annotation R-21 |
+| TC-10 | books | `[TC-10] Clearing the search restores the full list` | |
+| TC-11 | books | `[TC-11] Search text is not kept after a reload` | `searchBox` `toHaveValue('')` after `reload()` |
+| TC-12 | books | `[TC-12] Search with surrounding spaces is not trimmed` | annotation R-19 |
+| TC-13 | books | `[TC-13] Searching by ISBN finds no book` | annotation R-20 |
+| TC-14 | books | `[TC-14] Search with regular-expression characters keeps the page usable` | `pageErrors.mark()` before typing, `sinceMark()` empty after; clear restores 8 |
+| TC-15 | books | `[TC-15] Title sort cycles ascending, descending and original order` | `TITLES_ASC`, `TITLES_DESC`, `CATALOGUE_TITLES`; indicators; `anySortIndicator` count 0 |
+| TC-16 | books | `[TC-16] Author sort orders rows by author ascending` | `columnCells('Author')` `toHaveText(AUTHORS_ASC)` |
+| TC-17 | books | `[TC-17] Image column is not sortable` | |
+| TC-18 | books | `[TC-18] Guest opens a book and sees its details` | `openBook`; `fieldValue` per field; description `not.toBeEmpty()` (R-25); `websiteLink` visible |
+| TC-19 | books | `[TC-19] Back To Book Store returns to the list` | `bookDetailPage.open`, `backToBookStore()` |
+| TC-20 | books | `[TC-20] Detail URL with an unknown ISBN shows empty fields` | `openUnknown` status 400; title value `toHaveText('')`; `alertRegion` and `text(MESSAGES.isbnNotAvailable)` count 0; annotation R-22 |
+| TC-21 | books | `[TC-21] Book list when the books service fails` | `booksApi.failListWith(500)` before `openExpectingNoRows()`; await `fired`; `titleLinks` count 0; `searchBox` visible; record `pageInfo` text and `alerts.unexpected()` (R-30) |
+| TC-22 | auth | `[TC-22] Guest on a book detail page cannot add it to a collection` | guest; `session.loginButton` and `backButton` visible; `addToCollectionButton` count 0; `session.userNameLabel` count 0 |
+| TC-23 | auth | `[TC-23] Guest opening the profile sees the signed-out message` | `profilePage.goto()` status 200, URL `/profile$`; message text; links' `href`; `table.table`, `logoutButton`, `deleteAccountButton`, `deleteAllBooksButton` count 0 |
+| TC-24 | auth | `[TC-24] Signed-in user sees account controls on a book detail page` | Acct; `signedIn`; `userNameMatches`; `logoutButton` `toHaveText('Log out')`; add/back visible; `loginButton` count 0 |
+| TC-25 | auth | `[TC-25] Registered user signs in with valid credentials` | Acct; `freshLogin()`; URL `/profile$` (15 s); `userNameMatches`; "Logout"; `booksHeading` |
+| TC-26 | auth | `[TC-26] Real user name with a wrong password is rejected` | Acct; last test, own describe, `retries: 0`; breaker `ensureClosed()`, then the per-role wrong-password marker (K4); `signIn(account.userName, wrongLoginValue())` gives `'rejected'`; `errorMessage` `toHaveText(MESSAGES.loginInvalid)`; URL `/login$`; `passwordInput` `toHaveValue(wrong)`; `sessionCookieNames` lacks `token` |
+| TC-27 | auth | `[TC-27] Unknown user name is rejected` | guest; `fakeUserName()`, `wrongLoginValue()`; URL `/login$`; `errorMessage` `toHaveText(/\S/)`; `recordObservation('R-18', text)`; exact text asserted only after confirmation (section 10) |
+| TC-28 | auth | `[TC-28] Login submitted with both fields empty` | guest; `submitEmpty()`; both inputs `toHaveClass(/is-invalid/)`; `errorText()` is `''` |
+| TC-29 | auth | `[TC-29] Login submitted with only a user name` | guest; `apiLog.count('POST', '/Account/v1/Login')` is 0; user name input `not.toHaveClass(/is-invalid/)` |
+| TC-30 | auth | `[TC-30] Session survives a reload of the profile page` | Acct; `signedIn`; `profilePage.reload()`; `signedOutMessage` count 0 |
+| TC-31 | auth | `[TC-31] Signed-in user sees their name on the book list` | Acct; `signedIn`, then `booksPage.open()`; "Log out" text; `loginButton` count 0 |
+| TC-32 | auth | `[TC-32] Logout from the profile ends the session` | Acct; `freshLogin()`; `logOut()`; URL `/login$`; `sessionCookieNames` `toEqual([])` (via `expect.poll`); `profilePage.goto()` message |
+| TC-33 | auth | `[TC-33] Log out from the book list ends the session` | Acct; `freshLogin()`; `booksPage.open()`; `session.logOut()` URL recorded (R-28); `token` absent; profile message |
+| TC-34 | collection | `[TC-34] Signed-in user adds a book to their collection` | Acct; `signedIn`, `ownedBooks.claim(OWN_BOOKS.add)`; `addToCollection()` message `bookAdded`, status 201; URL unchanged; profile row cells; `deleteIcon` visible |
+| TC-35 | collection | `[TC-35] Adding a book already in the collection is refused` | Acct; claim + `addViaUi(duplicate)`; second add message `bookAlreadyPresent` (status 400); `table.row(title)` count 1 |
+| TC-36 | collection | `[TC-36] Added book stays after reload and after signing in again` | Acct; `freshLogin()`, claim + `addViaUi(persist)`; row; `reload()`; `logOut()`; `freshLogin()`; row with author and publisher (R-31) |
+| TC-37 | collection | `[TC-37] Cancelling the delete confirmation keeps the book` | Acct; claim + add (cancel); dialog title/body/OK/Cancel; `cancelDelete()`; `apiLog.count('DELETE', '/BookStore/v1/Book')` 0; `alerts.unexpected()` empty; row visible |
+| TC-38 | collection | `[TC-38] Signed-in user deletes one book from the collection` | Acct; claim + add (delete); `confirmDelete` message `bookDeleted`, status 204; row hidden; `reload()`; row count 0 |
+| TC-39 | collection | `[TC-39] Profile with an empty collection` | Acct; `signedIn`; claim all five `OWN_BOOKS` (leftover removal only); `userNameMatches`; five headers; buttons visible (never clicked); if foreign rows exist: `recordObservation('R-16', titles)` and `test.skip(true, 'R-16: ...')` **after** the other checks; else rows 0 and "Page 1 of 0" (R-21) |
+| TC-40 | register | `[TC-40] Register form submitted with all fields empty` | guest; `submitEmpty()`; four inputs `is-invalid`; `errorMessage` empty; URL `/register$`; `apiLog` POST `/Account/v1/User` count 0 |
+| TC-41 | register | `[TC-41] Register with a weak password shows the server rule message` | guest; `fillForm` (fake name, "abc"); `submitExpectingRejection()` status 400; `errorMessage` `toHaveText(MESSAGES.weakPassword)`; four `toHaveValue`; URL; record `bodyKeys` (R-26) |
+| TC-42 | navigation | `[TC-42] New User opens the register page` | guest; `openRegister()`; URL; heading |
+| TC-43 | navigation | `[TC-43] Back to Login returns from the register page` | guest |
+| TC-44 | navigation | `[TC-44] Signed-out profile links lead to login and register` | guest; `openSignedOutLink('login')`, `goto()`, `openSignedOutLink('register')` |
+| TC-45 | navigation | `[TC-45] Book Store Application menu links open their pages` | guest; `menu.open(...)` three times; `item(name)` `toHaveClass(/\bactive\b/)` |
+| TC-46 | navigation | `[TC-46] Go To Book Store leads from the profile to the book list` | Acct; `signedIn`; `goToBookStore()` URL recorded (R-29); then `toHaveURL(/\/books$/)` and 8 titles |
+| TC-47 | responsive | `[TC-47] Book list on a 375x812 viewport` | guest; `test.use({ viewport: MOBILE_VIEWPORT, hasTouch: true, isMobile: browserName !== 'firefox' })` (function override as in demo-web-shop TC-67); menu links hidden; search and Login visible; Image/Title/Author `toBeInViewport()`; Publisher `not.toBeInViewport()` (R-27); `documentScrollWidth` at most 375 |
+| TC-48 | responsive | `[TC-48] Login page on a 375x812 viewport` | guest; same `test.use`; fields and Login visible; menu collapsed; scroll width |
 
 Totals: **48 scenarios, 48 tests, 144 executions**; 0 browser-limited; 0 not automated.
 
@@ -593,15 +593,15 @@ printing values).
 | # | Verify | Why / fallback |
 | --- | --- | --- |
 | P1 | React internal key on the login button, register button, search box and detail back button after load (`__reactProps$` or `__reactEventHandlers$`), on all three browsers; and that typing after it is never lost (20 loads per page). | K7. Fallback: wait until a harmless typed probe value survives (`fillAndConfirm` on the search box, then clear), or for `/login` and `/register` wait for the `GET` responses the page makes after mount, if any. |
-| P2 | (a) `fillSecretValue` with the native setter makes React accept the value (login works on all three browsers); (b) after a DQB-025 run, the password and user name do not appear in `results.json`, `report/` or `summary.md`; the CSS mask hides the user name in screenshots and video. | K6. If React does not pick the value up, dispatch `input` with `InputEvent` and `bubbles: true`; never fall back to `fill()` for account values. |
+| P2 | (a) `fillSecretValue` with the native setter makes React accept the value (login works on all three browsers); (b) after a TC-25 run, the password and user name do not appear in `results.json`, `report/` or `summary.md`; the CSS mask hides the user name in screenshots and video. | K6. If React does not pick the value up, dispatch `input` with `InputEvent` and `bubbles: true`; never fall back to `fill()` for account values. |
 | P3 | Does a new login (GenerateToken) invalidate an earlier token? Does Logout call the server? | Decides how often `signedIn` self-heals. No design change either way. |
 | P4 | `#userName-value` count on `/books`, detail and `/profile` signed in; the value element inside each detail wrapper. | Section 3.3 and 3.6 locators. |
 | P5 | `pageInfo` text structure; `titleLinks` count is exactly 8 (no image links); no padding rows in `tbody`. | Section 3.2 fallbacks. |
 | P6 | Empty-submit on `/login` and `/register` sends no request (so the `toPass` click retry is safe). | If a request is sent, retry only after checking `apiLog`. |
-| P7 | Left-menu structure (`.element-group`, `li` with class `active`), click target under the fixed footer at 1280x900 on each browser. | DQB-045. |
-| P8 | 375x812 on Firefox and WebKit: menu collapsed, Publisher outside the viewport, scroll width 375; hamburger locator. | DQB-047, 048 (R-17). |
+| P7 | Left-menu structure (`.element-group`, `li` with class `active`), click target under the fixed footer at 1280x900 on each browser. | TC-45. |
+| P8 | 375x812 on Firefox and WebKit: menu collapsed, Publisher outside the viewport, scroll width 375; hamburger locator. | TC-47, 048 (R-17). |
 | P9 | With the blocklist active: list remaining third-party hosts; app pages load, reCAPTCHA iframe still renders on `/register`; no app `pageerror` caused by the block. | Extend the blocklist from evidence only. |
-| P10 | `/books` "Log out" target (R-28); "Go To Book Store" target (R-29); unknown-user message (R-18). Recorded by DQB-027, 033 and 046 on the first run. | Turn into assertions after review (section 10). |
+| P10 | `/books` "Log out" target (R-28); "Go To Book Store" target (R-29); unknown-user message (R-18). Recorded by TC-27, 033 and 046 on the first run. | Turn into assertions after review (section 10). |
 | P11 | Optional: request shape and auth of `DELETE /BookStore/v1/Book` and `POST /BookStore/v1/Books` (method, body keys, header names only). | Enables a later API cleanup (Q-NB4). |
 | P12 | Order of the response and the native alert for add, duplicate add and delete on all three browsers (WebKit and Firefox dialog timing). | `acceptNext` already awaits both in parallel. |
 | P15 | Optional: whether Playwright 1.64 supports a per-project `workers` limit. | Only relevant if the user later wants the account pass to run browsers concurrently. |
@@ -626,39 +626,39 @@ printing values).
 | R-11, R-27 responsive | Separate mobile tests; `toBeInViewport` for Publisher. |
 | R-12 slow login | `LOGIN_REDIRECT_MS = 15_000` for the post-login URL and profile waits; collection tests `test.slow()`. |
 | R-13 footer overlap | `scrollIntoView({ block: 'center' })` before menu clicks; no `force`. |
-| R-14 console errors | No global console-error failure; DQB-014 checks `pageerror` in a window only. |
-| R-16 unexpected books | DQB-039 records and skips the empty check; the cleaner never removes them. |
+| R-14 console errors | No global console-error failure; TC-14 checks `pageerror` in a window only. |
+| R-16 unexpected books | TC-39 records and skips the empty check; the cleaner never removes them. |
 | R-17 Firefox/WebKit unobserved | First run on those browsers is exploratory; probes P1, P2, P8, P12. |
 | R-18 to R-30 discrepancies and assumptions | Current behaviour asserted where stable; `recordObservation` for R-18, R-26, R-28, R-29, R-30; annotations name the R-id for the report. |
-| R-31 persistence | DQB-036 confirms on the first run. |
-| R-32 guest profile | DQB-023 asserts the observed 200 with message. |
+| R-31 persistence | TC-36 confirms on the first run. |
+| R-32 guest profile | TC-23 asserts the observed 200 with message. |
 | R-33 session expiry | No scenario; nothing to build. |
 
 ### 10.2 Scenarios that cannot be implemented exactly as written (flagged, not changed)
 
-1. **DQB-027 (two-phase).** The exact message cannot be asserted until it is observed (R-18). First
+1. **TC-27 (two-phase).** The exact message cannot be asserted until it is observed (R-18). First
    implementation asserts URL and a non-empty `p#name` and records the text; after the first run is
    reviewed, the exact text assertion is added and scenarios.json updated. The scenario itself
    describes this, so the acceptance criteria are unchanged.
-2. **DQB-039 (conditional).** "Skips the empty check" if foreign books exist: implemented as
+2. **TC-39 (conditional).** "Skips the empty check" if foreign books exist: implemented as
    `test.skip(true, reason)` **after** the other checks, so the result shows **Skipped**, not Passed.
    Needs the user's agreement that a Skipped status is the intended outcome.
-3. **DQB-037 "no native alert appears".** The absence of a later alert cannot be proven in finite time.
+3. **TC-37 "no native alert appears".** The absence of a later alert cannot be proven in finite time.
    Proxies: no `DELETE /BookStore/v1/Book` request and no dialog event by the time the modal has
    closed and the row is re-checked. Stated in the test as a comment.
-4. **DQB-020 "No user-facing error message is shown".** Only checkable against known candidates: no
+4. **TC-20 "No user-facing error message is shown".** Only checkable against known candidates: no
    `role=alert` and no text "ISBN supplied is not available in Books Collection!". A differently
    worded message elsewhere on the page would not be detected.
-5. **DQB-014 "no uncaught page error".** Checked only for errors raised between typing and clearing
+5. **TC-14 "no uncaught page error".** Checked only for errors raised between typing and clearing
    (`pageErrors.mark()`), because the page may raise errors from blocked third-party code at load.
-6. **DQB-047 / DQB-048 on Firefox.** Playwright does not support `isMobile` on Firefox; Firefox runs
+6. **TC-47 / TC-48 on Firefox.** Playwright does not support `isMobile` on Firefox; Firefox runs
    with the 375x812 viewport and touch only (desktop user agent). The asserted layout is driven by
    viewport width, so the acceptance criteria are still checked; the precondition "mobile context" is
    only partly met on Firefox.
-7. **DQB-024, 030, 031, 034, 035, 037, 038, 039, 046 "signed in (storageState reused)".** Implemented
+7. **TC-24, 030, 031, 034, 035, 037, 038, 039, 046 "signed in (storageState reused)".** Implemented
    as cookies captured from a real UI login in the same worker (K2), not a storageState file. The
    effect is the same; noted only for traceability.
-8. **DQB-033 and DQB-046** record the landing URL (R-28, R-29). DQB-046 additionally asserts
+8. **TC-33 and TC-46** record the landing URL (R-28, R-29). TC-46 additionally asserts
    `/books` and the 8 titles, as its expected result states; if P10 shows another target, that is a
    finding to review, not a silent change.
 
@@ -668,7 +668,7 @@ No scenario is blocked. All 48 can be automated on all three browsers.
 
 - **TypeScript.** Run `npx tsc --noEmit` before the first execution; the `.cjs` import resolves through
   `lib/credentials-store.d.cts`.
-- **Retries in CI** (`retries: 2`) apply to everything except DQB-026. Do not use `--repeat-each` on
+- **Retries in CI** (`retries: 2`) apply to everything except TC-26. Do not use `--repeat-each` on
   `auth.spec.ts`; the wrong-password marker would make the repeat fail rather than try again.
 - **Screenshots** of signed-in pages are masked by CSS (K6); they remain git-ignored local artifacts,
   and the HTML report zips should not be shared unedited (reporting.md).

@@ -7,10 +7,10 @@
 {
   "app": "demo-web-shop",
   "baseUrl": "https://demowebshop.tricentis.com/",
-  "code": "DWS",                       // scenario ID prefix
+  "code": "TC",                       // scenario ID prefix
   "scenarios": [
     {
-      "id": "DWS-001",                 // required, unique, stable: <CODE>-NNN
+      "id": "TC-01",                 // required, unique, stable: TC-NN
       "feature": "Authentication",     // required
       "journey": "Registered customer signs in",   // required (User Journey)
       "testType": "Positive",          // required: Positive | Negative | Validation | Boundary | Edge Case |
@@ -35,12 +35,12 @@
     }
   ],
   "testData": [
-    { "key": "existingEmail", "source": "credentials:existingUser.email", "usedBy": ["DWS-001"], "notes": "Pre-registered account" },
-    { "key": "password", "source": "credentials:existingUser.password", "usedBy": ["DWS-001"] },
-    { "key": "newEmail", "value": "qa+<timestamp>@example.test", "source": "generated", "usedBy": ["DWS-010"], "notes": "Unique per run" }
+    { "key": "existingEmail", "source": "credentials:existingUser.email", "usedBy": ["TC-01"], "notes": "Pre-registered account" },
+    { "key": "password", "source": "credentials:existingUser.password", "usedBy": ["TC-01"] },
+    { "key": "newEmail", "value": "qa+<timestamp>@example.test", "source": "generated", "usedBy": ["TC-10"], "notes": "Unique per run" }
   ],
   "risks": [
-    { "id": "R-01", "type": "Assumption", "description": "...", "impact": "High", "mitigation": "...", "scenarios": ["DWS-001"], "status": "Open" }
+    { "id": "R-01", "type": "Assumption", "description": "...", "impact": "High", "mitigation": "...", "scenarios": ["TC-01"], "status": "Open" }
     // type: Risk | Assumption | Ambiguity | Blocker | Discrepancy | Defect
   ],
   "executions": []                     // appended by `workbook.mjs sync`; do not edit by hand
@@ -52,7 +52,7 @@
 Each Playwright test title starts with its scenario ID in brackets:
 
 ```ts
-test('[DWS-001] registered customer signs in', async ({ loginPage, existingUser }) => { ... });
+test('[TC-01] registered customer signs in', async ({ loginPage, existingUser }) => { ... });
 ```
 
 `sync` maps results through this tag. `validate` fails when an `Automated`

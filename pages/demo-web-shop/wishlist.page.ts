@@ -75,7 +75,7 @@ export class DemoWebShopWishlistPage {
 
   /**
    * Row thumbnails have no width/height; a late load shifts the row checkboxes (24.5 px on
-   * Firefox, DWS-056), so the page waits for them before any row control is used.
+   * Firefox, TC-56), so the page waits for them before any row control is used.
    */
   async waitForRowImages(): Promise<void> {
     await waitForImagesComplete(this.page, '.wishlist-content table.cart tbody tr img');

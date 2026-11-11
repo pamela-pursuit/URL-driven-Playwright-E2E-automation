@@ -207,7 +207,7 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
         wishlistCount: await header.wishlistCount()
       };
       await use({ baseline, purge: () => purge('manual') });
-      // Teardown also runs after a failure. Sign in again only on the logout paths (DWS-050, 051).
+      // Teardown also runs after a failure. Sign in again only on the logout paths (TC-50, 051).
       if (!(await header.isSignedIn())) {
         await signInAsExistingUser();
       }

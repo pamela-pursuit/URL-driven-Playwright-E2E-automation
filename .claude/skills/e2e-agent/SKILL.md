@@ -244,6 +244,17 @@ brief is all the context it gets.
     include that explanation too, so the user never has to ask why the
     numbers differ. Point them to the workbook's "Not Executed" sheet.
 
+## Browser compatibility (all projects)
+
+Websites must work in every browser. Every scenario runs on Chromium,
+Firefox and WebKit. A browser limit is allowed only as a test-safety limit
+the user approved (side effects such as real orders or account lockout). It
+is recorded with a "Test-safety limit ..." `scopeReason` and reported as
+**compatibility not verified**. Any failure or behaviour difference in one
+browser is logged as a **Browser compatibility** defect, and the test stays
+on that browser (failing while open). Never use a defect as a reason to
+limit browsers. `validate` rejects both mistakes.
+
 ## Safety rules (non-negotiable)
 
 Never submit real payments or orders, delete real data, send real messages

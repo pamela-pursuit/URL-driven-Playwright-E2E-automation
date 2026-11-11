@@ -1,4 +1,4 @@
-import { chromiumOnly, expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
 import { formatPrice, MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 // P9: account values must not reach report artifacts. Values are filled without step titles
@@ -9,14 +9,14 @@ test.use({ trace: 'off' });
 const product = PRODUCTS.healthBook;
 
 test.describe('Wishlist', () => {
-  test('[DWS-053] New guest sees the empty wishlist state', async ({ wishlistPage, header }) => {
+  test('[TC-53] New guest sees the empty wishlist state', async ({ wishlistPage, header }) => {
     await wishlistPage.open();
 
     await expect(wishlistPage.content).toHaveText(MESSAGES.wishlistEmpty);
     await expect(header.wishlistLink).toHaveText('Wishlist (0)');
   });
 
-  test('[DWS-054] Guest adds a product to the wishlist', async ({ productPage, header }) => {
+  test('[TC-54] Guest adds a product to the wishlist', async ({ productPage, header }) => {
     await productPage.open(product.path);
     await productPage.addToWishlist();
 
@@ -24,7 +24,7 @@ test.describe('Wishlist', () => {
     await expect(header.wishlistLink).toHaveText('Wishlist (1)');
   });
 
-  test('[DWS-055] Guest wishlist shows the share URL and removes the item', async ({ productPage, wishlistPage, header }) => {
+  test('[TC-55] Guest wishlist shows the share URL and removes the item', async ({ productPage, wishlistPage, header }) => {
     await test.step(`Arrange: add "${product.name}" to the wishlist`, async () => {
       await productPage.open(product.path);
       await productPage.addToWishlist();
@@ -45,7 +45,7 @@ test.describe('Wishlist', () => {
     await expect(header.wishlistLink).toHaveText('Wishlist (0)');
   });
 
-  test('[DWS-056] Wishlist item moves to the cart', async ({ productPage, wishlistPage, cartPage, header }) => {
+  test('[TC-56] Wishlist item moves to the cart', async ({ productPage, wishlistPage, cartPage, header }) => {
     await test.step(`Arrange: add "${product.name}" to the wishlist`, async () => {
       await productPage.open(product.path);
       await productPage.addToWishlist();
@@ -70,10 +70,9 @@ test.describe('Wishlist', () => {
   });
 
   test.describe('Signed in', () => {
-    chromiumOnly();
     test(
-      '[DWS-057] Signed-in customer adds and removes an own wishlist item',
-      { tag: ['@mutates-account', '@chromium-only'] },
+      '[TC-57] Signed-in customer adds and removes an own wishlist item',
+      { tag: ['@mutates-account'] },
       async ({ accountCartCleaner, productPage, wishlistPage, header }) => {
         const { wishlistCount: w } = accountCartCleaner.baseline;
         await productPage.open(product.path);

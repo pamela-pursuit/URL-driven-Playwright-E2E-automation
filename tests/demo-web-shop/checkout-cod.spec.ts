@@ -1,20 +1,19 @@
-import { chromiumOnly, expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
+import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
 import { HEALTH_BOOK_COD_ORDER, MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
-// D5 / R-06: places ONE permanent Cash On Delivery order per run, as a guest with fictional data.
-// Chromium only, never retried (a retry would place a second order). Never run with --repeat-each.
+// D5 / D7 / R-06: places ONE permanent Cash On Delivery order per browser per run (3 per full run),
+// as a guest with fictional data. Never retried (a retry would place an extra order); never --repeat-each.
 // The checkout page object refuses to continue or confirm unless Payments.CashOnDelivery is selected.
-chromiumOnly('Chromium only (D2, R-06): places a permanent order');
 test.describe.configure({ retries: 0 });
 
 test.describe('Cash On Delivery order', () => {
   test(
-    '[DWS-061] Guest places a Cash On Delivery order end to end',
-    { tag: ['@places-order', '@chromium-only'] },
+    '[TC-61] Guest places a Cash On Delivery order end to end',
+    { tag: ['@places-order'] },
     async ({ productPage, cartPage, uniqueGuest, page }) => {
       // D5 / R-06: one permanent order per run; --repeat-each would place more.
       if (test.info().repeatEachIndex > 0) {
-        throw new Error('D5: DWS-061 must not be repeated');
+        throw new Error('D5: TC-61 must not be repeated');
       }
       test.slow();
       const checkoutPage = await test.step('Arrange: Health Book in a guest cart, through to Confirm Order', async () => {

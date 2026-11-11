@@ -64,7 +64,7 @@ export class DemoqaProfilePage {
     return this.page.locator(`#delete-record-${isbn}`);
   }
 
-  /** Raw navigation for guest checks (DQB-023/032/033/044); waits for either profile state. */
+  /** Raw navigation for guest checks (TC-23/032/033/044); waits for either profile state. */
   async goto(): Promise<Response> {
     const response = await this.page.goto('profile', { waitUntil: 'domcontentloaded' });
     await this.signedOutMessage.or(this.logoutButton).first().waitFor({ timeout: READY_MS });
@@ -176,7 +176,7 @@ export class DemoqaProfilePage {
     return login;
   }
 
-  /** DQB-046: returns the URL reached so the spec can record it (R-29). */
+  /** TC-46: returns the URL reached so the spec can record it (R-29). */
   async goToBookStore(): Promise<string> {
     await Promise.all([
       this.page.waitForURL((url) => !url.pathname.endsWith('/profile'), { waitUntil: 'domcontentloaded' }),

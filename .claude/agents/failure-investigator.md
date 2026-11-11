@@ -29,6 +29,12 @@ object, `scenarios.json` entry, and `discovery.md`.
 
 ## Classify the root cause as exactly one of
 
+- **Browser compatibility defect:** the same steps and data pass on one
+  browser and fail on another, and you have ruled out a test or locator
+  problem (re-run with identical inputs on each browser). Log it as a
+  defect with category "Browser compatibility". The browser coverage stays
+  as it is, so the test keeps failing on that browser while it is open.
+
 - **Incorrect locator:** the element exists but the locator is wrong,
   ambiguous, or unscoped.
 - **Timing/synchronization:** an action ran before the state was ready. The

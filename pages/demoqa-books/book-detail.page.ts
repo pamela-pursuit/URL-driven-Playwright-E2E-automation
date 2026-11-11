@@ -58,7 +58,7 @@ export class DemoqaBookDetailPage {
     await this.waitForBook();
   }
 
-  /** DQB-020: returns the status of the book request; values stay empty, so no value wait. */
+  /** TC-20: returns the status of the book request; values stay empty, so no value wait. */
   async openUnknown(isbn: string): Promise<number> {
     const status = await responseAfterNavigation(
       this.page,

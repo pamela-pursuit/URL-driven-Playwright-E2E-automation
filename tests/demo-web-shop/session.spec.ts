@@ -7,7 +7,7 @@ import { MESSAGES } from '../../test-data/demo-web-shop.data';
 test.use({ trace: 'off' });
 
 test.describe('Session', () => {
-  test('[DWS-007] Signed-in session survives a page reload', async ({ signedIn, existingUser }) => {
+  test('[TC-07] Signed-in session survives a page reload', async ({ signedIn, existingUser }) => {
     const { header } = signedIn;
     await header.reload();
 
@@ -15,7 +15,7 @@ test.describe('Session', () => {
     expect(await header.accountLinkShows(existingUser.email), 'header account link shows the existingUser email').toBe(true);
   });
 
-  test('[DWS-008] Logout restores the guest header', async ({ signedIn, page }) => {
+  test('[TC-08] Logout restores the guest header', async ({ signedIn, page }) => {
     const { header } = signedIn;
     await header.logOut();
 
@@ -28,7 +28,7 @@ test.describe('Session', () => {
     await expect(header.accountLink).toHaveCount(0);
   });
 
-  test('[DWS-009] Back navigation after logout shows no signed-in content', async ({ signedIn, cartPage }) => {
+  test('[TC-09] Back navigation after logout shows no signed-in content', async ({ signedIn, cartPage }) => {
     const { header } = signedIn;
     await cartPage.open();
     await header.logOut();
@@ -43,7 +43,7 @@ test.describe('Session', () => {
     }
   });
 
-  test('[DWS-010] Cleared session cookies force login on account pages', async ({ signedIn, accountPage, page }) => {
+  test('[TC-10] Cleared session cookies force login on account pages', async ({ signedIn, accountPage, page }) => {
     const { header } = signedIn;
     // Session expiry simulation (R-18: the server-side timeout itself is not observed).
     await page.context().clearCookies();
@@ -53,7 +53,7 @@ test.describe('Session', () => {
     await expect(header.loginLink).toBeVisible();
   });
 
-  test('[DWS-011] Login page renders while already signed in', async ({ signedIn, loginPage, page }) => {
+  test('[TC-11] Login page renders while already signed in', async ({ signedIn, loginPage, page }) => {
     const { header } = signedIn;
     await loginPage.open();
 

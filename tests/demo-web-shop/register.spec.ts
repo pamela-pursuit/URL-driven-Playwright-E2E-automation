@@ -8,7 +8,7 @@ test.use({ trace: 'off' });
 
 // No test may create an account (intake decision): only invalid or duplicate data is submitted.
 test.describe('Registration validation', () => {
-  test('[DWS-016] Empty registration form shows required messages', async ({ registerPage, page }) => {
+  test('[TC-16] Empty registration form shows required messages', async ({ registerPage, page }) => {
     await registerPage.open();
     await registerPage.submitEmpty();
 
@@ -21,7 +21,7 @@ test.describe('Registration validation', () => {
     await expect(registerPage.fieldError('ConfirmPassword')).toHaveText(MESSAGES.passwordRequired);
   });
 
-  test('[DWS-017] Invalid email format is rejected', async ({ registerPage, header, page }) => {
+  test('[TC-17] Invalid email format is rejected', async ({ registerPage, header, page }) => {
     await registerPage.open();
     await registerPage.enterEmailAndBlur(INVALID.email);
 
@@ -31,7 +31,7 @@ test.describe('Registration validation', () => {
     await expect(header.registerLink).toBeVisible();
   });
 
-  test('[DWS-018] Password length boundary 5 vs 6 characters', async ({ registerPage }) => {
+  test('[TC-18] Password length boundary 5 vs 6 characters', async ({ registerPage }) => {
     await registerPage.open();
     for (const value of INVALID.shortPasswords) {
       await test.step(`${value.length} characters`, async () => {
@@ -45,7 +45,7 @@ test.describe('Registration validation', () => {
     });
   });
 
-  test('[DWS-019] Confirm password mismatch is rejected', async ({ registerPage }) => {
+  test('[TC-19] Confirm password mismatch is rejected', async ({ registerPage }) => {
     await registerPage.open();
     await registerPage.enterPasswordAndBlur(INVALID.minPassword);
     await registerPage.enterConfirmPasswordAndBlur(INVALID.mismatchConfirm);
@@ -55,7 +55,7 @@ test.describe('Registration validation', () => {
   });
 
   test.describe('Existing account email', () => {
-    test('[DWS-020] Duplicate email registration is rejected without creating an account', async ({ registerPage, header, existingUser, page }) => {
+    test('[TC-20] Duplicate email registration is rejected without creating an account', async ({ registerPage, header, existingUser, page }) => {
       await registerPage.open();
       await registerPage.attemptDuplicateRegistration({
         firstName: GUEST_ADDRESS.firstName,

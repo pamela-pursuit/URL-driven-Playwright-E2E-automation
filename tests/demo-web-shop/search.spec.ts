@@ -2,7 +2,7 @@ import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fi
 import { MESSAGES, SEARCH } from '../../test-data/demo-web-shop.data';
 
 test.describe('Search', () => {
-  test('[DWS-021] Header search returns matching products', async ({ homePage, header, searchPage, page }) => {
+  test('[TC-21] Header search returns matching products', async ({ homePage, header, searchPage, page }) => {
     await homePage.open();
     await header.search(SEARCH.match);
 
@@ -15,7 +15,7 @@ test.describe('Search', () => {
     expect(await searchPage.productItems.count()).toBeGreaterThan(0);
   });
 
-  test('[DWS-022] Search with no matches shows the empty message', async ({ homePage, header, searchPage, page }) => {
+  test('[TC-22] Search with no matches shows the empty message', async ({ homePage, header, searchPage, page }) => {
     await homePage.open();
     await header.search(SEARCH.noMatch);
 
@@ -24,7 +24,7 @@ test.describe('Search', () => {
     await expect(searchPage.results).toHaveText(MESSAGES.searchNoResults);
   });
 
-  test('[DWS-023] Search term below the minimum length is rejected', async ({ homePage, header, searchPage }) => {
+  test('[TC-23] Search term below the minimum length is rejected', async ({ homePage, header, searchPage }) => {
     await test.step('Header search', async () => {
       await homePage.open();
       await header.search(SEARCH.tooShortHeader);
@@ -38,7 +38,7 @@ test.describe('Search', () => {
     });
   });
 
-  test('[DWS-024] Empty or default search term triggers an alert', async ({ homePage, header, page }) => {
+  test('[TC-24] Empty or default search term triggers an alert', async ({ homePage, header, page }) => {
     await homePage.open();
     await test.step('Cleared term', async () => {
       const message = await header.searchExpectingAlert('');
@@ -53,7 +53,7 @@ test.describe('Search', () => {
     });
   });
 
-  test('[DWS-025] Header search autocomplete suggests products', async ({ homePage, header }) => {
+  test('[TC-25] Header search autocomplete suggests products', async ({ homePage, header }) => {
     await homePage.open();
     await header.typeSearchPrefix(SEARCH.autocompletePrefix);
 
@@ -62,7 +62,7 @@ test.describe('Search', () => {
     }
   });
 
-  test('[DWS-026] Whitespace-only search lists no products', async ({ homePage, header, searchPage }) => {
+  test('[TC-26] Whitespace-only search lists no products', async ({ homePage, header, searchPage }) => {
     await homePage.open();
     const observed = await header.searchAndObserve(SEARCH.whitespace);
 

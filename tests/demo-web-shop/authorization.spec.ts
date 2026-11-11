@@ -7,7 +7,7 @@ import { ACCOUNT_SECTIONS_PROTECTED, HEADINGS } from '../../test-data/demo-web-s
 test.use({ trace: 'off' });
 
 test.describe('Authorization', () => {
-  test('[DWS-012] Guest is redirected to login from protected account pages', async ({ accountPage, loginPage, page }) => {
+  test('[TC-12] Guest is redirected to login from protected account pages', async ({ accountPage, loginPage, page }) => {
     for (const section of ACCOUNT_SECTIONS_PROTECTED) {
       await test.step(`/customer/${section}`, async () => {
         await accountPage.goto(section);
@@ -18,7 +18,7 @@ test.describe('Authorization', () => {
   });
 
   test.describe('Existing account', () => {
-    test('[DWS-013] Sign-in from a ReturnUrl redirect returns to the requested page', async ({ accountPage, signInAsExistingUser, page }) => {
+    test('[TC-13] Sign-in from a ReturnUrl redirect returns to the requested page', async ({ accountPage, signInAsExistingUser, page }) => {
       await accountPage.goto('info');
       await expect(page).toHaveURL(/\/login\?ReturnUrl=%2fcustomer%2finfo$/i);
 
@@ -31,10 +31,10 @@ test.describe('Authorization', () => {
     });
   });
 
-  test('[DWS-014] Guest is redirected to login from the back-in-stock subscriptions page', async ({ accountPage, page }) => {
+  test('[TC-14] Guest is redirected to login from the back-in-stock subscriptions page', async ({ accountPage, page }) => {
     await accountPage.goto('backinstocksubscriptions');
 
-    // Known defect DEF-007: fails while the page renders for a guest instead of redirecting like DWS-013.
+    // Known defect DEF-007: fails while the page renders for a guest instead of redirecting like TC-13.
     await expect(page, 'DEF-007: guest is redirected to login like the other /customer/* pages')
       .toHaveURL(/\/login\?ReturnUrl=%2fcustomer%2fbackinstocksubscriptions$/i, { timeout: 5_000 });
   });

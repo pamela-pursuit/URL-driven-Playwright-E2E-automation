@@ -3,7 +3,7 @@ import { LISTING, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
 // Shared catalogue (R-02): assert order, ranges and containment, never totals.
 test.describe('Category listing', () => {
-  test('[DWS-027] Books from the top menu sorted by price low to high', async ({ homePage, header, categoryPage, page }) => {
+  test('[TC-27] Books from the top menu sorted by price low to high', async ({ homePage, header, categoryPage, page }) => {
     await homePage.open();
     await header.openCategory(LISTING.category);
 
@@ -18,7 +18,7 @@ test.describe('Category listing', () => {
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
   });
 
-  test('[DWS-028] Books sorted by name Z to A', async ({ categoryPage, page }) => {
+  test('[TC-28] Books sorted by name Z to A', async ({ categoryPage, page }) => {
     await categoryPage.open(LISTING.slug);
     await categoryPage.sortBy(LISTING.sortNameZA);
 
@@ -28,7 +28,7 @@ test.describe('Category listing', () => {
     expect(names).toEqual([...names].sort((a, b) => b.localeCompare(a, 'en', { sensitivity: 'base' })));
   });
 
-  test('[DWS-029] Page size 4 paginates to page 2', async ({ categoryPage, page }) => {
+  test('[TC-29] Page size 4 paginates to page 2', async ({ categoryPage, page }) => {
     await categoryPage.open(LISTING.slug);
     await categoryPage.setPageSize(LISTING.pageSize);
 
@@ -42,7 +42,7 @@ test.describe('Category listing', () => {
     await expect(categoryPage.pagerLink('Previous')).toBeVisible();
   });
 
-  test('[DWS-030] List view replaces the grid', async ({ categoryPage, page }) => {
+  test('[TC-30] List view replaces the grid', async ({ categoryPage, page }) => {
     await categoryPage.open(LISTING.slug);
     await categoryPage.viewAs('List');
 
@@ -51,7 +51,7 @@ test.describe('Category listing', () => {
     await expect(categoryPage.productGrid).toHaveCount(0);
   });
 
-  test('[DWS-031] Under 25.00 price filter applies and is removed', async ({ categoryPage, page }) => {
+  test('[TC-31] Under 25.00 price filter applies and is removed', async ({ categoryPage, page }) => {
     await categoryPage.open(LISTING.slug);
     await categoryPage.filterByPrice(LISTING.priceFilter);
 

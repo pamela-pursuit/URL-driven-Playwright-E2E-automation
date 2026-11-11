@@ -45,8 +45,10 @@ available), and Chromium/Firefox/WebKit compatibility.
 
 ## Rules
 
-- **IDs:** `<CODE>-NNN`, where CODE is a 2 to 5 letter uppercase app code
-  (for example `DWS-001`). Keep existing IDs stable and never renumber them.
+- **IDs:** `TC-01`, `TC-02`, ... (prefix `TC`, two digits, more when needed:
+  `TC-100`). Each app has its own catalogue, so IDs restart at TC-01 per
+  app. Keep existing IDs stable and never renumber them. To convert an
+  older catalogue, run `node scripts/workbook.mjs rename-ids --app <app>`.
 - **Traceability:** every scenario has a `requirementRef` (`REQ-xx`) from
   requirements.md, or `ASSUMPTION-xx` with a matching entry in `risks`.
 - **Priority:** use High, Medium, or Low as defined in test-design.md.
@@ -59,11 +61,19 @@ available), and Chromium/Firefox/WebKit compatibility.
   `Manual` or `Not Automatable` when automation is unsafe or nondeterministic
   (real payment, CAPTCHA, email inbox), and give the reason in `failureNotes`.
   High-priority scenarios must end up `Automated` or `Blocked` with a reason.
-- **Browser coverage:** every scenario runs on all three browsers by default.
-  If you limit `browsers` (for example to chromium because it changes shared
-  data or places an order), you **must** set `scopeReason`. It should explain
-  why, and which other scenarios still cover those browsers. `validate`
-  rejects a limited scenario without it.
+- **Browser compatibility (all projects):** websites must work in every
+  browser, so every scenario runs on Chromium, Firefox and WebKit. Only limit
+  `browsers` as a **test-safety limit the user approved** (for example to
+  avoid placing several real orders or risking an account lockout). Start
+  `scopeReason` with "Test-safety limit (user decision Dn): ...". It is
+  reported as **compatibility not verified**, never as passing. Never limit
+  a scenario because the site fails or behaves differently in a browser:
+  that is a **Browser compatibility** defect, and the test keeps running and
+  failing on that browser while the defect is open. `validate` enforces this.
+- **Plain language:** write `journey`, `steps` and `expected` in short,
+  everyday sentences a non-tester understands ("Sign in with the saved
+  account", not "Authenticate existingUser via the login form"). Quote the
+  website's own messages word for word, because tests check them.
 - **Test data:** add each data item to `testData`. Secrets use
   `source: "env:VAR_NAME"` with no `value`. Generate unique data (such as
   emails) at runtime, and record the pattern, not a literal.

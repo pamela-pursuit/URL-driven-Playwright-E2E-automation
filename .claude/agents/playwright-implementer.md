@@ -14,7 +14,7 @@ For fixes, the failure-investigator's diagnosis.
 
 ## Implementation rules
 
-- **Test titles** start with the scenario ID: `test('[DWS-004] rejects login with wrong password', ...)`.
+- **Test titles** start with the scenario ID: `test('[TC-04] rejects login with wrong password', ...)`.
   `scripts/workbook.mjs` maps results through this tag, so give each scenario
   exactly one test unless the catalogue says otherwise.
 - **Locator order:** `getByRole` with name, then `getByLabel`, then

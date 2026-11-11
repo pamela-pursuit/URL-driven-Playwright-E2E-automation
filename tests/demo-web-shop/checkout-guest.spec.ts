@@ -1,12 +1,12 @@
 import { expect, recordObservation, test } from '../../fixtures/demo-web-shop.fixture';
 import { CHECKOUT_STEP_TITLES, HEALTH_BOOK_COD_ORDER, INVALID, MESSAGES, PRODUCTS } from '../../test-data/demo-web-shop.data';
 
-// Guest checkout never clicks Confirm here (only DWS-061 places an order).
+// Guest checkout never clicks Confirm here (only TC-61 places an order).
 // Health Book is used because Ground costs 10.00 for it (Computing and Internet ships free).
 const product = PRODUCTS.healthBook;
 
 test.describe('Guest checkout', () => {
-  test('[DWS-015] Direct checkout with an empty guest cart redirects to the cart', async ({ checkoutPage, cartPage, page }) => {
+  test('[TC-15] Direct checkout with an empty guest cart redirects to the cart', async ({ checkoutPage, cartPage, page }) => {
     await checkoutPage.goto();
 
     await expect(page).toHaveURL(/\/cart$/);
@@ -22,7 +22,7 @@ test.describe('Guest checkout', () => {
       });
     });
 
-    test('[DWS-058] Guest reaches checkout via Checkout as Guest', async ({ cartPage, page }) => {
+    test('[TC-58] Guest reaches checkout via Checkout as Guest', async ({ cartPage, page }) => {
       const loginPage = await cartPage.acceptTermsAndCheckoutAsGuest();
 
       await expect(page).toHaveURL(/\/login\/checkoutasguest\?returnUrl=%2Fcart$/i);
@@ -39,7 +39,7 @@ test.describe('Guest checkout', () => {
       await expect(checkoutPage.billingForm).toBeVisible();
     });
 
-    test('[DWS-059] Billing step enforces required fields and email format', async ({ cartPage }) => {
+    test('[TC-59] Billing step enforces required fields and email format', async ({ cartPage }) => {
       const checkoutPage = await (await cartPage.acceptTermsAndCheckoutAsGuest()).checkoutAsGuest();
 
       await test.step('Continue with empty fields', async () => {
@@ -55,7 +55,7 @@ test.describe('Guest checkout', () => {
       });
     });
 
-    test('[DWS-060] Guest checkout reaches the Confirm Order summary without placing an order', async ({ cartPage, uniqueGuest, header }) => {
+    test('[TC-60] Guest checkout reaches the Confirm Order summary without placing an order', async ({ cartPage, uniqueGuest, header }) => {
       test.slow();
       const checkoutPage = await (await cartPage.acceptTermsAndCheckoutAsGuest()).checkoutAsGuest();
 
@@ -107,7 +107,7 @@ test.describe('Guest checkout', () => {
       });
     });
 
-    test('[DWS-062] Back on the Shipping Address step returns to Billing', async ({ cartPage, uniqueGuest, page }) => {
+    test('[TC-62] Back on the Shipping Address step returns to Billing', async ({ cartPage, uniqueGuest, page }) => {
       const checkoutPage = await (await cartPage.acceptTermsAndCheckoutAsGuest()).checkoutAsGuest();
       await checkoutPage.fillBillingAddress(uniqueGuest);
       await checkoutPage.continueBilling();

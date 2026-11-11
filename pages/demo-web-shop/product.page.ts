@@ -57,7 +57,7 @@ export class DemoWebShopProductPage {
   }
 
   /**
-   * DWS-037 / DWS-038: clicks "Add to cart" while the request is made to fail (cartNetwork)
+   * TC-37 / TC-38: clicks "Add to cart" while the request is made to fail (cartNetwork)
    * and returns the native alert the AjaxCart failure handler raises (probe P1). The click
    * completes only after the alert is handled, so the dialog is accepted first.
    */
@@ -72,7 +72,7 @@ export class DemoWebShopProductPage {
     return message;
   }
 
-  /** DWS-039: double-click, then wait for the bar. The spec then reads /cart. */
+  /** TC-39: double-click, then wait for the bar. The spec then reads /cart. */
   async doubleClickAddToCart(): Promise<void> {
     await this.notification.dismissIfVisible();
     await Promise.all([
