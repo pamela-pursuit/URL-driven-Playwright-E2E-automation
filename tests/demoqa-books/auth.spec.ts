@@ -106,12 +106,15 @@ test.describe('Authentication and session', () => {
     await expect(profilePage.signedOutMessage).toHaveCount(0);
   });
 
-  test('[DQB-031] Signed-in user sees their name on the book list', { tag: [ACCOUNT_TAG] }, async ({ signedIn, booksPage }) => {
+  test('[DQB-031] Signed-in user sees their name on the book list', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-010' } }, async ({ signedIn, booksPage }) => {
     await booksPage.open();
 
     expect(await booksPage.session.userNameMatches(signedIn.account.userName), "User Name shows the browser's account").toBe(true);
     await expect(booksPage.session.logoutButton).toBeVisible();
-    await expect(booksPage.session.logoutButton).toHaveText(MESSAGES.logoutList);
+    // Fails while DEF-010 is open (/books says "Log out"); soft so the Login check still runs.
+    await expect
+      .soft(booksPage.session.logoutButton, 'DEF-010 (R-24): logout button on /books is labelled "Logout", as on /profile')
+      .toHaveText(MESSAGES.logoutProfile);
     await expect(booksPage.session.loginButton).toHaveCount(0);
   });
 

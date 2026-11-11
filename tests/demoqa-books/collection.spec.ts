@@ -32,7 +32,7 @@ test.describe('Profile collection', () => {
     await expect(profilePage.deleteIcon(book.isbn)).toBeVisible();
   });
 
-  test('[DQB-035] Adding a book already in the collection is refused', { tag: [ACCOUNT_TAG] }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage }) => {
+  test('[DQB-035] Adding a book already in the collection is refused', { tag: [ACCOUNT_TAG], annotation: { type: 'issue', description: 'DEF-009' } }, async ({ signedIn, ownedBooks, bookDetailPage, profilePage }) => {
     void signedIn;
     test.slow();
     const book = OWN_BOOKS.duplicate;
@@ -44,8 +44,12 @@ test.describe('Profile collection', () => {
     await bookDetailPage.open(book.isbn);
     const result = await bookDetailPage.addToCollection();
 
-    // Exact observed wording, including "the your" (R-23). The 400 console error is expected (R-14).
-    expect(result.message).toBe(MESSAGES.bookAlreadyPresent);
+    // The 400 console error is expected (R-14). The prefix check recognises the refusal even if the
+    // wording changes; the soft check fails while DEF-009 is open so the duplicate-row check still runs.
+    expect(result.message).toContain(MESSAGES.bookAlreadyPresentPrefix);
+    expect
+      .soft(result.message, 'DEF-009 (R-23): duplicate-add message reads "…your collection", not "the your collection"')
+      .not.toContain('the your');
     expect(result.status, 'POST /BookStore/v1/Books status').toBe(400);
 
     await profilePage.openSignedIn();
@@ -160,6 +164,6 @@ test.describe('Profile collection', () => {
 
     await expect(profilePage.table.bookRows).toHaveCount(0);
     await expect(profilePage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
-    recordObservation('R-21', 'No empty-state message exists for an empty collection (current behaviour asserted)');
+    // DEF-007 (R-21): no empty-state message is shown; none is specified, so none is asserted.
   });
 });

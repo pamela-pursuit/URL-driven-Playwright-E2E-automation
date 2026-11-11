@@ -106,8 +106,8 @@ export const UNKNOWN_ISBN = '0000000000';
 export const MESSAGES = {
   loginInvalid: 'Invalid username or password!',
   bookAdded: 'Book added to your collection.',
-  /** Exact observed wording, including "the your" (R-23). */
-  bookAlreadyPresent: 'Book already present in the your collection!',
+  /** Start of the duplicate-add alert; the observed full text reads "...in the your collection!" (DEF-009, R-23). */
+  bookAlreadyPresentPrefix: 'Book already present in',
   bookDeleted: 'Book deleted.',
   deleteDialogTitle: 'Delete Book',
   deleteDialogBody: 'Do you want to delete this book?',
@@ -115,8 +115,6 @@ export const MESSAGES = {
     'Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.',
   weakPassword:
     "Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.",
-  /** API response body only; used for an absence check (DQB-020). */
-  isbnNotAvailable: 'ISBN supplied is not available in Books Collection!',
   pageOfOne: 'Page 1 of 1',
   pageOfZero: 'Page 1 of 0',
   logoutList: 'Log out',

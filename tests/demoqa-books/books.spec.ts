@@ -106,7 +106,7 @@ test.describe('Book Store list, search, sort and detail', () => {
       await expect(booksPage.table.columnHeader(column)).toBeVisible();
     }
     await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
-    recordObservation('R-21', 'No empty-state message exists for a search without results (current behaviour asserted)');
+    // DEF-007 (R-21): no empty-state message is shown; none is specified, so none is asserted.
   });
 
   test('[DQB-010] Clearing the search restores the full list', async ({ booksPage }) => {
@@ -132,22 +132,30 @@ test.describe('Book Store list, search, sort and detail', () => {
     await expect(booksPage.table.titleLinks).toHaveText(CATALOGUE_TITLES);
   });
 
-  test('[DQB-012] Search with surrounding spaces is not trimmed', async ({ booksPage }) => {
+  test('[DQB-012] Search term with leading and trailing spaces finds the same books', { annotation: { type: 'issue', description: 'DEF-005' } }, async ({ booksPage }) => {
     await booksPage.open();
+    await booksPage.search(SEARCH.title);
+    await expect(booksPage.table.titleLinks).toHaveText([BOOKS.gitPocketGuide.title]);
+    const unpaddedTitles = await booksPage.table.titleLinks.allTextContents();
+
     await booksPage.search(SEARCH.padded);
 
-    await expect(booksPage.table.titleLinks).toHaveCount(0);
-    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
-    recordObservation('R-19', 'Search input is not trimmed: "  git  " finds no book (current behaviour asserted)');
+    // Fails while DEF-005 is open ("  git  " finds no book).
+    await expect(
+      booksPage.table.titleLinks,
+      'DEF-005 (R-19): search ignores leading and trailing spaces'
+    ).toHaveText(unpaddedTitles);
   });
 
-  test('[DQB-013] Searching by ISBN finds no book', async ({ booksPage }) => {
+  test('[DQB-013] Searching by ISBN finds the book', { annotation: { type: 'issue', description: 'DEF-006' } }, async ({ booksPage }) => {
     await booksPage.open();
     await booksPage.search(SEARCH.isbn);
 
-    await expect(booksPage.table.titleLinks).toHaveCount(0);
-    await expect(booksPage.table.pageInfo).toHaveText(MESSAGES.pageOfZero);
-    recordObservation('R-20', 'ISBN is not searchable from the list (current behaviour asserted)');
+    // Fails while DEF-006 is open (the ISBN finds no book).
+    await expect(
+      booksPage.table.titleLinks,
+      'DEF-006 (R-20): searching the ISBN shows that book'
+    ).toHaveText([BOOKS.gitPocketGuide.title]);
   });
 
   test('[DQB-014] Search with regular-expression characters keeps the page usable', async ({ booksPage, pageErrors }) => {
@@ -202,7 +210,7 @@ test.describe('Book Store list, search, sort and detail', () => {
     await expect(booksPage.table.anySortIndicator).toHaveCount(0);
   });
 
-  test('[DQB-018] Guest opens a book and sees its details', async ({ booksPage, page }) => {
+  test('[DQB-018] Guest opens a book and sees its details', { annotation: { type: 'issue', description: 'DEF-011' } }, async ({ booksPage, page }) => {
     await booksPage.open();
     const detail = await booksPage.openBook(GIT_POCKET_GUIDE_DETAIL.title);
 
@@ -213,8 +221,15 @@ test.describe('Book Store list, search, sort and detail', () => {
     await expect(detail.fieldValue('author')).toHaveText(GIT_POCKET_GUIDE_DETAIL.author);
     await expect(detail.fieldValue('publisher')).toHaveText(GIT_POCKET_GUIDE_DETAIL.publisher);
     await expect(detail.fieldValue('pages')).toHaveText(GIT_POCKET_GUIDE_DETAIL.totalPages);
-    // R-25: the description is truncated, so only its presence is asserted.
     await expect(detail.fieldValue('description')).not.toBeEmpty();
+    // Fails while DEF-011 is open: the API itself returns the description cut at 255 characters
+    // mid-word, and the page shows it unchanged. Soft, so the Website check still runs.
+    expect
+      .soft(
+        ((await detail.fieldValue('description').textContent()) ?? '').trim(),
+        'DEF-011 (R-25): description is not cut off mid-word'
+      )
+      .toMatch(/[.!?…]["')\]]?$/);
     // Probe P4: the Website value is rendered as a label, not a link; presence is asserted.
     await expect(detail.fieldValue('website')).not.toBeEmpty();
   });
@@ -236,10 +251,7 @@ test.describe('Book Store list, search, sort and detail', () => {
     await expect(bookDetailPage.wrapper('title')).toBeVisible();
     await expect(bookDetailPage.fieldValue('title')).toHaveText('');
     await expect(bookDetailPage.backButton).toBeVisible();
-    // Section 10.2 note 4: checked against the known candidates only.
-    await expect(bookDetailPage.alertRegion).toHaveCount(0);
-    await expect(bookDetailPage.text(MESSAGES.isbnNotAvailable)).toHaveCount(0);
-    recordObservation('R-22', 'Unknown ISBN shows empty fields and no user-facing error (current behaviour asserted)');
+    // DEF-008 (R-22): no not-found message is shown; its text is not specified, so none is asserted.
   });
 
   test('[DQB-021] Book list when the books service fails', { annotation: { type: 'issue', description: 'DEF-001' } }, async ({ booksApi, booksPage, alerts, pageErrors }) => {

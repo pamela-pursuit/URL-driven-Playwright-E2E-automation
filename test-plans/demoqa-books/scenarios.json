@@ -28,7 +28,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -56,7 +56,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -84,7 +84,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -112,7 +112,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -140,7 +140,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -168,7 +168,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -196,7 +196,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -224,7 +224,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -239,7 +239,7 @@
         "Open /books and wait for the rows",
         "Type \"zzzznotabook\" in \"Type to search\""
       ],
-      "expected": "No title links are shown; the column headers stay visible; text \"Page 1 of 0\" is shown. No empty-state message exists today (current behaviour asserted; possible gap R-21).",
+      "expected": "No title links are shown; the column headers stay visible; text \"Page 1 of 0\" is shown. No automated check for the missing empty-state message (DEF-007, R-21).",
       "browsers": [
         "chromium",
         "firefox",
@@ -247,12 +247,12 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
-      "risk": "Users get no feedback that nothing matched (R-21)",
+      "risk": "Users get no feedback that nothing matched (R-21, DEF-007)",
       "requirementRef": "REQ-02",
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -281,7 +281,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -310,22 +310,23 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
       "id": "DQB-012",
       "feature": "Search",
-      "journey": "Search term with leading and trailing spaces is not trimmed",
+      "journey": "Search term with leading and trailing spaces finds the same books",
       "testType": "Edge Case",
       "priority": "Low",
       "preconditions": "Signed out; /books rows rendered",
-      "testData": "searchPadded = \"  git  \" (two spaces each side)",
+      "testData": "searchTitle = \"git\"; searchPadded = \"  git  \" (two spaces each side)",
       "steps": [
         "Open /books and wait for the rows",
-        "Type \"  git  \" in \"Type to search\""
+        "Type \"git\" in \"Type to search\" and note the title links (Git Pocket Guide)",
+        "Replace the search with \"  git  \""
       ],
-      "expected": "No title links are shown and text \"Page 1 of 0\" is shown (current behaviour: input not trimmed). Flagged as possible defect R-19.",
+      "expected": "Searching \"  git  \" shows the same title links as \"git\": exactly \"Git Pocket Guide\". Fails while DEF-005 (R-19) is open: today \"  git  \" shows no title links and \"Page 1 of 0\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -333,18 +334,18 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
-      "risk": "Pasted terms with spaces find nothing (R-19)",
+      "risk": "Pasted terms with spaces find nothing (R-19, DEF-005)",
       "requirementRef": "REQ-02",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:38:36.838Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed  | firefox: Failed - Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed  | webkit: Failed - Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed "
     },
     {
       "id": "DQB-013",
       "feature": "Search",
-      "journey": "Searching by ISBN finds no book",
+      "journey": "Searching by ISBN finds the book",
       "testType": "Edge Case",
       "priority": "Low",
       "preconditions": "Signed out; /books rows rendered",
@@ -353,7 +354,7 @@
         "Open /books and wait for the rows",
         "Type \"9781449325862\" in \"Type to search\""
       ],
-      "expected": "No title links are shown and text \"Page 1 of 0\" is shown (current behaviour: ISBN is not searchable). Flagged as possible gap R-20.",
+      "expected": "Exactly one title link \"Git Pocket Guide\" is shown. Fails while DEF-006 (R-20) is open: today the ISBN shows no title links and \"Page 1 of 0\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -361,13 +362,13 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
-      "risk": "Users who know the ISBN cannot find the book (R-20)",
+      "risk": "Users who know the ISBN cannot find the book (R-20, DEF-006)",
       "requirementRef": "REQ-02",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:38:36.838Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed  | firefox: Failed - Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed  | webkit: Failed - Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed "
     },
     {
       "id": "DQB-014",
@@ -395,7 +396,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -425,7 +426,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -453,7 +454,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -481,7 +482,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -496,7 +497,7 @@
         "Open /books and wait for the rows",
         "Click title link \"Git Pocket Guide\""
       ],
-      "expected": "URL is https://demoqa.com/books?search=9781449325862. Detail fields show: ISBN \"9781449325862\", Title \"Git Pocket Guide\", Sub Title \"A Working Introduction\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\", Total Pages \"234\". Description is not empty (full text not asserted: it is truncated, R-25). A Website value is present.",
+      "expected": "URL is https://demoqa.com/books?search=9781449325862. Detail fields show: ISBN \"9781449325862\", Title \"Git Pocket Guide\", Sub Title \"A Working Introduction\", Author \"Richard E. Silverman\", Publisher \"O'Reilly Media\", Total Pages \"234\". Description is not empty and ends a sentence (trimmed text ends with \".\", \"!\", \"?\" or \"…\", optionally followed by a closing quote or bracket). A Website value is present. The description check fails while DEF-011 (R-25) is open: the API returns the description cut at 255 characters mid-word (\"...with Git exp\") and the page shows it unchanged.",
       "browsers": [
         "chromium",
         "firefox",
@@ -504,13 +505,13 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
-      "risk": "Wrong details mislead users; description truncation is a possible defect (R-25)",
+      "risk": "Wrong details mislead users; description cut off mid-word (R-25, DEF-011)",
       "requirementRef": "REQ-04",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:38:36.838Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected)  | firefox: Failed - Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected)  | webkit: Failed - Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected) "
     },
     {
       "id": "DQB-019",
@@ -538,7 +539,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -553,7 +554,7 @@
         "Open /books?search=0000000000",
         "Wait for the book request to finish (GET /BookStore/v1/Book?ISBN=0000000000)"
       ],
-      "expected": "The book request returns 400. The detail labels render with empty values (Title value empty) and button \"Back To Book Store\" is visible. No user-facing error message is shown today (current behaviour asserted; possible defect R-22). The 400 console error is allow-listed (R-14).",
+      "expected": "The book request returns 400. The detail labels render with empty values (Title value empty) and button \"Back To Book Store\" is visible. No automated check for the missing not-found message (DEF-008, R-22). The 400 console error is allow-listed (R-14).",
       "browsers": [
         "chromium",
         "firefox",
@@ -561,12 +562,12 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
-      "risk": "Users get a blank page with no explanation (R-22)",
+      "risk": "Users get a blank page with no explanation (R-22, DEF-008)",
       "requirementRef": "REQ-04",
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -595,7 +596,7 @@
       "executionStatus": "Failed",
       "failureNotes": "Fails by design while DEF-001 is open (user policy: plain Failed).",
       "specFile": "tests/demoqa-books/books.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": "chromium: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed "
     },
     {
@@ -622,7 +623,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -649,7 +650,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -676,7 +677,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:21:35.605Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -705,7 +706,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -735,7 +736,7 @@
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
       "lastRun": "2026-11-10T18:50:36.138Z",
-      "lastRunNotes": "Evidence from run 2026-11-10_18-50-36 (passed on chromium, firefox and webkit). Excluded from later re-runs to keep one wrong-password attempt per account per run; its code path is unchanged apart from artifact masking."
+      "lastRunNotes": ""
     },
     {
       "id": "DQB-027",
@@ -763,7 +764,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -792,7 +793,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -821,7 +822,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -849,7 +850,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -863,7 +864,7 @@
       "steps": [
         "Open /books and wait for the rows"
       ],
-      "expected": "\"User Name :\" value equals the browser's account userName and button \"Log out\" is visible (text \"Log out\" here vs \"Logout\" on /profile, R-24). Button \"Login\" is not present.",
+      "expected": "\"User Name :\" value equals the browser's account userName and the logout button is visible and labelled exactly \"Logout\", the same as on /profile. Button \"Login\" is not present. The label check fails while DEF-010 (R-24) is open: /books shows \"Log out\".",
       "browsers": [
         "chromium",
         "firefox",
@@ -871,13 +872,13 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBooksPage",
-      "risk": "Session not shared across pages; inconsistent logout label (R-24)",
+      "risk": "Session not shared across pages; inconsistent logout label (R-24, DEF-010)",
       "requirementRef": "REQ-06",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:21:35.605Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:44:24.884Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed  | firefox: Failed - Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed  | webkit: Failed - Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed "
     },
     {
       "id": "DQB-032",
@@ -905,7 +906,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -935,7 +936,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/auth.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -964,7 +965,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:21:35.605Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -980,7 +981,7 @@
         "Register a dialog handler, then click \"Add To Your Collection\" for a book already in the collection",
         "Open /profile and wait for \"Books :\""
       ],
-      "expected": "A native alert with the exact text \"Book already present in the your collection!\" appears and is accepted (wording asserted as observed; possible defect R-23). On /profile the book appears in exactly one row (no duplicate). The 400 console error is allow-listed (R-14).",
+      "expected": "A native alert appears whose text contains \"Book already present in\" and is accepted; the POST returns 400. The text does not contain \"the your\" (it reads \"...your collection\"). On /profile the book appears in exactly one row (no duplicate). The wording check fails while DEF-009 (R-23) is open: today the alert reads \"Book already present in the your collection!\". The 400 console error is allow-listed (R-14).",
       "browsers": [
         "chromium",
         "firefox",
@@ -988,13 +989,13 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaBookDetailPage",
-      "risk": "Duplicate entries would corrupt the collection (data integrity); grammar of the message (R-23)",
+      "risk": "Duplicate entries would corrupt the collection (data integrity); grammar of the message (R-23, DEF-009)",
       "requirementRef": "REQ-08",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:44:24.884Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf  | firefox: Failed - Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf  | webkit: Failed - Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf "
     },
     {
       "id": "DQB-036",
@@ -1023,7 +1024,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -1052,7 +1053,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -1082,7 +1083,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -1096,7 +1097,7 @@
       "steps": [
         "Open /profile and wait for \"Books :\""
       ],
-      "expected": "\"User Name :\" value equals the browser's account userName. Column headers \"Image\", \"Title\", \"Author\", \"Publisher\", \"Action\" are shown with no book rows, text \"Page 1 of 0\" is shown, and buttons \"Logout\", \"Go To Book Store\", \"Delete Account\" and \"Delete All Books\" are visible (not clicked). No empty-state message exists today (possible gap R-21).",
+      "expected": "\"User Name :\" value equals the browser's account userName. Column headers \"Image\", \"Title\", \"Author\", \"Publisher\", \"Action\" are shown with no book rows, text \"Page 1 of 0\" is shown, and buttons \"Logout\", \"Go To Book Store\", \"Delete Account\" and \"Delete All Books\" are visible (not clicked). No automated check for the missing empty-state message (DEF-007, R-21).",
       "browsers": [
         "chromium",
         "firefox",
@@ -1104,12 +1105,12 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaProfilePage",
-      "risk": "Unclear empty state (R-21); destructive buttons nearby (R-08)",
+      "risk": "Unclear empty state (R-21, DEF-007); destructive buttons nearby (R-08)",
       "requirementRef": "REQ-09",
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/collection.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -1137,7 +1138,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/register.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1153,7 +1154,7 @@
         "Fill First Name, Last Name, UserName (fakeUserName) and Password (weakRegisterValue); confirm each field keeps its value",
         "Click button \"Register\""
       ],
-      "expected": "POST /Account/v1/User returns 400. p#name shows \"Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.\" All four fields keep their values. URL stays https://demoqa.com/register. The client sending the request without a captcha token is recorded as possible defect R-26.",
+      "expected": "POST /Account/v1/User returns 400. p#name shows \"Passwords must have at least one non alphanumeric character, one digit ('0'-'9'), one uppercase ('A'-'Z'), one lowercase ('a'-'z'), one special character and Password must be eight characters or longer.\" All four fields keep their values. URL stays https://demoqa.com/register. The request body contains a field whose name matches \"captcha\" (the reCAPTCHA result is sent to the server). The captcha check fails while DEF-012 (R-26) is open: the request carries no captcha field.",
       "browsers": [
         "chromium",
         "firefox",
@@ -1161,13 +1162,13 @@
       ],
       "automationStatus": "Automated",
       "pageObject": "DemoqaRegisterPage",
-      "risk": "A valid value would create a real account (R-07); client does not enforce the rule or captcha (R-26)",
+      "risk": "A valid value would create a real account (R-07); client does not send the captcha result (R-26, DEF-012)",
       "requirementRef": "REQ-10",
-      "executionStatus": "Passed",
+      "executionStatus": "Failed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/register.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
-      "lastRunNotes": ""
+      "lastRun": "2026-11-11T02:38:36.838Z",
+      "lastRunNotes": "chromium: Failed - Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality  | firefox: Failed - Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality  | webkit: Failed - Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality "
     },
     {
       "id": "DQB-042",
@@ -1194,7 +1195,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/navigation.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1222,7 +1223,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/navigation.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1250,7 +1251,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/navigation.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1280,7 +1281,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/navigation.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1308,7 +1309,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/navigation.spec.ts",
-      "lastRun": "2026-11-10T20:10:19.405Z",
+      "lastRun": "2026-11-11T02:44:24.884Z",
       "lastRunNotes": ""
     },
     {
@@ -1335,7 +1336,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/responsive.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     },
     {
@@ -1362,7 +1363,7 @@
       "executionStatus": "Passed",
       "failureNotes": "",
       "specFile": "tests/demoqa-books/responsive.spec.ts",
-      "lastRun": "2026-11-10T20:05:48.742Z",
+      "lastRun": "2026-11-11T02:38:36.838Z",
       "lastRunNotes": ""
     }
   ],
@@ -1556,7 +1557,8 @@
       "usedBy": [
         "DQB-003",
         "DQB-010",
-        "DQB-011"
+        "DQB-011",
+        "DQB-012"
       ]
     },
     {
@@ -1953,10 +1955,10 @@
     },
     {
       "id": "R-19",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Search input is not trimmed: \"  git  \" returns no rows",
       "impact": "Low",
-      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3)",
+      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3) Promoted to defect DEF-005 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-012"
       ],
@@ -1964,10 +1966,10 @@
     },
     {
       "id": "R-20",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "ISBN is not searchable on /books although it identifies the book",
       "impact": "Low",
-      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3) Promoted to defect DEF-006 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-013"
       ],
@@ -1975,10 +1977,10 @@
     },
     {
       "id": "R-21",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "No empty-state message: a no-match search and an empty collection only show the header row and \"Page 1 of 0\"",
       "impact": "Low",
-      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3) Promoted to defect DEF-007 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-009",
         "DQB-039"
@@ -1987,10 +1989,10 @@
     },
     {
       "id": "R-22",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Unknown ISBN detail URL shows blank fields and no user-facing error (API answers 400 code 1205)",
       "impact": "Medium",
-      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3)",
+      "mitigation": "Assert current behaviour; report as possible defect (Q-NB3) Promoted to defect DEF-008 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-020"
       ],
@@ -1998,10 +2000,10 @@
     },
     {
       "id": "R-23",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Duplicate-add alert wording \"Book already present in the your collection!\" (\"the your\")",
       "impact": "Low",
-      "mitigation": "Assert the exact observed text; report the grammar as possible defect (Q-NB3)",
+      "mitigation": "Assert the exact observed text; report the grammar as possible defect (Q-NB3) Promoted to defect DEF-009 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-035"
       ],
@@ -2009,10 +2011,10 @@
     },
     {
       "id": "R-24",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Logout button text differs: \"Logout\" on /profile, \"Log out\" on list and detail",
       "impact": "Low",
-      "mitigation": "Assert the observed text per page; locate with /^Log ?out$/; report as possible defect (Q-NB3)",
+      "mitigation": "Assert the observed text per page; locate with /^Log ?out$/; report as possible defect (Q-NB3) Promoted to defect DEF-010 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-031",
         "DQB-032",
@@ -2022,10 +2024,10 @@
     },
     {
       "id": "R-25",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Book description is cut mid-word (\"... for those of you with Git exp\")",
       "impact": "Low",
-      "mitigation": "Do not assert the full description; assert it is not empty; report as possible defect (Q-NB3)",
+      "mitigation": "Do not assert the full description; assert it is not empty; report as possible defect (Q-NB3) Promoted to defect DEF-011 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-018"
       ],
@@ -2033,10 +2035,10 @@
     },
     {
       "id": "R-26",
-      "type": "Discrepancy",
+      "type": "Defect",
       "description": "Register client sends POST /Account/v1/User despite the failing password pattern and without a reCAPTCHA token; only the server rejects it Update 2026-11-11 (investigation): the client does block submission until an invisible reCAPTCHA v3 token exists (\"Please verify reCaptcha to register!\"), but the token is never sent to POST /Account/v1/User (body: userName, password), so the server cannot verify it.",
       "impact": "Medium",
-      "mitigation": "Record in DQB-041; report as possible defect (Q-NB3); never submit a valid value (R-07)",
+      "mitigation": "Record in DQB-041; report as possible defect (Q-NB3); never submit a valid value (R-07) Promoted to defect DEF-012 by the user on 2026-11-11.",
       "scenarios": [
         "DQB-041"
       ],
@@ -2047,11 +2049,11 @@
       "type": "Discrepancy",
       "description": "Publisher column is not visible on /books at 375x812",
       "impact": "Low",
-      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3)",
+      "mitigation": "Assert current behaviour; report as possible gap (Q-NB3) Closed 2026-11-11: not a defect, the table scrolls sideways to the Publisher column (DEF-013 Rejected).",
       "scenarios": [
         "DQB-047"
       ],
-      "status": "Open"
+      "status": "Closed"
     },
     {
       "id": "R-28",
@@ -2284,6 +2286,258 @@
       "foundOn": "2026-11-11",
       "reportedTo": "Not reported (workbook only)",
       "nextAction": "None. No automated check."
+    },
+    {
+      "id": "DEF-005",
+      "riskRef": "R-19",
+      "title": "Book search does not ignore leading and trailing spaces",
+      "severity": "Low",
+      "status": "New",
+      "category": "Functional / search",
+      "scenarios": [
+        "DQB-012"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books",
+        "Type \"  git  \" (with spaces) in \"Type to search\""
+      ],
+      "expected": "The same books as for \"git\" are listed (Git Pocket Guide).",
+      "actual": "No books are listed; the table is empty and shows \"Page 1 of 0\".",
+      "expectedBasis": "Recommendation: search input is normally trimmed. Promoted to a defect by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-012 fails while this is open.",
+      "failingScenario": "DQB-012"
+    },
+    {
+      "id": "DEF-006",
+      "riskRef": "R-20",
+      "title": "Searching by ISBN finds no book",
+      "severity": "Low",
+      "status": "New",
+      "category": "Functional / search",
+      "scenarios": [
+        "DQB-013"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books",
+        "Type the ISBN 9781449325862 in \"Type to search\""
+      ],
+      "expected": "Git Pocket Guide (ISBN 9781449325862) is listed.",
+      "actual": "No books are listed (search covers only Title, Author and Publisher).",
+      "expectedBasis": "Recommendation: the ISBN identifies the book and is shown on its detail page. Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-013 fails while this is open.",
+      "failingScenario": "DQB-013"
+    },
+    {
+      "id": "DEF-007",
+      "riskRef": "R-21",
+      "title": "No message when a search finds nothing or the collection is empty",
+      "severity": "Low",
+      "status": "New",
+      "category": "Usability",
+      "scenarios": [
+        "DQB-009",
+        "DQB-039"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books and search \"zzqx\" (no match)",
+        "Or open /profile with an empty collection"
+      ],
+      "expected": "A short message explains that there are no results / no books.",
+      "actual": "Only the column headers and \"Page 1 of 0\" are shown; no message.",
+      "expectedBasis": "Recommendation (exact wording not specified). Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. No automated check: the expected wording is not specified, so the tests do not invent it."
+    },
+    {
+      "id": "DEF-008",
+      "riskRef": "R-22",
+      "title": "Unknown ISBN shows an empty details page with no message",
+      "severity": "Low",
+      "status": "New",
+      "category": "Error handling",
+      "scenarios": [
+        "DQB-020"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books?search=0000000000000"
+      ],
+      "expected": "A message that the book was not found.",
+      "actual": "The detail labels render with empty values and no message; the API answers 400 (code 1205).",
+      "expectedBasis": "Recommendation (exact wording not specified). Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. No automated check: the expected wording is not specified, so the test does not invent it."
+    },
+    {
+      "id": "DEF-009",
+      "riskRef": "R-23",
+      "title": "Duplicate-add message reads \"the your collection\"",
+      "severity": "Low",
+      "status": "New",
+      "category": "Content",
+      "scenarios": [
+        "DQB-035"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Sign in",
+        "Add a book to the collection",
+        "Add the same book again"
+      ],
+      "expected": "The message reads \"...already present in your collection!\" (no \"the your\").",
+      "actual": "The alert reads \"Book already present in the your collection!\".",
+      "expectedBasis": "Grammar. Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-035 fails while this is open.",
+      "failingScenario": "DQB-035"
+    },
+    {
+      "id": "DEF-010",
+      "riskRef": "R-24",
+      "title": "Logout button is labelled differently on different pages",
+      "severity": "Low",
+      "status": "New",
+      "category": "Content / consistency",
+      "scenarios": [
+        "DQB-031",
+        "DQB-032",
+        "DQB-033"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Sign in",
+        "Look at the logout button on /profile and on /books"
+      ],
+      "expected": "The same label on every page (\"Logout\", as on /profile).",
+      "actual": "\"Logout\" on /profile, \"Log out\" on /books and book detail pages.",
+      "expectedBasis": "Consistency. Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-031 fails while this is open.",
+      "failingScenario": "DQB-031"
+    },
+    {
+      "id": "DEF-011",
+      "riskRef": "R-25",
+      "title": "Book description is cut off mid-word",
+      "severity": "Low",
+      "status": "New",
+      "category": "Content / data",
+      "scenarios": [
+        "DQB-018"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books and click \"Git Pocket Guide\"",
+        "Read the Description"
+      ],
+      "expected": "The full description, ending with a complete sentence.",
+      "actual": "The text stops mid-word: \"...for those of you with Git exp\". The API (GET /BookStore/v1/Book and /Books) already returns this 255-character text; the page does not clip it.",
+      "expectedBasis": "Recommendation. Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-018 fails while this is open.",
+      "failingScenario": "DQB-018"
+    },
+    {
+      "id": "DEF-012",
+      "riskRef": "R-26",
+      "title": "Register request does not send the reCAPTCHA result to the server",
+      "severity": "Medium",
+      "status": "New",
+      "category": "Security",
+      "scenarios": [
+        "DQB-041"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/register and wait for the invisible reCAPTCHA",
+        "Fill the form with the weak password \"abc\" and click Register",
+        "Inspect the POST /Account/v1/User request body"
+      ],
+      "expected": "The request includes the reCAPTCHA token so the server can verify it.",
+      "actual": "The body contains only userName and password. The browser blocks the click until a token exists, but the server never receives it, so a direct API call skips the captcha.",
+      "expectedBasis": "Recommendation: captcha checks must be verified on the server. Promoted by the user (2026-11-11).",
+      "evidence": [
+        {
+          "label": "Reproduced on all 3 browsers: discovery 2026-11-10 and every run since (the test asserted this behaviour and passed), and again 2026-11-11 with the corrected check."
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-041 fails while this is open.",
+      "failingScenario": "DQB-041"
+    },
+    {
+      "id": "DEF-013",
+      "riskRef": "R-27",
+      "title": "Publisher column hidden on a 375 px wide screen",
+      "severity": "Low",
+      "status": "Rejected",
+      "category": "Responsive",
+      "scenarios": [
+        "DQB-047"
+      ],
+      "environment": "https://demoqa.com (public demo); Chromium, Firefox and WebKit",
+      "steps": [
+        "Open https://demoqa.com/books at 375x812"
+      ],
+      "expected": "All columns can be reached.",
+      "actual": "Not a defect: the Publisher header is clipped at first view, but the table scrolls sideways (wrapper overflow-x: auto, scrollWidth 428 vs 344); after scrolling the column is fully visible on Chromium, Firefox and WebKit.",
+      "expectedBasis": "Checked 2026-11-11 after the user asked to promote all discrepancies.",
+      "evidence": [
+        {
+          "label": "Probe 2026-11-11 at 375x812 on all 3 browsers (impl-def005-012.mjs)"
+        }
+      ],
+      "foundOn": "2026-11-10",
+      "reportedTo": "Not reported (workbook only)",
+      "nextAction": "None. DQB-047 keeps checking the first view; the column stays reachable by scrolling."
     }
   ],
   "executions": [
@@ -7863,10 +8117,1843 @@
       "error": "",
       "screenshot": "artifacts/demoqa-books/runs/2026-11-10_20-21-35/test-results/demoqa-books-collection-Pr-e3f9c--a-book-to-their-collection-chromium/test-finished-1.png",
       "runDirectory": "artifacts/demoqa-books/runs/2026-11-10_20-21-35"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-022",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3384,
+      "testTitle": "[DQB-022] Guest on a book detail page cannot add it to a collection",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-039af-nnot-add-it-to-a-collection-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-023",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 2379,
+      "testTitle": "[DQB-023] Guest opening the profile sees the signed-out message",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-44f12-sees-the-signed-out-message-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-027",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6341,
+      "testTitle": "[DQB-027] Unknown user name is rejected",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-2056e-known-user-name-is-rejected-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-028",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3355,
+      "testTitle": "[DQB-028] Login submitted with both fields empty",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-8fd72-tted-with-both-fields-empty-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-029",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3641,
+      "testTitle": "[DQB-029] Login submitted with only a user name",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-321e3-itted-with-only-a-user-name-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-022",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9829,
+      "testTitle": "[DQB-022] Guest on a book detail page cannot add it to a collection",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-039af-nnot-add-it-to-a-collection-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-023",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6672,
+      "testTitle": "[DQB-023] Guest opening the profile sees the signed-out message",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-44f12-sees-the-signed-out-message-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-027",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5300,
+      "testTitle": "[DQB-027] Unknown user name is rejected",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-2056e-known-user-name-is-rejected-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-028",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3444,
+      "testTitle": "[DQB-028] Login submitted with both fields empty",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-8fd72-tted-with-both-fields-empty-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-029",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4193,
+      "testTitle": "[DQB-029] Login submitted with only a user name",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-321e3-itted-with-only-a-user-name-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-022",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 10172,
+      "testTitle": "[DQB-022] Guest on a book detail page cannot add it to a collection",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-039af-nnot-add-it-to-a-collection-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-023",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6375,
+      "testTitle": "[DQB-023] Guest opening the profile sees the signed-out message",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-44f12-sees-the-signed-out-message-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-027",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 10680,
+      "testTitle": "[DQB-027] Unknown user name is rejected",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-2056e-known-user-name-is-rejected-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-028",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6444,
+      "testTitle": "[DQB-028] Login submitted with both fields empty",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-8fd72-tted-with-both-fields-empty-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-029",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5710,
+      "testTitle": "[DQB-029] Login submitted with only a user name",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-auth-Authenti-321e3-itted-with-only-a-user-name-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-001",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3794,
+      "testTitle": "[DQB-001] Guest sees the 8-book catalogue on the Book Store",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-40279-catalogue-on-the-Book-Store-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-002",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3075,
+      "testTitle": "[DQB-002] All 8 books fit on one page and the pager is disabled",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-db872-e-and-the-pager-is-disabled-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-003",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5064,
+      "testTitle": "[DQB-003] Search by part of a title",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-988bc-3-Search-by-part-of-a-title-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-004",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3616,
+      "testTitle": "[DQB-004] Search ignores letter case",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-9791c--Search-ignores-letter-case-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-005",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4211,
+      "testTitle": "[DQB-005] Search by author name",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1a17d-B-005-Search-by-author-name-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-006",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3494,
+      "testTitle": "[DQB-006] Search by publisher",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-03fa8-DQB-006-Search-by-publisher-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-007",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3716,
+      "testTitle": "[DQB-007] Search matches a fragment inside a word",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-cca2c-es-a-fragment-inside-a-word-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-008",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3336,
+      "testTitle": "[DQB-008] Search term with an apostrophe",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-46d10-rch-term-with-an-apostrophe-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-009",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4255,
+      "testTitle": "[DQB-009] Search with no matching book shows an empty table",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-7b244-g-book-shows-an-empty-table-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-010",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4524,
+      "testTitle": "[DQB-010] Clearing the search restores the full list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-63e7f-arch-restores-the-full-list-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-011",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5344,
+      "testTitle": "[DQB-011] Search text is not kept after a reload",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-608f7--is-not-kept-after-a-reload-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-012",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 10618,
+      "testTitle": "[DQB-012] Search term with leading and trailing spaces finds the same books",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-28e3b-spaces-finds-the-same-books-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-013",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 9523,
+      "testTitle": "[DQB-013] Searching by ISBN finds the book",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1936e-hing-by-ISBN-finds-the-book-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-014",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4243,
+      "testTitle": "[DQB-014] Search with regular-expression characters keeps the page usable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1c794-cters-keeps-the-page-usable-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-015",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4724,
+      "testTitle": "[DQB-015] Title sort cycles ascending, descending and original order",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-a7b6f-scending-and-original-order-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-016",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4112,
+      "testTitle": "[DQB-016] Author sort orders rows by author ascending",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-334bf-rs-rows-by-author-ascending-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-017",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3652,
+      "testTitle": "[DQB-017] Image column is not sortable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-fb55f-mage-column-is-not-sortable-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-018",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 4949,
+      "testTitle": "[DQB-018] Guest opens a book and sees its details",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected) ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-117e2-a-book-and-sees-its-details-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-019",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7816,
+      "testTitle": "[DQB-019] Back To Book Store returns to the list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-6d283-k-Store-returns-to-the-list-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-020",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3766,
+      "testTitle": "[DQB-020] Detail URL with an unknown ISBN shows empty fields",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-b2c2a-own-ISBN-shows-empty-fields-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-021",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 14730,
+      "testTitle": "[DQB-021] Book list when the books service fails",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-18658-hen-the-books-service-fails-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-001",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 16872,
+      "testTitle": "[DQB-001] Guest sees the 8-book catalogue on the Book Store",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-40279-catalogue-on-the-Book-Store-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-002",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7551,
+      "testTitle": "[DQB-002] All 8 books fit on one page and the pager is disabled",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-db872-e-and-the-pager-is-disabled-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-003",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5297,
+      "testTitle": "[DQB-003] Search by part of a title",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-988bc-3-Search-by-part-of-a-title-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-004",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5006,
+      "testTitle": "[DQB-004] Search ignores letter case",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-9791c--Search-ignores-letter-case-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-005",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6243,
+      "testTitle": "[DQB-005] Search by author name",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1a17d-B-005-Search-by-author-name-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-006",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5499,
+      "testTitle": "[DQB-006] Search by publisher",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-03fa8-DQB-006-Search-by-publisher-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-007",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6253,
+      "testTitle": "[DQB-007] Search matches a fragment inside a word",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-cca2c-es-a-fragment-inside-a-word-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-008",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5933,
+      "testTitle": "[DQB-008] Search term with an apostrophe",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-46d10-rch-term-with-an-apostrophe-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-009",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8776,
+      "testTitle": "[DQB-009] Search with no matching book shows an empty table",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-7b244-g-book-shows-an-empty-table-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-010",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8085,
+      "testTitle": "[DQB-010] Clearing the search restores the full list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-63e7f-arch-restores-the-full-list-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-011",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6387,
+      "testTitle": "[DQB-011] Search text is not kept after a reload",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-608f7--is-not-kept-after-a-reload-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-012",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 10771,
+      "testTitle": "[DQB-012] Search term with leading and trailing spaces finds the same books",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-28e3b-spaces-finds-the-same-books-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-013",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 16807,
+      "testTitle": "[DQB-013] Searching by ISBN finds the book",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1936e-hing-by-ISBN-finds-the-book-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-014",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 12196,
+      "testTitle": "[DQB-014] Search with regular-expression characters keeps the page usable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1c794-cters-keeps-the-page-usable-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-015",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5030,
+      "testTitle": "[DQB-015] Title sort cycles ascending, descending and original order",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-a7b6f-scending-and-original-order-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-016",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4999,
+      "testTitle": "[DQB-016] Author sort orders rows by author ascending",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-334bf-rs-rows-by-author-ascending-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-017",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4423,
+      "testTitle": "[DQB-017] Image column is not sortable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-fb55f-mage-column-is-not-sortable-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-018",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 5837,
+      "testTitle": "[DQB-018] Guest opens a book and sees its details",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected) ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-117e2-a-book-and-sees-its-details-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-019",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 13066,
+      "testTitle": "[DQB-019] Back To Book Store returns to the list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-6d283-k-Store-returns-to-the-list-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-020",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4954,
+      "testTitle": "[DQB-020] Detail URL with an unknown ISBN shows empty fields",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-b2c2a-own-ISBN-shows-empty-fields-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-021",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 14197,
+      "testTitle": "[DQB-021] Book list when the books service fails",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-18658-hen-the-books-service-fails-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-001",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9952,
+      "testTitle": "[DQB-001] Guest sees the 8-book catalogue on the Book Store",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-40279-catalogue-on-the-Book-Store-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-002",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9289,
+      "testTitle": "[DQB-002] All 8 books fit on one page and the pager is disabled",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-db872-e-and-the-pager-is-disabled-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-003",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6855,
+      "testTitle": "[DQB-003] Search by part of a title",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-988bc-3-Search-by-part-of-a-title-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-004",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11002,
+      "testTitle": "[DQB-004] Search ignores letter case",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-9791c--Search-ignores-letter-case-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-005",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9199,
+      "testTitle": "[DQB-005] Search by author name",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1a17d-B-005-Search-by-author-name-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-006",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9380,
+      "testTitle": "[DQB-006] Search by publisher",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-03fa8-DQB-006-Search-by-publisher-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-007",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7627,
+      "testTitle": "[DQB-007] Search matches a fragment inside a word",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-cca2c-es-a-fragment-inside-a-word-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-008",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11275,
+      "testTitle": "[DQB-008] Search term with an apostrophe",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-46d10-rch-term-with-an-apostrophe-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-009",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11068,
+      "testTitle": "[DQB-009] Search with no matching book shows an empty table",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-7b244-g-book-shows-an-empty-table-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-010",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6147,
+      "testTitle": "[DQB-010] Clearing the search restores the full list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-63e7f-arch-restores-the-full-list-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-011",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7182,
+      "testTitle": "[DQB-011] Search text is not kept after a reload",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-608f7--is-not-kept-after-a-reload-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-012",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 9411,
+      "testTitle": "[DQB-012] Search term with leading and trailing spaces finds the same books",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-005 (R-19): search ignores leading and trailing spaces  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-28e3b-spaces-finds-the-same-books-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-013",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 8738,
+      "testTitle": "[DQB-013] Searching by ISBN finds the book",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-006 (R-20): searching the ISBN shows that book  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1936e-hing-by-ISBN-finds-the-book-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-014",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4089,
+      "testTitle": "[DQB-014] Search with regular-expression characters keeps the page usable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-1c794-cters-keeps-the-page-usable-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-015",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5403,
+      "testTitle": "[DQB-015] Title sort cycles ascending, descending and original order",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-a7b6f-scending-and-original-order-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-016",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4595,
+      "testTitle": "[DQB-016] Author sort orders rows by author ascending",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-334bf-rs-rows-by-author-ascending-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-017",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4054,
+      "testTitle": "[DQB-017] Image column is not sortable",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-fb55f-mage-column-is-not-sortable-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-018",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 5188,
+      "testTitle": "[DQB-018] Guest opens a book and sees its details",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-011 (R-25): description is not cut off mid-word  expect(received).toMatch(expected) ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-117e2-a-book-and-sees-its-details-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-019",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6574,
+      "testTitle": "[DQB-019] Back To Book Store returns to the list",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-6d283-k-Store-returns-to-the-list-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-020",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4090,
+      "testTitle": "[DQB-020] Detail URL with an unknown ISBN shows empty fields",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-b2c2a-own-ISBN-shows-empty-fields-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-021",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 12923,
+      "testTitle": "[DQB-021] Book list when the books service fails",
+      "file": "demoqa-books/books.spec.ts",
+      "error": "Error: DEF-001 (R-30): list page stays usable when GET /BookStore/v1/Books returns 500  expect(locator).toBeVisible() failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-books-Book-St-18658-hen-the-books-service-fails-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-042",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6708,
+      "testTitle": "[DQB-042] New User opens the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-7396a-ser-opens-the-register-page-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-043",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9680,
+      "testTitle": "[DQB-043] Back to Login returns from the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4fe8a-urns-from-the-register-page-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-044",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11822,
+      "testTitle": "[DQB-044] Signed-out profile links lead to login and register",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4eb7f--lead-to-login-and-register-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-045",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4313,
+      "testTitle": "[DQB-045] Book Store Application menu links open their pages",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-10e96-menu-links-open-their-pages-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-042",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 14878,
+      "testTitle": "[DQB-042] New User opens the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-7396a-ser-opens-the-register-page-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-043",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6658,
+      "testTitle": "[DQB-043] Back to Login returns from the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4fe8a-urns-from-the-register-page-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-044",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 12250,
+      "testTitle": "[DQB-044] Signed-out profile links lead to login and register",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4eb7f--lead-to-login-and-register-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-045",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6800,
+      "testTitle": "[DQB-045] Book Store Application menu links open their pages",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-10e96-menu-links-open-their-pages-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-042",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 10533,
+      "testTitle": "[DQB-042] New User opens the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-7396a-ser-opens-the-register-page-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-043",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11299,
+      "testTitle": "[DQB-043] Back to Login returns from the register page",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4fe8a-urns-from-the-register-page-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-044",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 19748,
+      "testTitle": "[DQB-044] Signed-out profile links lead to login and register",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-4eb7f--lead-to-login-and-register-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-045",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9673,
+      "testTitle": "[DQB-045] Book Store Application menu links open their pages",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-navigation-Bo-10e96-menu-links-open-their-pages-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-040",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9469,
+      "testTitle": "[DQB-040] Register form submitted with all fields empty",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-a868c-itted-with-all-fields-empty-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-041",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 10559,
+      "testTitle": "[DQB-041] Register with a weak password shows the server rule message",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-99265-ows-the-server-rule-message-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-040",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 17920,
+      "testTitle": "[DQB-040] Register form submitted with all fields empty",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-a868c-itted-with-all-fields-empty-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-041",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 13590,
+      "testTitle": "[DQB-041] Register with a weak password shows the server rule message",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-99265-ows-the-server-rule-message-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-040",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 16850,
+      "testTitle": "[DQB-040] Register form submitted with all fields empty",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-a868c-itted-with-all-fields-empty-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-041",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 29313,
+      "testTitle": "[DQB-041] Register with a weak password shows the server rule message",
+      "file": "demoqa-books/register.spec.ts",
+      "error": "Error: DEF-012 (R-26): the reCAPTCHA result is sent to the server  expect(received).toContainEqual(expected) // deep equality ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-register-Regi-99265-ows-the-server-rule-message-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-047",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4880,
+      "testTitle": "[DQB-047] Book list on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-e5573--list-on-a-375x812-viewport-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-048",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3445,
+      "testTitle": "[DQB-048] Login page on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-875b0--page-on-a-375x812-viewport-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-047",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11781,
+      "testTitle": "[DQB-047] Book list on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-e5573--list-on-a-375x812-viewport-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-048",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6838,
+      "testTitle": "[DQB-048] Login page on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-875b0--page-on-a-375x812-viewport-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-047",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6311,
+      "testTitle": "[DQB-047] Book list on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-e5573--list-on-a-375x812-viewport-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:38:36.838Z",
+      "scenarioId": "DQB-048",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3879,
+      "testTitle": "[DQB-048] Login page on a 375x812 viewport",
+      "file": "demoqa-books/responsive.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-38-36/test-results/demoqa-books-responsive-Re-875b0--page-on-a-375x812-viewport-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-38-36"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-024",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 1753,
+      "testTitle": "[DQB-024] Signed-in user sees account controls on a book detail page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-668b1-trols-on-a-book-detail-page-chromium/test-finished-2.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-030",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3069,
+      "testTitle": "[DQB-030] Session survives a reload of the profile page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-59ef5--reload-of-the-profile-page-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-031",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 6902,
+      "testTitle": "[DQB-031] Signed-in user sees their name on the book list",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bcc82-their-name-on-the-book-list-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-025",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4299,
+      "testTitle": "[DQB-025] Registered user signs in with valid credentials",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bd38c-s-in-with-valid-credentials-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-032",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5519,
+      "testTitle": "[DQB-032] Logout from the profile ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-9eb91-he-profile-ends-the-session-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-033",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6858,
+      "testTitle": "[DQB-033] Log out from the book list ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-833fa--book-list-ends-the-session-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-024",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 2523,
+      "testTitle": "[DQB-024] Signed-in user sees account controls on a book detail page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-668b1-trols-on-a-book-detail-page-firefox/test-finished-2.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-030",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3115,
+      "testTitle": "[DQB-030] Session survives a reload of the profile page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-59ef5--reload-of-the-profile-page-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-031",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 6702,
+      "testTitle": "[DQB-031] Signed-in user sees their name on the book list",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bcc82-their-name-on-the-book-list-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-025",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5841,
+      "testTitle": "[DQB-025] Registered user signs in with valid credentials",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bd38c-s-in-with-valid-credentials-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-032",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6383,
+      "testTitle": "[DQB-032] Logout from the profile ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-9eb91-he-profile-ends-the-session-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-033",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7457,
+      "testTitle": "[DQB-033] Log out from the book list ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-833fa--book-list-ends-the-session-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-024",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 2554,
+      "testTitle": "[DQB-024] Signed-in user sees account controls on a book detail page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-668b1-trols-on-a-book-detail-page-webkit/test-finished-2.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-030",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4156,
+      "testTitle": "[DQB-030] Session survives a reload of the profile page",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-59ef5--reload-of-the-profile-page-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-031",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 8541,
+      "testTitle": "[DQB-031] Signed-in user sees their name on the book list",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "Error: DEF-010 (R-24): logout button on /books is labelled \"Logout\", as on /profile  expect(locator).toHaveText(expected) failed ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bcc82-their-name-on-the-book-list-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-025",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6802,
+      "testTitle": "[DQB-025] Registered user signs in with valid credentials",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-bd38c-s-in-with-valid-credentials-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-032",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8839,
+      "testTitle": "[DQB-032] Logout from the profile ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-9eb91-he-profile-ends-the-session-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-033",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11006,
+      "testTitle": "[DQB-033] Log out from the book list ends the session",
+      "file": "demoqa-books/auth.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-auth-Authenti-833fa--book-list-ends-the-session-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-034",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8579,
+      "testTitle": "[DQB-034] Signed-in user adds a book to their collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-e3f9c--a-book-to-their-collection-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-035",
+      "browser": "chromium",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 7452,
+      "testTitle": "[DQB-035] Adding a book already in the collection is refused",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-0446f-n-the-collection-is-refused-chromium/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-036",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 15996,
+      "testTitle": "[DQB-036] Added book stays after reload and after signing in again",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-a3670--and-after-signing-in-again-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-037",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6113,
+      "testTitle": "[DQB-037] Cancelling the delete confirmation keeps the book",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-06158-confirmation-keeps-the-book-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-038",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8140,
+      "testTitle": "[DQB-038] Signed-in user deletes one book from the collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-b9f1b-ne-book-from-the-collection-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-039",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9573,
+      "testTitle": "[DQB-039] Profile with an empty collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-2f2b4-le-with-an-empty-collection-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-034",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4589,
+      "testTitle": "[DQB-034] Signed-in user adds a book to their collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-e3f9c--a-book-to-their-collection-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-035",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 6010,
+      "testTitle": "[DQB-035] Adding a book already in the collection is refused",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-0446f-n-the-collection-is-refused-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-036",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 18570,
+      "testTitle": "[DQB-036] Added book stays after reload and after signing in again",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-a3670--and-after-signing-in-again-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-037",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5381,
+      "testTitle": "[DQB-037] Cancelling the delete confirmation keeps the book",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-06158-confirmation-keeps-the-book-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-038",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7443,
+      "testTitle": "[DQB-038] Signed-in user deletes one book from the collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-b9f1b-ne-book-from-the-collection-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-039",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7755,
+      "testTitle": "[DQB-039] Profile with an empty collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-2f2b4-le-with-an-empty-collection-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-034",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6858,
+      "testTitle": "[DQB-034] Signed-in user adds a book to their collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-e3f9c--a-book-to-their-collection-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-035",
+      "browser": "webkit",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 8192,
+      "testTitle": "[DQB-035] Adding a book already in the collection is refused",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "Error: DEF-009 (R-23): duplicate-add message reads \"…your collection\", not \"the your collection\"  expect(received).not.toContain(expected) // indexOf ",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-0446f-n-the-collection-is-refused-webkit/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-036",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 20030,
+      "testTitle": "[DQB-036] Added book stays after reload and after signing in again",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-a3670--and-after-signing-in-again-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-037",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9144,
+      "testTitle": "[DQB-037] Cancelling the delete confirmation keeps the book",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-06158-confirmation-keeps-the-book-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-038",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 10645,
+      "testTitle": "[DQB-038] Signed-in user deletes one book from the collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-b9f1b-ne-book-from-the-collection-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-039",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 14484,
+      "testTitle": "[DQB-039] Profile with an empty collection",
+      "file": "demoqa-books/collection.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-collection-Pr-2f2b4-le-with-an-empty-collection-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-046",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 2112,
+      "testTitle": "[DQB-046] Go To Book Store leads from the profile to the book list",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-navigation-Bo-59c11-he-profile-to-the-book-list-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-046",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 1966,
+      "testTitle": "[DQB-046] Go To Book Store leads from the profile to the book list",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-navigation-Bo-59c11-he-profile-to-the-book-list-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
+    },
+    {
+      "runAt": "2026-11-11T02:44:24.884Z",
+      "scenarioId": "DQB-046",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 4127,
+      "testTitle": "[DQB-046] Go To Book Store leads from the profile to the book list",
+      "file": "demoqa-books/navigation.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-books/runs/2026-11-11_02-44-24/test-results/demoqa-books-navigation-Bo-59c11-he-profile-to-the-book-list-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-books/runs/2026-11-11_02-44-24"
     }
   ],
   "approval": {
-    "approvedAt": "2026-11-10T20:18:20.552Z",
+    "approvedAt": "2026-11-11T02:38:25.357Z",
     "scenarios": {
       "DQB-001": "57b0b10665466147",
       "DQB-002": "11bbc3ab73620b9e",
@@ -7876,18 +9963,18 @@
       "DQB-006": "5cbfdc14638dd644",
       "DQB-007": "8f5a3ce862d82127",
       "DQB-008": "8549ad1ab4e2eac2",
-      "DQB-009": "726d87d6b3537948",
+      "DQB-009": "fe38936a39dfaa49",
       "DQB-010": "eef8db753b7729f2",
       "DQB-011": "d2d8b87471ef56ba",
-      "DQB-012": "558075ceb382c457",
-      "DQB-013": "92177b53ded42106",
+      "DQB-012": "4f91df41f1c6b798",
+      "DQB-013": "b482d4150e6b132d",
       "DQB-014": "8788f09ba757231e",
       "DQB-015": "a830680a77848899",
       "DQB-016": "90c588604166f1f2",
       "DQB-017": "88c13521c9100ed2",
-      "DQB-018": "76802e9f71cd0715",
+      "DQB-018": "fe00f0e5e44e796c",
       "DQB-019": "141ddffaed67bf36",
-      "DQB-020": "a0a7e829504000a5",
+      "DQB-020": "039bf6f4b946dc92",
       "DQB-021": "ce1bd013119b2fa8",
       "DQB-022": "0d9fb718f8cba4fb",
       "DQB-023": "70b3ba425935fdde",
@@ -7898,17 +9985,17 @@
       "DQB-028": "f01e8a6084aacff9",
       "DQB-029": "077ce30928d86b89",
       "DQB-030": "d13263e0774d9983",
-      "DQB-031": "1faacbf63fd22271",
+      "DQB-031": "613abf23c9b0394e",
       "DQB-032": "159c6095a75d232d",
       "DQB-033": "cfec692c5b191786",
       "DQB-034": "f3fe4321baf0e8ec",
-      "DQB-035": "1945d50129a03c4a",
+      "DQB-035": "f363b0735e5a6c00",
       "DQB-036": "880fd192b8d9510d",
       "DQB-037": "514d1a51322b372d",
       "DQB-038": "9ad6446961d33817",
-      "DQB-039": "5d5e9e29e14544e1",
+      "DQB-039": "d927bc3fdb394861",
       "DQB-040": "2a2c9b0003734965",
-      "DQB-041": "85d8753a8f7d90b2",
+      "DQB-041": "9bbc4c65032c2228",
       "DQB-042": "77b16106c7dda718",
       "DQB-043": "3acc6c6d8ad1b8dd",
       "DQB-044": "b62f91334da35cb9",
@@ -7918,5 +10005,5 @@
       "DQB-048": "de5e8ed38e602ff8"
     }
   },
-  "deliveryReport": "# Delivery Report: demoqa-books\n\n| Item | Value |\n| --- | --- |\n| Report date | 2026-11-11 |\n| App slug / ID prefix | `demoqa-books` / `DQB` (renamed from `demoqa` at the user's request on 2026-11-10) |\n| Source of all counts | `test-plans/demoqa-books/scenarios.json` (48 scenarios, 32 test-data rows, 37 risks, 4 defects, 429 execution rows), computed on 2026-11-11 |\n| Evidence runs | Guest pass `2026-11-10_20-05-48`, account pass `2026-11-10_20-10-19`, Chromium re-run `2026-11-10_20-21-35`, DQB-026 from `2026-11-10_18-50-36` |\n| Account values | Not included anywhere in this report. Accounts are referred to only by role: `existingUser` (Chromium), `firefoxUser` (Firefox), `webkitUser` (WebKit). |\n\n## 1. Requirement Summary\n\nNo user stories or acceptance criteria were supplied. The user gave `https://demoqa.com/books` and named no flows. Scope is the **Book Store Application only**, assumed from the URL (`intake.md`). Requirements REQ-01 to REQ-13 were derived from discovery (`requirements.md`).\n\n| REQ | Flow | Priority | Scenarios |\n| --- | --- | --- | --- |\n| REQ-01 | Book list (8 books, columns, pager disabled; service failure) | Medium | 3 |\n| REQ-02 | Search on /books | Medium | 12 |\n| REQ-03 | Sort (Title, Author, Image not sortable) | Low | 3 |\n| REQ-04 | Book detail (guest and signed in, Back To Book Store, unknown ISBN) | Medium | 4 |\n| REQ-05 | Login (valid, wrong password, unknown user, empty, partial) | High | 5 |\n| REQ-06 | Session and logout | High | 3 |\n| REQ-07 | Guest restrictions | High | 3 |\n| REQ-08 | Add to collection, duplicate add | High | 2 |\n| REQ-09 | Profile collection, delete, persistence, empty state | High | 4 |\n| REQ-10 | Registration validation only (no account is created) | Medium | 3 |\n| REQ-11 | Navigation (menu, New User) | Low | 2 |\n| REQ-12 | Responsive 375x812 | Medium | 2 |\n| REQ-13 | Cross-browser (Chromium, Firefox, WebKit) | Medium | Execution model, no own scenario |\n| ASSUMPTION-02 / -03 | Log out from the list; Go To Book Store target | n/a | 2 (DQB-033, DQB-046) |\n\nUser decisions that shape the suite:\n\n- **Scope:** Book Store Application only (assumed from the URL; the other demoqa sections are out of scope).\n- **I1 / registration:** existing login accounts only. Registration was not selected; no accounts are created by the tests.\n- **I2 (answer to Q1):** one existing account per browser: `existingUser` for Chromium, `firefoxUser` for Firefox, `webkitUser` for WebKit. Masked credential check OK for all three; the three user names were verified to be different without printing them. Collection tests therefore run on all three browsers.\n- **I3:** accessibility out of scope, confirmed by the user (\"no need\").\n- **Scenario approval:** given **in advance** by the user before the list existed (the user was unavailable). Recorded with `workbook.mjs approve` for 48 scenarios, and re-recorded after the DQB-019 step correction and the DQB-027/033/046 strengthening under the user's \"run and fix\" authorisation (last `approvedAt` 2026-11-10T20:18:20Z).\n- **Test runs:** authorised in advance (\"Yes, run and fix\"). Accepted side effects: books added to and removed from each browser's account collection (left empty), one wrong-password login per account per run. No accounts created, nothing else deleted.\n- **Defect policy:** a test behind an open defect fails (plain Failed) until the site is fixed. Defects are tracked in the workbook only and are not reported externally.\n\n## 2. Application URL and Environment\n\n- URL: `https://demoqa.com/books` (HTTP 200, no redirects; base URL `https://demoqa.com/`).\n- Environment: public ToolsQA practice site, shared with everyone, not owned by us. Page title is `demosite` on every page; no `data-testid` attributes.\n- Third-party ad and tracking hosts are blocked by an auto fixture; reCAPTCHA is deliberately not blocked.\n- Tooling: Playwright 1.64; projects chromium, firefox, webkit; `screenshot: 'on'`; `trace: 'off'` in the three files that use accounts.\n- Node: the machine's default Node 20.11.1 is blocked by Microsoft Defender; all commands used Node 26.13.0 via fnm.\n- Credentials: git-ignored local file `credentials/credentials.xlsx`, roles `existingUser`, `firefoxUser`, `webkitUser` (fields `userName`, `password`); masked check OK on 2026-11-10.\n\n## 3. Subagents Used\n\n| Subagent | Ran | Output |\n| --- | --- | --- |\n| application-explorer | Yes | `discovery.md` (routes, page details, flows F1 to F5, API calls, locator candidates, noise). No blockers; collection empty at start and end; one wrong-password attempt |\n| requirement-analyst | Yes | `requirements.md` (REQ-01 to REQ-13, missing criteria, Q1 blocking question, Q-NB1 to Q-NB8, risks R-01 to R-17) |\n| scenario-designer | Yes | `scenarios.json` (48 scenarios, test data, risk register) |\n| excel-test-analyst steps | Run by the orchestrator | `workbook.mjs validate`, `build`, `approve`, `sync`; workbook `demoqa-books-e2e-scenarios.xlsx` |\n| test-architect | Yes | `architecture.md` (decisions K1 to K11, file plan, fixtures, run plan, probes) |\n| playwright-implementer | Yes | Page objects, fixture, test data, 6 spec files; tsc OK; Chromium smoke 3 passed (run `18-41-28`); checkpoint commit `3509083` |\n| test-executor | Yes | Run 1 (guest `18-43-50`, account `18-50-36`) and later runs |\n| failure-investigator | Yes (three in iteration 1) | Root causes for collection/session, register and book-list failures; account clean-up; DEF-001 to DEF-004 |\n| quality-reviewer | Yes | Review 1: **Not ready** (3 Majors, no Blockers). Re-review: **Ready** (no Blockers or Majors) |\n| delivery-reporter | Yes | This report |\n\n## 4. Discovered Application Flows\n\nSource: `discovery.md` sections 2 to 4.\n\n| Flow | Routes | Access |\n| --- | --- | --- |\n| Book list, search, sort | `/books` | Public |\n| Book detail | `/books?search=<ISBN>` | Public; \"Add To Your Collection\" only when signed in |\n| Login | `/login` (UserName, Password, Login, New User) | Public |\n| Register | `/register` (four fields, invisible reCAPTCHA) | Public; validation only |\n| Profile / collection | `/profile` (collection table, delete with confirm modal, Logout, Go To Book Store) | Signed in; guests see a signed-out message (HTTP 200) |\n| Left menu | Book Store Application group (Login, Book Store, Profile, Book Store API) | Public |\n| Mobile | 375x812 on `/books` and `/login` | Public |\n\nNever automated by decision: Delete Account, Delete All Books, successful registration, solving or bypassing the reCAPTCHA, `/swagger`, other demoqa sections.\n\n## 5. Excel Workbook Location\n\n- `test-plans/demoqa-books/demoqa-books-e2e-scenarios.xlsx` (tracked in git).\n- First sheet: this **Delivery Report**. Other sheets include the Scenario Catalogue, **Not Executed**, **Defects**, Execution Results and Risks and Assumptions.\n- Built from `scenarios.json` by `node scripts/workbook.mjs build --app demoqa-books` (the `report` command rebuilds it).\n\n## 6. Scenario Coverage Summary\n\nTotal scenarios: **48**, all automated, all on Chromium, Firefox and WebKit.\n\nBy priority and latest status:\n\n| Priority | Total | Automated | Passed | Failed | Not Run |\n| --- | --- | --- | --- | --- | --- |\n| High | 14 | 14 | 14 | 0 | 0 |\n| Medium | 19 | 19 | 19 | 0 | 0 |\n| Low | 15 | 15 | 14 | 1 | 0 |\n| **Total** | **48** | **48** | **47** | **1** | **0** |\n\nThe one Failed scenario is DQB-021 (Low), which fails by design while defect DEF-001 is open.\n\nBy test type:\n\n| Test type | Count | Test type | Count |\n| --- | --- | --- | --- |\n| Positive | 10 | Authorization | 3 |\n| Edge Case | 7 | Boundary | 2 |\n| Navigation | 6 | Persistence | 2 |\n| Negative | 5 | Error Handling | 2 |\n| Validation | 4 | Responsive | 2 |\n| Session | 4 | Authentication | 1 |\n\n**High-priority gaps:** none in the catalogue. All 14 High scenarios are automated and passed on all three browsers. High-risk behaviour outside the catalogue by decision: successful registration, Delete All Books, Delete Account.\n\n### Execution scope\n\nGenerated with `node scripts/workbook.mjs scope --app demoqa-books`:\n\n- **48 of 48** scenarios are automated and run. 0 are not automated.\n- A full run executes **144** tests: chromium 48, firefox 48, webkit 48.\n\nAdditional facts (from `scenarios.json` and `progress.md`):\n\n- **Not automated:** none.\n- **Browser-limited scenarios:** none. Every scenario runs on all three browsers, so browser counts are equal.\n- **Expected failures:** 3 per full run (DQB-021 on each browser, known defect DEF-001).\n- **DQB-026** (real user name, wrong password) is run at most once per account per run. Its current evidence is from run `2026-11-10_18-50-36` (passed on all three browsers); it was deliberately excluded from later re-runs to keep the wrong-password count per account low (lockout threshold unknown, R-06).\n\nSee the workbook's **\"Not Executed\"** sheet for every scenario/browser that was not executed or did not pass, with reason and action.\n\n## 7. Implemented Page Objects\n\nIn `pages/demoqa-books/`:\n\n| Class / export | File |\n| --- | --- |\n| DemoqaBooksPage | `books.page.ts` |\n| DemoqaBookDetailPage | `book-detail.page.ts` |\n| DemoqaLoginPage | `login.page.ts` |\n| DemoqaRegisterPage | `register.page.ts` |\n| DemoqaProfilePage | `profile.page.ts` |\n| DemoqaBooksTable (component) | `books-table.page.ts` |\n| DemoqaSessionBar (component) | `session-bar.page.ts` |\n| DemoqaSideMenu (component) | `side-menu.page.ts` |\n| DemoqaAlerts (native dialog broker) | `alerts.ts` |\n| waitForHydration, fillAndConfirm, clickUntilInvalid, responseAfterNavigation, documentScrollWidth | `app-ready.ts` |\n| fillSecretValue, inputHasValue (React-safe, no values in reports) | `secret-input.ts` |\n\nSupporting files:\n\n- `fixtures/demoqa-books.fixture.ts`: per-browser account mapping, in-memory session per worker with one re-login, `freshLogin`, per-role lock, login circuit breaker, `ownedBooks` clean-up with a guard against removing other rows, third-party blocker, account-value masking.\n- `test-data/demoqa-books.data.ts`: books, own test books, messages, search data, viewports, role-per-browser map.\n\n## 8. Implemented Test Files\n\nIn `tests/demoqa-books/` (6 specs, 48 tests, 144 executions):\n\n| Spec | Scenarios | Tests | Account tests (`@account`) |\n| --- | --- | --- | --- |\n| books.spec.ts | DQB-001 to 021 | 21 | 0 |\n| auth.spec.ts | DQB-022 to 033 | 12 | 7 (024, 025, 026, 030 to 033) |\n| collection.spec.ts | DQB-034 to 039 | 6 | 6 |\n| register.spec.ts | DQB-040, 041 | 2 | 0 |\n| navigation.spec.ts | DQB-042 to 046 | 5 | 1 (046) |\n| responsive.spec.ts | DQB-047, 048 | 2 | 0 |\n\nGuest tests: 34 scenarios = 102 executions (run with `--workers=3`). Account tests: 14 scenarios = 42 executions (run with `--workers=1`).\n\n## 9. Browser Execution Results\n\nLatest result per scenario and browser, from the guest pass `2026-11-10_20-05-48` (started 2026-11-10T20:05:48Z), the account pass `2026-11-10_20-10-19` (started 2026-11-10T20:10:19Z, without DQB-026), the Chromium re-run `2026-11-10_20-21-35` (started 2026-11-10T20:21:36Z, DQB-024/031/034 after the teardown hardening) and DQB-026 from `2026-11-10_18-50-36`. Figures match each run's `summary.md` and the latest executions in `scenarios.json`.\n\n| Browser | Passed | Failed | Flaky | Skipped | Out of scope by design |\n| --- | --- | --- | --- | --- | --- |\n| chromium | 47 | 1 | 0 | 0 | 0 |\n| firefox | 47 | 1 | 0 | 0 | 0 |\n| webkit | 47 | 1 | 0 | 0 | 0 |\n| **Total** | **141** | **3** | **0** | **0** | **0** |\n\nPer run:\n\n| Run | Scope | Passed | Failed | Skipped |\n| --- | --- | --- | --- | --- |\n| `20-05-48` | Guest, 3 browsers, `--workers=3` | 99 | 3 (DQB-021 x3, DEF-001) | 0 |\n| `20-10-19` | `@account` without DQB-026, `--workers=1` | 39 | 0 | 0 |\n| `20-21-35` | Chromium DQB-024, 031, 034 | 3 | 0 | 0 |\n| `18-50-36` (DQB-026 only counted) | Wrong password, one per account | 3 | 0 | 0 |\n\n- There were **no skips** and no browser-limited scenarios.\n- The 3 failures are all DQB-021, the intended known-defect check for DEF-001.\n- No test needed a retry: 0 of 429 execution rows have more than one attempt.\n- Kept HTML reports: `artifacts/demoqa-books/html-reports/<runId>.zip` (24 zips, git-ignored).\n\n## 10. Failures and Discrepancies\n\n### Run 1 failures\n\nGuest pass `2026-11-10_18-43-50`: 92 passed, 10 failed (7 failed, 3 timed out). Account pass `2026-11-10_18-50-36`: 32 passed, 10 failed.\n\n| Scenario | Browser | Classification | Evidence / root cause |\n| --- | --- | --- | --- |\n| DQB-019 | all 3 (timed out) | Test design vs product defect DEF-002 | \"Back To Book Store\" is a history-back control; after a direct `goto` it went to about:blank (Firefox: empty list shell) |\n| DQB-021 | all 3 | Product defect DEF-001 | Books service 500 makes the whole page blank with an uncaught script error |\n| DQB-041 | all 3 | Test synchronisation; product defect DEF-003 | Invisible reCAPTCHA v3 token arrives 1-3 s after load and clears the form; no register request sent |\n| DQB-040 | webkit | Test synchronisation (same cause as DQB-041) | Fields cleared by the token arrival |\n| DQB-034 to 039 | chromium | Test defect | Profile wait matched the previous page's User response and read its body after navigation (\"response.json\" protocol error) |\n| DQB-034, 037 | firefox, webkit | Test defect; product behaviour DEF-004 / R-37 | A new login revokes the account's earlier token (\"User not authorized!\"); the cached session was stale |\n\n### Later failures\n\n- `2026-11-10_19-15-34`, `19-25-42`, `20-05-48`: DQB-021 failed on all three browsers each time (DEF-001, by design).\n- `2026-11-10_19-49-03` (verification run): firefox DQB-041 timed out on the first load of `/register` (heading not rendered within 15 s). It passed on re-run (`19-51-31`) and in the final run. Treated as a flake to watch.\n\n### Defects (workbook \"Defects\" sheet, workbook only, not reported externally)\n\n| Defect | Severity | Status | Summary | Test |\n| --- | --- | --- | --- | --- |\n| DEF-001 | Medium | New | Book list goes blank with a script error when the books service fails | DQB-021 fails while open |\n| DEF-002 | Low | New | Back To Book Store from a deep link leaves the site or shows an empty list | No automated check (DQB-019 covers the normal journey) |\n| DEF-003 | Medium | New | Register form silently erased when the invisible reCAPTCHA v3 token arrives | No automated check (timing-dependent) |\n| DEF-004 | Medium | New | Logout does not end the session on the server | No automated check |\n\n### Discrepancies asserted as current behaviour\n\nThese may be product defects; the tests assert today's behaviour. Any of them can be promoted to a defect if the user wants.\n\n| Risk | Scenario | Observation |\n| --- | --- | --- |\n| R-19 | DQB-012 | Search input is not trimmed |\n| R-20 | DQB-013 | ISBN is not searchable |\n| R-21 | DQB-009, 039 | No empty-state message (only \"Page 1 of 0\") |\n| R-22 | DQB-020 | Unknown ISBN shows blank fields, no user-facing error |\n| R-23 | DQB-035 | Duplicate-add alert says \"the your collection\" |\n| R-24 | DQB-031, 032, 033 | \"Logout\" on /profile vs \"Log out\" on list and detail |\n| R-25 | DQB-018 | Book description is cut mid-word |\n| R-26 | DQB-041 | The client waits for a reCAPTCHA token but never sends it to the server (updated 2026-11-11) |\n| R-27 | DQB-047 | Publisher column hidden at 375x812 |\n\n## 11. Corrections Applied\n\n| Item | Change | Why the acceptance criteria are intact |\n| --- | --- | --- |\n| DQB-034 to 039 (chromium) | Response waits are armed only after the new navigation commits, and the body is read immediately | Synchronisation only; assertions unchanged |\n| DQB-034, 037 (firefox, webkit) | Session state taken from `GET /Account/v1/User`, one re-login if invalid; `freshLogin` adopts its new cookies | Fixture behaviour only; assertions unchanged |\n| DQB-040, 041 | Register page waits for the reCAPTCHA v3 token before typing | Synchronisation only; captcha is not solved or bypassed |\n| DQB-019 | Test now arrives at the detail page from the list (steps changed) | Expected result unchanged; approval re-recorded |\n| DQB-021 | Asserts the expected usable page directly; annotated DEF-001 | Expected result kept; it fails while the defect is open |\n| Review 1 Major 1 | Account-value masking for every context; the login context goes to about:blank before closing | Artifact privacy only |\n| Review 1 Major 2 | Account fields hidden from error-context ARIA snapshots (aria-hidden plus teardown visibility:hidden) | Artifact privacy only |\n| Review 1 Major 3 | DQB-027 asserts the exact message \"Invalid username or password!\" (R-18 closed) | Strengthened, not weakened |\n| DQB-033, 046 | Strengthened (per the orchestrator's hand-over); approval re-recorded | Expected results tightened |\n| Teardown hardening (after the final full runs) | A failure while blanking the page or hiding fields is recorded and the context is always closed, so it cannot hide the original error | Verified on Chromium DQB-024/031/034 (`20-21-35`, 3 passed); uncommitted at the time of this report |\n\nQuality review 1 verdict was **Not ready** (3 Majors, no Blockers); after the fixes the re-review returned **Ready**.\n\n**Privacy clean-up.** The first runs left an account user name in local, git-ignored artifacts (12 error-context and report text files, plus unmasked close-time screenshots). These were removed (12 text files, 55 screenshots) and the kept-report zips rebuilt. A leak check over all run and zip text files is clean. Nothing with account values was ever committed. Signed-in screenshots now mask the user name.\n\n**Account state.** After run 1 the Chromium account held two leftover suite books (teardown bug). The failure investigator removed them. All three collections were empty after the final runs (DQB-039 passed on every browser).\n\n## 12. Remaining Risks and Blockers\n\nThe register has 37 risks: 34 Open, 3 Closed (R-18, R-28, R-29). By type: 14 Risk, 10 Discrepancy, 6 Assumption, 4 Ambiguity, 3 Defect.\n\n- **Public shared demo (R-04).** The catalogue or site can change or go down at any time.\n- **Known defect failure.** Every full run has 3 failures (DQB-021, DEF-001) until the site is fixed.\n- **DQB-026 evidence is from run 1** (`18-50-36`). Its code path changed since then only in artifact masking, but it was not re-run on the final code.\n- **Lockout threshold unknown (R-06).** One wrong-password attempt per account per run.\n- **Flake to watch.** Firefox DQB-041 once timed out on the first load of `/register`.\n- **Session handling (R-37, DEF-004).** A new login revokes earlier tokens, so account tests for one browser must run one at a time; concurrent runs on the same account are unsupported.\n- **Discrepancies** R-19 to R-27 are asserted as current behaviour (section 10).\n- **Not covered by decision:** successful registration, Delete All Books, Delete Account, session expiry, `/swagger` and direct API testing, accessibility (I3), other demoqa sections.\n- **Workspace state at report time:** the teardown hardening in `fixtures/demoqa-books.fixture.ts`, `progress.md` and `scenarios.json` are uncommitted; the untracked temporary scripts `scripts/_leakcheck.cjs` and `scripts/_redact-runs.cjs` still exist, although `progress.md` says temporary scripts were deleted. They must be deleted or kept out of the commit.\n- **Remaining manual checks:** none required for the catalogue; DEF-002 to DEF-004 have no automated check and can only be re-checked manually.\n\n## 13. Commands Executed\n\nEvery Node command was prefixed with the fnm Node 26.13.0 path. `BASE_URL=https://demoqa.com/` and `TEST_SUITE=demoqa-books` were set for test runs. The exact command lines were not all handed over; the run commands below follow the run plan in `architecture.md` 7.3 and the scopes recorded in `progress.md`.\n\n```\nnode scripts/explore-app.mjs --url https://demoqa.com/books --app demoqa-books\nnode scripts/credentials.mjs check --app demoqa-books --require existingUser:userName,password\nnode scripts/workbook.mjs validate --app demoqa-books\nnode scripts/workbook.mjs build --app demoqa-books\nnode scripts/workbook.mjs approve --app demoqa-books\nnpx tsc --noEmit\nnpx playwright test tests/demoqa-books --list\n# Run 1: guest pass (18-43-50), then account pass (18-50-36)\nnpx playwright test tests/demoqa-books --project=chromium --project=firefox --project=webkit --grep-invert \"@account\" --workers=3\nnpx playwright test tests/demoqa-books --project=chromium --project=firefox --project=webkit --grep \"@account\" --workers=1\nnode scripts/workbook.mjs sync --app demoqa-books\n# Targeted verification after iteration 1: guest 19-15-34, account 19-16-43 (DQB-026 excluded)\n# Full run after iteration 1: guest 19-25-42, account 19-31-14 (DQB-026 excluded)\n# Verification after quality review 1: guest subset 19-49-03, firefox DQB-041 re-run 19-51-31, account 19-57-32\n# Final full run: guest 20-05-48, account 20-10-19 (DQB-026 excluded)\n# Chromium DQB-024/031/034 after teardown hardening: 20-21-35\nnode scripts/workbook.mjs sync --app demoqa-books\nnode scripts/workbook.mjs build --app demoqa-books\nnode scripts/workbook.mjs scope --app demoqa-books\nnode scripts/workbook.mjs report --app demoqa-books --from artifacts/demoqa-books/delivery-report.md\n```\n\nRun folders without screenshots (`18-39-52`, `18-39-58`, `19-14-39`, `19-15-20`, `19-24-45`, `19-48-40`, `19-48-53`) have no test results in their summaries; their exact commands were not handed over.\n\nReporter commands (read only): `git status --short`, `git diff --stat`, `git log --oneline -12`, `workbook.mjs report --print` (demo-web-shop), `workbook.mjs scope`, and node one-liners that tally `scenarios.json`.\n\nCommits so far: `49f31c8` plans, `3509083` suite checkpoint, `7e5a147` run-1 fixes and defects, `f4eeb17` quality-review fixes.\n\n## 14. Overall Automation Readiness\n\n**Ready with limitations**\n\nAll 48 scenarios are automated and run on Chromium, Firefox and WebKit (144 tests). On the current code, 141 of 144 passed with no retries, no flaky results and no skips; the only failures are the 3 intended DQB-021 checks for known defect DEF-001. All 14 High-priority scenarios pass on every browser. Every run-1 failure has an evidenced root cause and a fix that leaves the expected results unchanged, and the quality re-review returned Ready. The limitations: the site is a public shared demo that can change or fail; every full run is red by design while DEF-001 is open; DQB-026's evidence is from run 1, not the final code; a Firefox first-load flake on `/register` was seen once; successful registration, Delete All Books and Delete Account are not testable by decision; and the final teardown hardening plus workbook updates are not yet committed.\n\n## 15. Recommended Next Steps\n\n1. Delete `scripts/_leakcheck.cjs` and `scripts/_redact-runs.cjs` (or keep them out of the commit), then commit and push the teardown hardening, `progress.md`, `scenarios.json` and the rebuilt workbook.\n2. In the next scheduled full run, include DQB-026 once per account so its evidence comes from the current code.\n3. Watch Firefox DQB-041; if the first-load timeout recurs, investigate it as a flake.\n4. Decide whether the discrepancies R-19 to R-27 should be promoted to defects; update assertions if the intended behaviour differs.\n5. When reading a run, use the \"Not Executed\" sheet: only failures not marked as a known defect need investigation.\n6. For CI: keep the account pass at `--workers=1`, never run two suites on the same accounts at once, keep DQB-026 at retries 0.\n"
+  "deliveryReport": "# Delivery Report: demoqa-books\n\n| Item | Value |\n| --- | --- |\n| Report date | 2026-11-11 |\n| App slug / ID prefix | `demoqa-books` / `DQB` (renamed from `demoqa` at the user's request on 2026-11-10) |\n| Source of all counts | `test-plans/demoqa-books/scenarios.json` (48 scenarios, 32 test-data rows, 37 risks, 13 defects, 570 execution rows), computed on 2026-11-11 after the discrepancies were promoted to defects |\n| Evidence runs | Guest pass `2026-11-11_02-38-36`, account pass `2026-11-11_02-44-24` (all three browsers, current code), DQB-026 from `2026-11-10_18-50-36` |\n| Account values | Not included anywhere in this report. Accounts are referred to only by role: `existingUser` (Chromium), `firefoxUser` (Firefox), `webkitUser` (WebKit). |\n\n## 1. Requirement Summary\n\nNo user stories or acceptance criteria were supplied. The user gave `https://demoqa.com/books` and named no flows. Scope is the **Book Store Application only**, assumed from the URL (`intake.md`). Requirements REQ-01 to REQ-13 were derived from discovery (`requirements.md`).\n\n| REQ | Flow | Priority | Scenarios |\n| --- | --- | --- | --- |\n| REQ-01 | Book list (8 books, columns, pager disabled; service failure) | Medium | 3 |\n| REQ-02 | Search on /books | Medium | 12 |\n| REQ-03 | Sort (Title, Author, Image not sortable) | Low | 3 |\n| REQ-04 | Book detail (guest and signed in, Back To Book Store, unknown ISBN) | Medium | 4 |\n| REQ-05 | Login (valid, wrong password, unknown user, empty, partial) | High | 5 |\n| REQ-06 | Session and logout | High | 3 |\n| REQ-07 | Guest restrictions | High | 3 |\n| REQ-08 | Add to collection, duplicate add | High | 2 |\n| REQ-09 | Profile collection, delete, persistence, empty state | High | 4 |\n| REQ-10 | Registration validation only (no account is created) | Medium | 3 |\n| REQ-11 | Navigation (menu, New User) | Low | 2 |\n| REQ-12 | Responsive 375x812 | Medium | 2 |\n| REQ-13 | Cross-browser (Chromium, Firefox, WebKit) | Medium | Execution model, no own scenario |\n| ASSUMPTION-02 / -03 | Log out from the list; Go To Book Store target | n/a | 2 (DQB-033, DQB-046) |\n\nUser decisions that shape the suite:\n\n- **Scope:** Book Store Application only (assumed from the URL; the other demoqa sections are out of scope).\n- **I1 / registration:** existing login accounts only. Registration was not selected; no accounts are created by the tests.\n- **I2 (answer to Q1):** one existing account per browser: `existingUser` for Chromium, `firefoxUser` for Firefox, `webkitUser` for WebKit. Masked credential check OK for all three; the three user names were verified to be different without printing them. Collection tests therefore run on all three browsers.\n- **I3:** accessibility out of scope, confirmed by the user (\"no need\").\n- **Scenario approval:** given **in advance** by the user before the list existed (the user was unavailable). Recorded with `workbook.mjs approve` for 48 scenarios, and re-recorded after the DQB-019 step correction and the DQB-027/033/046 strengthening under the user's \"run and fix\" authorisation (2026-11-10T20:18:20Z), and again on 2026-11-11 after the user asked to promote the discrepancies to defects (\"do it\"), which changed 9 scenarios.\n- **Test runs:** authorised in advance (\"Yes, run and fix\"). Accepted side effects: books added to and removed from each browser's account collection (left empty), one wrong-password login per account per run. No accounts created, nothing else deleted.\n- **Defect policy:** a test behind an open defect fails (plain Failed) until the site is fixed. Defects are tracked in the workbook only and are not reported externally.\n\n## 2. Application URL and Environment\n\n- URL: `https://demoqa.com/books` (HTTP 200, no redirects; base URL `https://demoqa.com/`).\n- Environment: public ToolsQA practice site, shared with everyone, not owned by us. Page title is `demosite` on every page; no `data-testid` attributes.\n- Third-party ad and tracking hosts are blocked by an auto fixture; reCAPTCHA is deliberately not blocked.\n- Tooling: Playwright 1.64; projects chromium, firefox, webkit; `screenshot: 'on'`; `trace: 'off'` in the three files that use accounts.\n- Node: the machine's default Node 20.11.1 is blocked by Microsoft Defender; all commands used Node 26.13.0 via fnm.\n- Credentials: git-ignored local file `credentials/credentials.xlsx`, roles `existingUser`, `firefoxUser`, `webkitUser` (fields `userName`, `password`); masked check OK on 2026-11-10.\n\n## 3. Subagents Used\n\n| Subagent | Ran | Output |\n| --- | --- | --- |\n| application-explorer | Yes | `discovery.md` (routes, page details, flows F1 to F5, API calls, locator candidates, noise). No blockers; collection empty at start and end; one wrong-password attempt |\n| requirement-analyst | Yes | `requirements.md` (REQ-01 to REQ-13, missing criteria, Q1 blocking question, Q-NB1 to Q-NB8, risks R-01 to R-17) |\n| scenario-designer | Yes | `scenarios.json` (48 scenarios, test data, risk register) |\n| excel-test-analyst steps | Run by the orchestrator | `workbook.mjs validate`, `build`, `approve`, `sync`; workbook `demoqa-books-e2e-scenarios.xlsx` |\n| test-architect | Yes | `architecture.md` (decisions K1 to K11, file plan, fixtures, run plan, probes) |\n| playwright-implementer | Yes | Page objects, fixture, test data, 6 spec files; tsc OK; Chromium smoke 3 passed (run `18-41-28`); checkpoint commit `3509083` |\n| test-executor | Yes | Run 1 (guest `18-43-50`, account `18-50-36`) and later runs |\n| failure-investigator | Yes (three in iteration 1) | Root causes for collection/session, register and book-list failures; account clean-up; DEF-001 to DEF-004 |\n| quality-reviewer | Yes | Review 1: **Not ready** (3 Majors, no Blockers). Re-review: **Ready** (no Blockers or Majors) |\n| delivery-reporter | Yes | This report |\n\n## 4. Discovered Application Flows\n\nSource: `discovery.md` sections 2 to 4.\n\n| Flow | Routes | Access |\n| --- | --- | --- |\n| Book list, search, sort | `/books` | Public |\n| Book detail | `/books?search=<ISBN>` | Public; \"Add To Your Collection\" only when signed in |\n| Login | `/login` (UserName, Password, Login, New User) | Public |\n| Register | `/register` (four fields, invisible reCAPTCHA) | Public; validation only |\n| Profile / collection | `/profile` (collection table, delete with confirm modal, Logout, Go To Book Store) | Signed in; guests see a signed-out message (HTTP 200) |\n| Left menu | Book Store Application group (Login, Book Store, Profile, Book Store API) | Public |\n| Mobile | 375x812 on `/books` and `/login` | Public |\n\nNever automated by decision: Delete Account, Delete All Books, successful registration, solving or bypassing the reCAPTCHA, `/swagger`, other demoqa sections.\n\n## 5. Excel Workbook Location\n\n- `test-plans/demoqa-books/demoqa-books-e2e-scenarios.xlsx` (tracked in git).\n- First sheet: this **Delivery Report**. Other sheets include the Scenario Catalogue, **Not Executed**, **Defects**, Execution Results and Risks and Assumptions.\n- Built from `scenarios.json` by `node scripts/workbook.mjs build --app demoqa-books` (the `report` command rebuilds it).\n\n## 6. Scenario Coverage Summary\n\nTotal scenarios: **48**, all automated, all on Chromium, Firefox and WebKit.\n\nBy priority and latest status:\n\n| Priority | Total | Automated | Passed | Failed | Not Run |\n| --- | --- | --- | --- | --- | --- |\n| High | 14 | 14 | 12 | 2 | 0 |\n| Medium | 19 | 19 | 17 | 2 | 0 |\n| Low | 15 | 15 | 12 | 3 | 0 |\n| **Total** | **48** | **48** | **41** | **7** | **0** |\n\nThe 7 Failed scenarios (DQB-012, DQB-013, DQB-018, DQB-021, DQB-031, DQB-035, DQB-041) each fail by design on their own defect check while that defect is open (DEF-001, 005, 006, 009, 010, 011, 012). No other test fails.\n\nBy test type:\n\n| Test type | Count | Test type | Count |\n| --- | --- | --- | --- |\n| Positive | 10 | Authorization | 3 |\n| Edge Case | 7 | Boundary | 2 |\n| Navigation | 6 | Persistence | 2 |\n| Negative | 5 | Error Handling | 2 |\n| Validation | 4 | Responsive | 2 |\n| Session | 4 | Authentication | 1 |\n\n**High-priority gaps:** none in the catalogue. All 14 High scenarios are automated; 12 pass on all three browsers and 2 (DQB-031, DQB-035) fail only on their soft defect checks (DEF-010 wording, DEF-009 wording) while the rest of each test passes. High-risk behaviour outside the catalogue by decision: successful registration, Delete All Books, Delete Account.\n\n### Execution scope\n\nGenerated with `node scripts/workbook.mjs scope --app demoqa-books`:\n\n- **48 of 48** scenarios are automated and run. 0 are not automated.\n- A full run executes **144** tests: chromium 48, firefox 48, webkit 48.\n\nAdditional facts (from `scenarios.json` and `progress.md`):\n\n- **Not automated:** none.\n- **Browser-limited scenarios:** none. Every scenario runs on all three browsers, so browser counts are equal.\n- **Expected failures:** 21 per full run: DQB-012, 013, 018, 021, 031, 035 and 041 on each browser, each labelled \"Known defect\" on the Not Executed sheet.\n- **DQB-026** (real user name, wrong password) is run at most once per account per run. Its current evidence is from run `2026-11-10_18-50-36` (passed on all three browsers); it was deliberately excluded from later re-runs to keep the wrong-password count per account low (lockout threshold unknown, R-06).\n\nSee the workbook's **\"Not Executed\"** sheet for every scenario/browser that was not executed or did not pass, with reason and action.\n\n## 7. Implemented Page Objects\n\nIn `pages/demoqa-books/`:\n\n| Class / export | File |\n| --- | --- |\n| DemoqaBooksPage | `books.page.ts` |\n| DemoqaBookDetailPage | `book-detail.page.ts` |\n| DemoqaLoginPage | `login.page.ts` |\n| DemoqaRegisterPage | `register.page.ts` |\n| DemoqaProfilePage | `profile.page.ts` |\n| DemoqaBooksTable (component) | `books-table.page.ts` |\n| DemoqaSessionBar (component) | `session-bar.page.ts` |\n| DemoqaSideMenu (component) | `side-menu.page.ts` |\n| DemoqaAlerts (native dialog broker) | `alerts.ts` |\n| waitForHydration, fillAndConfirm, clickUntilInvalid, responseAfterNavigation, documentScrollWidth | `app-ready.ts` |\n| fillSecretValue, inputHasValue (React-safe, no values in reports) | `secret-input.ts` |\n\nSupporting files:\n\n- `fixtures/demoqa-books.fixture.ts`: per-browser account mapping, in-memory session per worker with one re-login, `freshLogin`, per-role lock, login circuit breaker, `ownedBooks` clean-up with a guard against removing other rows, third-party blocker, account-value masking.\n- `test-data/demoqa-books.data.ts`: books, own test books, messages, search data, viewports, role-per-browser map.\n\n## 8. Implemented Test Files\n\nIn `tests/demoqa-books/` (6 specs, 48 tests, 144 executions):\n\n| Spec | Scenarios | Tests | Account tests (`@account`) |\n| --- | --- | --- | --- |\n| books.spec.ts | DQB-001 to 021 | 21 | 0 |\n| auth.spec.ts | DQB-022 to 033 | 12 | 7 (024, 025, 026, 030 to 033) |\n| collection.spec.ts | DQB-034 to 039 | 6 | 6 |\n| register.spec.ts | DQB-040, 041 | 2 | 0 |\n| navigation.spec.ts | DQB-042 to 046 | 5 | 1 (046) |\n| responsive.spec.ts | DQB-047, 048 | 2 | 0 |\n\nGuest tests: 34 scenarios = 102 executions (run with `--workers=3`). Account tests: 14 scenarios = 42 executions (run with `--workers=1`).\n\n## 9. Browser Execution Results\n\nLatest result per scenario and browser, from the guest pass `2026-11-11_02-38-36` and the account pass `2026-11-11_02-44-24` (both on the current code, all three browsers, without DQB-026) and DQB-026 from `2026-11-10_18-50-36`. Figures match each run's `summary.md` and the latest executions in `scenarios.json`.\n\n| Browser | Passed | Failed | Flaky | Skipped | Out of scope by design |\n| --- | --- | --- | --- | --- | --- |\n| chromium | 41 | 7 | 0 | 0 | 0 |\n| firefox | 41 | 7 | 0 | 0 | 0 |\n| webkit | 41 | 7 | 0 | 0 | 0 |\n| **Total** | **123** | **21** | **0** | **0** | **0** |\n\nPer run:\n\n| Run | Scope | Passed | Failed | Skipped |\n| --- | --- | --- | --- | --- |\n| `2026-11-11_02-38-36` | Guest, 3 browsers, `--workers=3` | 87 | 15 (DQB-012, 013, 018, 021, 041 x3) | 0 |\n| `2026-11-11_02-44-24` | `@account` without DQB-026, `--workers=1` | 33 | 6 (DQB-031, 035 x3) | 0 |\n| `18-50-36` (DQB-026 only counted) | Wrong password, one per account | 3 | 0 | 0 |\n\n- There were **no skips** and no browser-limited scenarios.\n- All 21 failures were checked: each test failed only on its own defect check (DEF id in the message), with no other errors. Firefox and WebKit signed-in tests pass on the current code, including the teardown hardening.\n- No test needed a retry.\n- Kept HTML reports: `artifacts/demoqa-books/html-reports/<runId>.zip` (24 zips, git-ignored).\n\n## 10. Failures and Discrepancies\n\n### Run 1 failures\n\nGuest pass `2026-11-10_18-43-50`: 92 passed, 10 failed (7 failed, 3 timed out). Account pass `2026-11-10_18-50-36`: 32 passed, 10 failed.\n\n| Scenario | Browser | Classification | Evidence / root cause |\n| --- | --- | --- | --- |\n| DQB-019 | all 3 (timed out) | Test design vs product defect DEF-002 | \"Back To Book Store\" is a history-back control; after a direct `goto` it went to about:blank (Firefox: empty list shell) |\n| DQB-021 | all 3 | Product defect DEF-001 | Books service 500 makes the whole page blank with an uncaught script error |\n| DQB-041 | all 3 | Test synchronisation; product defect DEF-003 | Invisible reCAPTCHA v3 token arrives 1-3 s after load and clears the form; no register request sent |\n| DQB-040 | webkit | Test synchronisation (same cause as DQB-041) | Fields cleared by the token arrival |\n| DQB-034 to 039 | chromium | Test defect | Profile wait matched the previous page's User response and read its body after navigation (\"response.json\" protocol error) |\n| DQB-034, 037 | firefox, webkit | Test defect; product behaviour DEF-004 / R-37 | A new login revokes the account's earlier token (\"User not authorized!\"); the cached session was stale |\n\n### Later failures\n\n- `2026-11-10_19-15-34`, `19-25-42`, `20-05-48`: DQB-021 failed on all three browsers each time (DEF-001, by design).\n- `2026-11-10_19-49-03` (verification run): firefox DQB-041 timed out on the first load of `/register` (heading not rendered within 15 s). It passed on re-run (`19-51-31`) and in the final run. Treated as a flake to watch.\n\n### Defects (workbook \"Defects\" sheet, workbook only, not reported externally)\n\n| Defect | Severity | Status | Summary | Test |\n| --- | --- | --- | --- | --- |\n| DEF-001 | Medium | New | Book list goes blank with a script error when the books service fails | DQB-021 fails while open |\n| DEF-002 | Low | New | Back To Book Store from a deep link leaves the site or shows an empty list | No automated check (DQB-019 covers the normal journey) |\n| DEF-003 | Medium | New | Register form silently erased when the invisible reCAPTCHA v3 token arrives | No automated check (timing-dependent) |\n| DEF-004 | Medium | New | Logout does not end the session on the server | No automated check |\n| DEF-005 | Low | New | Search does not ignore leading and trailing spaces | DQB-012 fails while open |\n| DEF-006 | Low | New | Searching by ISBN finds no book | DQB-013 fails while open |\n| DEF-007 | Low | New | No message for no results or an empty collection | No automated check (wording not specified) |\n| DEF-008 | Low | New | Unknown ISBN shows an empty page with no message | No automated check (wording not specified) |\n| DEF-009 | Low | New | Duplicate-add message reads \"the your collection\" | DQB-035 fails while open |\n| DEF-010 | Low | New | \"Logout\" vs \"Log out\" | DQB-031 fails while open |\n| DEF-011 | Low | New | Description cut off mid-word (already cut in the API data) | DQB-018 fails while open |\n| DEF-012 | Medium | New | reCAPTCHA result never sent to the server | DQB-041 fails while open |\n| DEF-013 | Low | Rejected | Publisher column hidden at 375 px | Not a defect: the table scrolls sideways to it |\n\n### Discrepancies (promoted to defects on 2026-11-11, see the addendum)\n\nAt the user's request (\"do it\") R-19 to R-26 became DEF-005 to DEF-012; R-27 was checked and rejected (DEF-013).\n\n| Risk | Scenario | Observation |\n| --- | --- | --- |\n| R-19 | DQB-012 | Search input is not trimmed |\n| R-20 | DQB-013 | ISBN is not searchable |\n| R-21 | DQB-009, 039 | No empty-state message (only \"Page 1 of 0\") |\n| R-22 | DQB-020 | Unknown ISBN shows blank fields, no user-facing error |\n| R-23 | DQB-035 | Duplicate-add alert says \"the your collection\" |\n| R-24 | DQB-031, 032, 033 | \"Logout\" on /profile vs \"Log out\" on list and detail |\n| R-25 | DQB-018 | Book description is cut mid-word |\n| R-26 | DQB-041 | The client waits for a reCAPTCHA token but never sends it to the server (updated 2026-11-11) |\n| R-27 | DQB-047 | Publisher column hidden at 375x812 |\n\n## 11. Corrections Applied\n\n| Item | Change | Why the acceptance criteria are intact |\n| --- | --- | --- |\n| DQB-034 to 039 (chromium) | Response waits are armed only after the new navigation commits, and the body is read immediately | Synchronisation only; assertions unchanged |\n| DQB-034, 037 (firefox, webkit) | Session state taken from `GET /Account/v1/User`, one re-login if invalid; `freshLogin` adopts its new cookies | Fixture behaviour only; assertions unchanged |\n| DQB-040, 041 | Register page waits for the reCAPTCHA v3 token before typing | Synchronisation only; captcha is not solved or bypassed |\n| DQB-019 | Test now arrives at the detail page from the list (steps changed) | Expected result unchanged; approval re-recorded |\n| DQB-021 | Asserts the expected usable page directly; annotated DEF-001 | Expected result kept; it fails while the defect is open |\n| Review 1 Major 1 | Account-value masking for every context; the login context goes to about:blank before closing | Artifact privacy only |\n| Review 1 Major 2 | Account fields hidden from error-context ARIA snapshots (aria-hidden plus teardown visibility:hidden) | Artifact privacy only |\n| Review 1 Major 3 | DQB-027 asserts the exact message \"Invalid username or password!\" (R-18 closed) | Strengthened, not weakened |\n| DQB-033, 046 | Strengthened (per the orchestrator's hand-over); approval re-recorded | Expected results tightened |\n| Teardown hardening (after the final full runs) | A failure while blanking the page or hiding fields is recorded and the context is always closed, so it cannot hide the original error | Verified on Chromium DQB-024/031/034 (`20-21-35`, 3 passed); uncommitted at the time of this report |\n\nQuality review 1 verdict was **Not ready** (3 Majors, no Blockers); after the fixes the re-review returned **Ready**.\n\n**Privacy clean-up.** The first runs left an account user name in local, git-ignored artifacts (12 error-context and report text files, plus unmasked close-time screenshots). These were removed (12 text files, 55 screenshots) and the kept-report zips rebuilt. A leak check over all run and zip text files is clean. Nothing with account values was ever committed. Signed-in screenshots now mask the user name.\n\n**Account state.** After run 1 the Chromium account held two leftover suite books (teardown bug). The failure investigator removed them. All three collections were empty after the final runs (DQB-039 passed on every browser).\n\n## 12. Remaining Risks and Blockers\n\nThe register has 37 risks: 33 Open, 4 Closed. By type: 14 Risk, 11 Defect, 6 Assumption, 4 Ambiguity, 2 Discrepancy.\n\n- **Public shared demo (R-04).** The catalogue or site can change or go down at any time.\n- **Known defect failures.** Every full run has 21 failures (7 tests x 3 browsers) until the site is fixed. Open defects: 12 (8 Low, 4 Medium).\n- **DQB-026 evidence is from run 1** (`18-50-36`). Its code path changed since then only in artifact masking, but it was not re-run on the final code.\n- **Lockout threshold unknown (R-06).** One wrong-password attempt per account per run.\n- **Flake to watch.** Firefox DQB-041 once timed out on the first load of `/register`.\n- **Session handling (R-37, DEF-004).** A new login revokes earlier tokens, so account tests for one browser must run one at a time; concurrent runs on the same account are unsupported.\n- **Not covered by decision:** successful registration, Delete All Books, Delete Account, session expiry, `/swagger` and direct API testing, accessibility (I3), other demoqa sections.\n- **Remaining manual checks:** DEF-002, DEF-003, DEF-004, DEF-007 and DEF-008 have no automated check and can only be re-checked manually.\n\n## 13. Commands Executed\n\nEvery Node command was prefixed with the fnm Node 26.13.0 path. `BASE_URL=https://demoqa.com/` and `TEST_SUITE=demoqa-books` were set for test runs. The exact command lines were not all handed over; the run commands below follow the run plan in `architecture.md` 7.3 and the scopes recorded in `progress.md`.\n\n```\nnode scripts/explore-app.mjs --url https://demoqa.com/books --app demoqa-books\nnode scripts/credentials.mjs check --app demoqa-books --require existingUser:userName,password\nnode scripts/workbook.mjs validate --app demoqa-books\nnode scripts/workbook.mjs build --app demoqa-books\nnode scripts/workbook.mjs approve --app demoqa-books\nnpx tsc --noEmit\nnpx playwright test tests/demoqa-books --list\n# Run 1: guest pass (18-43-50), then account pass (18-50-36)\nnpx playwright test tests/demoqa-books --project=chromium --project=firefox --project=webkit --grep-invert \"@account\" --workers=3\nnpx playwright test tests/demoqa-books --project=chromium --project=firefox --project=webkit --grep \"@account\" --workers=1\nnode scripts/workbook.mjs sync --app demoqa-books\n# Targeted verification after iteration 1: guest 19-15-34, account 19-16-43 (DQB-026 excluded)\n# Full run after iteration 1: guest 19-25-42, account 19-31-14 (DQB-026 excluded)\n# Verification after quality review 1: guest subset 19-49-03, firefox DQB-041 re-run 19-51-31, account 19-57-32\n# Final full run: guest 20-05-48, account 20-10-19 (DQB-026 excluded)\n# Chromium DQB-024/031/034 after teardown hardening: 20-21-35\nnode scripts/workbook.mjs sync --app demoqa-books\nnode scripts/workbook.mjs build --app demoqa-books\nnode scripts/workbook.mjs scope --app demoqa-books\nnode scripts/workbook.mjs report --app demoqa-books --from artifacts/demoqa-books/delivery-report.md\n```\n\nRun folders without screenshots (`18-39-52`, `18-39-58`, `19-14-39`, `19-15-20`, `19-24-45`, `19-48-40`, `19-48-53`) have no test results in their summaries; their exact commands were not handed over.\n\nReporter commands (read only): `git status --short`, `git diff --stat`, `git log --oneline -12`, `workbook.mjs report --print` (demo-web-shop), `workbook.mjs scope`, and node one-liners that tally `scenarios.json`.\n\nCommits: `49f31c8` plans, `3509083` suite checkpoint, `7e5a147` run-1 fixes and defects, `f4eeb17` quality-review fixes, `21e6139` delivery; the promotion of the discrepancies is committed after this report.\n\n## 14. Overall Automation Readiness\n\n**Ready with limitations**\n\nAll 48 scenarios are automated and run on Chromium, Firefox and WebKit (144 tests). On the current code, 123 of 144 passed with no retries, no flaky results and no skips; the 21 failures are the intended defect checks of 7 tests (DQB-012, 013, 018, 021, 031, 035, 041) on each browser, each failing only on its own defect. The functional parts of all 14 High-priority scenarios pass on every browser; DQB-031 and DQB-035 fail only on wording defects (DEF-010, DEF-009). Every run-1 failure has an evidenced root cause and a fix that leaves the expected results unchanged, and the quality re-review returned Ready. The limitations: the site is a public shared demo that can change or fail; every full run is red by design while the 7 checked defects are open; DQB-026's evidence is from run 1, not the final code; a Firefox first-load flake on `/register` was seen once; successful registration, Delete All Books and Delete Account are not testable by decision.\n\n## 15. Recommended Next Steps\n\n2. In the next scheduled full run, include DQB-026 once per account so its evidence comes from the current code.\n3. Watch Firefox DQB-041; if the first-load timeout recurs, investigate it as a flake.\n5. When reading a run, use the \"Not Executed\" sheet: only failures not marked as a known defect need investigation.\n6. For CI: keep the account pass at `--workers=1`, never run two suites on the same accounts at once, keep DQB-026 at retries 0.\n\n---\n\n## Addendum: discrepancies promoted to defects (2026-11-11, user: \"do it\")\n\n- **Promoted:** R-19 to R-26 became DEF-005 to DEF-012 (7 Low, 1 Medium: DEF-012, the reCAPTCHA result is never sent to the server, so the captcha can be skipped by calling the API directly).\n- **Tests changed** to check the correct behaviour and fail while the defect is open (plain Failed; DEF id in the assertion message; `expect.soft` inside longer tests so the rest and the clean-up still run): DQB-012 (DEF-005), DQB-013 (DEF-006), DQB-018 (DEF-011), DQB-031 (DEF-010), DQB-035 (DEF-009), DQB-041 (DEF-012).\n- **No automated check** for DEF-007 and DEF-008: the expected wording is not specified, so the tests do not invent it. DQB-009, DQB-020 and DQB-039 no longer assert that no message exists.\n- **DEF-011:** the description is already cut at 255 characters in the API response; the page does not clip it.\n- **R-27 rejected (DEF-013):** at 375x812 the table wrapper scrolls sideways (overflow-x: auto, scrollWidth 428 vs 344); after scrolling, the Publisher column is fully visible on all three browsers. R-27 closed.\n- **Approval:** re-recorded for the 9 changed scenarios.\n- **Full run on all three browsers** (guest `2026-11-11_02-38-36`, account `2026-11-11_02-44-24`): 123 passed, 21 failed, every failure only on its own defect check. This also re-checked the Firefox and WebKit signed-in tests after the teardown hardening: all their non-defect checks pass. All three collections were empty afterwards (DQB-039 passed on every browser).\n"
 }

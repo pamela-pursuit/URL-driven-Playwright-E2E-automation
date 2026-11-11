@@ -80,3 +80,12 @@ Chromium account probably still holds suite books "Speaking JavaScript" and "Des
 - Scenario changes from quality review 1 (approval re-recorded 2026-11-11 under the user's "run and fix" authorisation): DQB-027 asserts the exact "Invalid username or password!"; DQB-033 also asserts the URL is /login after "Log out" on /books (R-28 closed); DQB-046 expected text states /books (R-29 closed; the test already asserted it).
 - The teardown hardening (after the final full runs) only changes error-handling paths; it was re-checked on Chromium (run 2026-11-10_20-21-35, 3 passed), not yet on Firefox/WebKit.
 - Delivery Report stored as the workbook's first sheet (verdict: Ready with limitations).
+
+## Discrepancies promoted to defects (2026-11-11, user: "do it")
+
+- R-19..R-26 became defects DEF-005..DEF-012. Where the correct behaviour is concrete, the test now checks it and fails while the defect is open (plain Failed, DEF id in the message): DQB-012 (DEF-005), DQB-013 (DEF-006), DQB-018 (DEF-011), DQB-031 (DEF-010), DQB-035 (DEF-009), DQB-041 (DEF-012). DEF-007 and DEF-008 have no automated check (wording not specified); DQB-009/020/039 no longer assert the absence of a message.
+- DEF-011: the description is already cut at 255 characters in the API (not a display problem).
+- R-27 checked: the table scrolls sideways to the Publisher column on all 3 browsers, so DEF-013 is Rejected and R-27 closed.
+- Approval re-recorded for the 9 changed scenarios. Targeted runs: each changed check failed only with its DEF message; DQB-009/020/039 passed; collections empty.
+- Full run on all 3 browsers started (also re-checks firefox/webkit after the teardown hardening). Expected failures: DQB-012, 013, 018, 021, 031, 035, 041 on each browser (21).
+- Full run result (2026-11-11): guest 2026-11-11_02-38-36 87 passed / 15 failed, account 2026-11-11_02-44-24 33 passed / 6 failed = 123/144; all 21 failures verified to fail only on their own DEF check. Workbook: 21 "Known defect" rows, 0 to investigate; 12 open defects (4 Medium, 8 Low), 1 rejected. Delivery Report updated with an addendum.

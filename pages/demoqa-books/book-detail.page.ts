@@ -48,11 +48,6 @@ export class DemoqaBookDetailPage {
     return this.wrapper(field).locator('#userName-value');
   }
 
-  /** Generic text presence, for absence checks of the API message (DQB-020). */
-  text(value: string): Locator {
-    return this.page.getByText(value);
-  }
-
   async open(isbn: string): Promise<void> {
     await responseAfterNavigation(
       this.page,

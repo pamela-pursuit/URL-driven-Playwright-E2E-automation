@@ -12,6 +12,11 @@
   Delivery Report verdict: Ready with limitations.
 - Account values are masked in every signed-in browser context (screenshots,
   videos and failure ARIA snapshots), including the worker login context.
+- demoqa-books discrepancies R-19 to R-26 promoted to defects DEF-005 to
+  DEF-012 at the user's request; six tests now check the correct behaviour
+  and fail while their defect is open. R-27 rejected (DEF-013: the table
+  scrolls to the Publisher column). Full run: 123/144, all 21 failures are
+  known-defect checks.
 
 ## 2026-11-10
 
