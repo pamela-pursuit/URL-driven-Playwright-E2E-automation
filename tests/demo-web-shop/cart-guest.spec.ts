@@ -81,7 +81,7 @@ test.describe('Guest cart', () => {
       await cartPage.estimateShipping({ country: ESTIMATE_SHIPPING.country, zip: ESTIMATE_SHIPPING.zip });
 
       // "Computing and Internet" has free shipping (its product page says so), so every option is 0.00.
-      // Health Book, which has no free shipping, estimates Ground (10.00), matching checkout (DEF-001 Rejected).
+      // Health Book, which has no free shipping, estimates Ground (10.00), matching checkout.
       await expect(cartPage.shippingOptionNames).toHaveText([...ESTIMATE_SHIPPING.options]);
     });
 
