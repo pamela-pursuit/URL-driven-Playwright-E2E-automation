@@ -47,8 +47,8 @@ test.describe('Guest cart', () => {
         await cartPage.open();
         await cartPage.setQuantity(product.name, INVALID.negativeQty);
         await cartPage.updateCart();
-        // Defect DEF-006: this check fails until the defect is fixed (-1 silently removes the item.).
-        await expect(cartPage.row(product.name), 'DEF-006: quantity -1 is rejected, the item stays in the cart')
+        // Defect DEF-005: this check fails until the defect is fixed (-1 silently removes the item.).
+        await expect(cartPage.row(product.name), 'DEF-005: quantity -1 is rejected, the item stays in the cart')
           .toBeVisible({ timeout: 2_000 });
       });
     });
@@ -72,8 +72,8 @@ test.describe('Guest cart', () => {
       await cartPage.applyGiftCard(INVALID.giftCard);
 
       await expect(cartPage.giftCardMessage).toBeVisible();
-      // Defect DEF-004: this check fails until the defect is fixed (the gift card error reuses the coupon text.).
-      await expect(cartPage.giftCardMessage, 'DEF-004: gift card error is not the coupon text')
+      // Defect DEF-003: this check fails until the defect is fixed (the gift card error reuses the coupon text.).
+      await expect(cartPage.giftCardMessage, 'DEF-003: gift card error is not the coupon text')
         .not.toHaveText(MESSAGES.couponInvalid, { timeout: 2_000 });
     });
 

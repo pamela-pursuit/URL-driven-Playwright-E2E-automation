@@ -36,8 +36,8 @@ test.describe('Wishlist', () => {
     await expect(wishlistPage.rowQuantityInput(product.name)).toHaveValue('1');
     await expect(wishlistPage.shareInfo).toContainText(MESSAGES.wishlistShare);
     expect(await wishlistPage.shareUrl()).toMatch(/^\/wishlist\/[0-9a-f-]{36}$/i);
-    // Defect DEF-003: soft check, so the removal below still runs; this check fails until the defect is fixed (the share URL is http.).
-    await expect.soft(wishlistPage.shareInfo, 'DEF-003: the share URL uses https')
+    // Defect DEF-002: soft check, so the removal below still runs; this check fails until the defect is fixed (the share URL is http.).
+    await expect.soft(wishlistPage.shareInfo, 'DEF-002: the share URL uses https')
       .toContainText(/https:\/\/\S+\/wishlist\//i, { timeout: 2_000 });
 
     await wishlistPage.removeProduct(product.name);
@@ -57,10 +57,10 @@ test.describe('Wishlist', () => {
     await cartPage.open();
     await expect(cartPage.row(product.name)).toBeVisible();
     await expect(header.cartLink).toHaveText(`Shopping cart (${cartBefore + 1})`);
-    // Defect DEF-008: soft check, so the R-27 check below still runs; this check fails until the defect is fixed (thumbnails have no size.).
-    await expect.soft(cartPage.rowImage(product.name), 'DEF-008: the row thumbnail has a width (no layout shift)')
+    // Defect DEF-007: soft check, so the R-27 check below still runs; this check fails until the defect is fixed (thumbnails have no size.).
+    await expect.soft(cartPage.rowImage(product.name), 'DEF-007: the row thumbnail has a width (no layout shift)')
       .toHaveAttribute('width', /\d+/, { timeout: 2_000 });
-    await expect.soft(cartPage.rowImage(product.name), 'DEF-008: the row thumbnail has a height (no layout shift)')
+    await expect.soft(cartPage.rowImage(product.name), 'DEF-007: the row thumbnail has a height (no layout shift)')
       .toHaveAttribute('height', /\d+/, { timeout: 2_000 });
 
     // R-27: whether the item leaves the wishlist is recorded, not asserted.

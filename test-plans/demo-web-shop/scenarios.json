@@ -88,7 +88,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/auth.spec.ts",
       "lastRun": "2026-11-11T15:16:21.914Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed  | firefox: Failed - Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed  | webkit: Failed - Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed  | firefox: Failed - Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed  | webkit: Failed - Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed "
     },
     {
       "id": "TC-04",
@@ -400,7 +400,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/authorization.spec.ts",
       "lastRun": "2026-11-11T15:16:21.914Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed  | firefox: Failed - Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed  | webkit: Failed - Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed  | firefox: Failed - Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed  | webkit: Failed - Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed "
     },
     {
       "id": "TC-15",
@@ -1192,7 +1192,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/cart-guest.spec.ts",
       "lastRun": "2026-11-11T15:09:49.987Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed "
     },
     {
       "id": "TC-43",
@@ -1277,7 +1277,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/cart-guest.spec.ts",
       "lastRun": "2026-11-11T15:09:49.987Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed  | firefox: Failed - Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed  | webkit: Failed - Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed  | firefox: Failed - Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed  | webkit: Failed - Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed "
     },
     {
       "id": "TC-46",
@@ -1569,7 +1569,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/wishlist.spec.ts",
       "lastRun": "2026-11-11T15:16:21.914Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed  | firefox: Failed - Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed  | webkit: Failed - Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed  | firefox: Failed - Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed  | webkit: Failed - Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed "
     },
     {
       "id": "TC-56",
@@ -1598,7 +1598,7 @@
       "failureNotes": "Firefox, intermittent: the wishlist row thumbnail has no width/height and shifts the add-to-cart checkbox 24.5 px when it loads, so a click straddling the shift did not toggle it (reproduced deterministically by probe F2c). Fixed by waiting for row images to complete in the wishlist and cart open() and update methods.",
       "specFile": "tests/demo-web-shop/wishlist.spec.ts",
       "lastRun": "2026-11-11T15:16:21.914Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed  | firefox: Failed - Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed  | webkit: Failed - Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed  | firefox: Failed - Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed  | webkit: Failed - Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed "
     },
     {
       "id": "TC-57",
@@ -1889,7 +1889,7 @@
       "failureNotes": "",
       "specFile": "tests/demo-web-shop/account.spec.ts",
       "lastRun": "2026-11-11T15:16:21.914Z",
-      "lastRunNotes": "chromium: Failed - Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed "
+      "lastRunNotes": "chromium: Failed - Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed  | firefox: Failed - Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed  | webkit: Failed - Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed "
     },
     {
       "id": "TC-67",
@@ -2210,7 +2210,7 @@
       "type": "Defect",
       "description": "/customer/downloadableproducts did not render within 20 s or 45 s (possible defect).",
       "impact": "Medium",
-      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report. Logged as DEF-005 on 2026-11-10 (see \"Defects\"). Reproduced 2026-11-10 (3 of 3, HTTP 200 but no content); DEF-005 status New. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-005 is open. 2026-11-10: the page actually ends on the site error page (/errorpage.htm) after about 30 s.",
+      "mitigation": "Scenario Blocked and excluded from CI gating; re-check manually and report. Logged as DEF-004 on 2026-11-10 (see \"Defects\"). Reproduced 2026-11-10 (3 of 3, HTTP 200 but no content); DEF-004 status New. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-004 is open. 2026-11-10: the page actually ends on the site error page (/errorpage.htm) after about 30 s.",
       "scenarios": [
         "TC-66"
       ],
@@ -2349,7 +2349,7 @@
       "type": "Discrepancy",
       "description": "Cart quantity 0 or -1 with \"Update shopping cart\" silently removes the row with no message. Tests assert current behaviour; possible defect.",
       "impact": "Medium",
-      "mitigation": "Report to product owner; update the assertion if the behaviour is changed. Logged as DEF-006 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-006 is open.",
+      "mitigation": "Report to product owner; update the assertion if the behaviour is changed. Logged as DEF-005 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-005 is open.",
       "scenarios": [
         "TC-42"
       ],
@@ -2360,7 +2360,7 @@
       "type": "Discrepancy",
       "description": "An invalid gift card shows the coupon text \"The coupon code you entered couldn't be applied to your order\". Tests assert current behaviour; possible defect.",
       "impact": "Low",
-      "mitigation": "Report; update the assertion if a gift-card-specific message is introduced. Logged as DEF-004 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-004 is open.",
+      "mitigation": "Report; update the assertion if a gift-card-specific message is introduced. Logged as DEF-003 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-003 is open.",
       "scenarios": [
         "TC-45"
       ],
@@ -2384,7 +2384,7 @@
       "type": "Discrepancy",
       "description": "Login reveals whether an email exists: \"No customer account found\" for unknown emails vs \"The credentials provided are incorrect\" for a known email (account enumeration).",
       "impact": "Medium",
-      "mitigation": "Assert observed text; report as a security observation for product decision (Q-NB2). Logged as DEF-002 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-002 is open.",
+      "mitigation": "Assert observed text; report as a security observation for product decision (Q-NB2). Logged as DEF-001 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-001 is open.",
       "scenarios": [
         "TC-02",
         "TC-03",
@@ -2397,7 +2397,7 @@
       "type": "Discrepancy",
       "description": "Wishlist share URL uses http, not https.",
       "impact": "Low",
-      "mitigation": "Assert only the /wishlist/<guid> path; report the scheme. Logged as DEF-003 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-003 is open.",
+      "mitigation": "Assert only the /wishlist/<guid> path; report the scheme. Logged as DEF-002 on 2026-11-10 (see \"Defects\"). Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-002 is open.",
       "scenarios": [
         "TC-55"
       ],
@@ -2467,7 +2467,7 @@
       "type": "Ambiguity",
       "description": "/customer/backinstocksubscriptions renders for guests while other /customer/* pages redirect.",
       "impact": "Low",
-      "mitigation": "Assert observed behaviour and flag as a possible defect. Logged as DEF-007 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-007 is open.",
+      "mitigation": "Assert observed behaviour and flag as a possible defect. Logged as DEF-006 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-006 is open.",
       "scenarios": [
         "TC-14"
       ],
@@ -2627,7 +2627,7 @@
       "type": "Discrepancy",
       "description": "Cart and wishlist thumbnails lack width/height, causing layout shift that can move controls under the pointer during load (observed, TC-56).",
       "impact": "Low",
-      "mitigation": "Page objects wait for row images to complete before using row controls; report as a UI defect. Logged as DEF-008 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-008 is open.",
+      "mitigation": "Page objects wait for row images to complete before using row controls; report as a UI defect. Logged as DEF-007 on 2026-11-10 (see \"Defects\"). Confirmed as a defect by the user on 2026-11-10. Since 2026-11-10 the test now checks the correct behaviour and fails while DEF-007 is open.",
       "scenarios": [
         "TC-56"
       ],
@@ -2636,7 +2636,7 @@
   ],
   "defects": [
     {
-      "id": "DEF-002",
+      "id": "DEF-001",
       "riskRef": "R-14",
       "title": "Login message tells anyone whether an email address has an account",
       "severity": "Medium",
@@ -2661,11 +2661,11 @@
       "evidence": [
         {
           "label": "1. Before: an unknown email gets \"No customer account found\" (2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-002-1-before-unknown-email-message.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-001-1-before-unknown-email-message.png"
         },
         {
           "label": "2. After: a real email with a wrong password gets a different message, \"The credentials provided are incorrect\" (highlighted; email blurred)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-002-2-after-real-email-different-message.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-001-2-after-real-email-different-message.png"
         },
         {
           "label": "TC-03 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2685,7 +2685,7 @@
       "failingScenario": "TC-03"
     },
     {
-      "id": "DEF-003",
+      "id": "DEF-002",
       "riskRef": "R-15",
       "title": "Wishlist share link starts with http instead of the secure https",
       "severity": "Low",
@@ -2706,11 +2706,11 @@
       "evidence": [
         {
           "label": "1. Before: Health Book page, about to click \"Add to wishlist\" (2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-003-1-before-add-to-wishlist.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-002-1-before-add-to-wishlist.png"
         },
         {
           "label": "2. After: the wishlist share link starts with http:// (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-003-2-after-share-link-http.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-002-2-after-share-link-http.png"
         },
         {
           "label": "TC-55 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2727,7 +2727,7 @@
       "failingScenario": "TC-55"
     },
     {
-      "id": "DEF-004",
+      "id": "DEF-003",
       "riskRef": "R-12",
       "title": "Wrong gift card code shows an error message about a coupon",
       "severity": "Low",
@@ -2748,11 +2748,11 @@
       "evidence": [
         {
           "label": "1. Before: INVALIDGIFT typed in the Gift Cards box (2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-004-1-before-gift-card-typed.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-003-1-before-gift-card-typed.png"
         },
         {
           "label": "2. After: the coupon message appears under Gift Cards (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-004-2-after-coupon-message-under-gift-cards.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-003-2-after-coupon-message-under-gift-cards.png"
         },
         {
           "label": "TC-45 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2769,7 +2769,7 @@
       "failingScenario": "TC-45"
     },
     {
-      "id": "DEF-005",
+      "id": "DEF-004",
       "riskRef": "R-05",
       "title": "Downloadable products page shows an error page after about 30 seconds",
       "severity": "Medium",
@@ -2790,11 +2790,11 @@
       "evidence": [
         {
           "label": "1. Before: signed in on My account, about to click \"Downloadable products\" (2026-11-11; account details blurred)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-005-1-before-downloadable-products-link.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-004-1-before-downloadable-products-link.png"
         },
         {
           "label": "2. After: about 30 seconds later the site error page appears (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-005-2-after-error-page.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-004-2-after-error-page.png"
         },
         {
           "label": "Probe 2026-11-10: HTTP 200 after 30.6 s; final page /errorpage.htm, title \"Error\" (no screenshot: signed-in pages show the account email)"
@@ -2810,7 +2810,7 @@
       "failingScenario": "TC-66"
     },
     {
-      "id": "DEF-006",
+      "id": "DEF-005",
       "riskRef": "R-11",
       "title": "Cart quantity 0 or -1 removes the item without any message",
       "severity": "Medium",
@@ -2831,11 +2831,11 @@
       "evidence": [
         {
           "label": "1. Before: quantity -1 typed in the cart, about to click \"Update shopping cart\" (2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-006-1-before-quantity-minus-1.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-005-1-before-quantity-minus-1.png"
         },
         {
           "label": "2. After: the item is gone and the cart shows (0), with no message (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-006-2-after-item-removed-no-message.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-005-2-after-item-removed-no-message.png"
         },
         {
           "label": "TC-42 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2852,7 +2852,7 @@
       "failingScenario": "TC-42"
     },
     {
-      "id": "DEF-007",
+      "id": "DEF-006",
       "riskRef": "R-21",
       "title": "Back in stock page opens for guests, but other account pages ask to log in",
       "severity": "Low",
@@ -2873,11 +2873,11 @@
       "evidence": [
         {
           "label": "1. Before: as a guest, My account sends you to the Log in page (2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-007-1-before-my-account-asks-to-log-in.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-006-1-before-my-account-asks-to-log-in.png"
         },
         {
           "label": "2. After: as a guest, the Back in stock subscriptions page opens instead (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-007-2-after-back-in-stock-opens-for-guest.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-006-2-after-back-in-stock-opens-for-guest.png"
         },
         {
           "label": "TC-14 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -2894,7 +2894,7 @@
       "failingScenario": "TC-14"
     },
     {
-      "id": "DEF-008",
+      "id": "DEF-007",
       "riskRef": "R-36",
       "title": "Cart and wishlist pictures make the page jump while they load",
       "severity": "Low",
@@ -2915,11 +2915,11 @@
       "evidence": [
         {
           "label": "1. Before: wishlist row while the picture is still loading (slow connection simulated, 2026-11-11)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-008-1-before-picture-loading.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-007-1-before-picture-loading.png"
         },
         {
           "label": "2. After: the picture has loaded, the row is twice as tall and the \"Add to cart\" tick box moved down about 25 px (highlighted)",
-          "path": "artifacts/demo-web-shop/evidence/DEF-008-2-after-picture-loaded-row-moved.png"
+          "path": "artifacts/demo-web-shop/evidence/DEF-007-2-after-picture-loaded-row-moved.png"
         },
         {
           "label": "TC-56 failing check (chromium, run 2026-11-10_16-05-39)",
@@ -11786,7 +11786,7 @@
       "durationMs": 69553,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-account-Down-67099-oadable-products-page-loads-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11825,7 +11825,7 @@
       "durationMs": 5499,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11838,7 +11838,7 @@
       "durationMs": 9071,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11851,7 +11851,7 @@
       "durationMs": 7219,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11864,7 +11864,7 @@
       "durationMs": 7236,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11877,7 +11877,7 @@
       "durationMs": 9598,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11890,7 +11890,7 @@
       "durationMs": 7881,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11903,7 +11903,7 @@
       "durationMs": 11079,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11916,7 +11916,7 @@
       "durationMs": 10523,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11942,7 +11942,7 @@
       "durationMs": 20143,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11955,7 +11955,7 @@
       "durationMs": 11846,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11981,7 +11981,7 @@
       "durationMs": 16441,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -11994,7 +11994,7 @@
       "durationMs": 10609,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12020,7 +12020,7 @@
       "durationMs": 6595,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12033,7 +12033,7 @@
       "durationMs": 11046,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12046,7 +12046,7 @@
       "durationMs": 9228,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12059,7 +12059,7 @@
       "durationMs": 14643,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12072,7 +12072,7 @@
       "durationMs": 9455,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12085,7 +12085,7 @@
       "durationMs": 14507,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_15-39-16"
     },
@@ -12137,7 +12137,7 @@
       "durationMs": 65933,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-account-Down-67099-oadable-products-page-loads-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12176,7 +12176,7 @@
       "durationMs": 5484,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12189,7 +12189,7 @@
       "durationMs": 8051,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12202,7 +12202,7 @@
       "durationMs": 6448,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12215,7 +12215,7 @@
       "durationMs": 7070,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12228,7 +12228,7 @@
       "durationMs": 10147,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12241,7 +12241,7 @@
       "durationMs": 8282,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12254,7 +12254,7 @@
       "durationMs": 11279,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12267,7 +12267,7 @@
       "durationMs": 8033,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12280,7 +12280,7 @@
       "durationMs": 15330,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12293,7 +12293,7 @@
       "durationMs": 12723,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12306,7 +12306,7 @@
       "durationMs": 16632,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12319,7 +12319,7 @@
       "durationMs": 10730,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12332,7 +12332,7 @@
       "durationMs": 8268,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12345,7 +12345,7 @@
       "durationMs": 11119,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12358,7 +12358,7 @@
       "durationMs": 9360,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12371,7 +12371,7 @@
       "durationMs": 14660,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12384,7 +12384,7 @@
       "durationMs": 9430,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12397,7 +12397,7 @@
       "durationMs": 15009,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-10_16-05-39"
     },
@@ -12475,7 +12475,7 @@
       "durationMs": 16009,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -12514,7 +12514,7 @@
       "durationMs": 16215,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -12579,7 +12579,7 @@
       "durationMs": 19942,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -12618,7 +12618,7 @@
       "durationMs": 13558,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -12683,7 +12683,7 @@
       "durationMs": 24818,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-a7a5c-row-quantity--1-is-rejected-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -12722,7 +12722,7 @@
       "durationMs": 16180,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20/test-results/demo-web-shop-cart-guest-G-804c0-sage-not-the-coupon-message-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-34-20"
     },
@@ -13892,7 +13892,7 @@
       "durationMs": 66976,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-account-Down-67099-oadable-products-page-loads-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -13931,7 +13931,7 @@
       "durationMs": 5631,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -13983,7 +13983,7 @@
       "durationMs": 5880,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14035,7 +14035,7 @@
       "durationMs": 7079,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-auth-Authent-9c87d--the-account-does-not-exist-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14178,7 +14178,7 @@
       "durationMs": 7367,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14204,7 +14204,7 @@
       "durationMs": 7996,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14230,7 +14230,7 @@
       "durationMs": 8186,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-authorizatio-43588-in-stock-subscriptions-page-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14854,7 +14854,7 @@
       "durationMs": 7082,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14867,7 +14867,7 @@
       "durationMs": 13126,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14906,7 +14906,7 @@
       "durationMs": 7149,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14919,7 +14919,7 @@
       "durationMs": 16317,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14958,7 +14958,7 @@
       "durationMs": 9380,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-c59a1-re-URL-and-removes-the-item-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -14971,7 +14971,7 @@
       "durationMs": 15773,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39/test-results/demo-web-shop-wishlist-Wis-ac8ac-list-item-moves-to-the-cart-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_12-41-39"
     },
@@ -15088,7 +15088,7 @@
       "durationMs": 16122,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-947ea-row-quantity--1-is-rejected-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -15127,7 +15127,7 @@
       "durationMs": 10265,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-ff974-sage-not-the-coupon-message-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -15192,7 +15192,7 @@
       "durationMs": 19104,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-947ea-row-quantity--1-is-rejected-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -15231,7 +15231,7 @@
       "durationMs": 12988,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-ff974-sage-not-the-coupon-message-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -15296,7 +15296,7 @@
       "durationMs": 22111,
       "testTitle": "[TC-42] Quantity 0 removes the row; quantity -1 is rejected",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-006: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-005: quantity -1 is rejected, the item stays in the cart  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-947ea-row-quantity--1-is-rejected-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -15335,7 +15335,7 @@
       "durationMs": 15710,
       "testTitle": "[TC-45] Invalid gift card code shows a gift card message, not the coupon message",
       "file": "demo-web-shop/cart-guest.spec.ts",
-      "error": "Error: DEF-004: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
+      "error": "Error: DEF-003: gift card error is not the coupon text  expect(locator).not.toHaveText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49/test-results/demo-web-shop-cart-guest-G-ff974-sage-not-the-coupon-message-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-09-49"
     },
@@ -16505,7 +16505,7 @@
       "durationMs": 65395,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-account-Down-ee050-oadable-products-page-loads-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16518,7 +16518,7 @@
       "durationMs": 64391,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-account-Down-ee050-oadable-products-page-loads-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16531,7 +16531,7 @@
       "durationMs": 68404,
       "testTitle": "[TC-66] Downloadable products page loads",
       "file": "demo-web-shop/account.spec.ts",
-      "error": "Error: DEF-005: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
+      "error": "Error: DEF-004: the Downloadable products page shows its heading  expect(locator).toBeVisible() failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-account-Down-ee050-oadable-products-page-loads-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16544,7 +16544,7 @@
       "durationMs": 5042,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-auth-Authent-f9a0a--the-account-does-not-exist-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16596,7 +16596,7 @@
       "durationMs": 5460,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-auth-Authent-f9a0a--the-account-does-not-exist-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16648,7 +16648,7 @@
       "durationMs": 8062,
       "testTitle": "[TC-03] Unknown email is rejected without revealing that the account does not exist",
       "file": "demo-web-shop/auth.spec.ts",
-      "error": "Error: DEF-002: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
+      "error": "Error: DEF-001: the message does not reveal whether the email is registered  expect(locator).not.toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-auth-Authent-f9a0a--the-account-does-not-exist-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16791,7 +16791,7 @@
       "durationMs": 6934,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-authorizatio-b9991-in-stock-subscriptions-page-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16817,7 +16817,7 @@
       "durationMs": 6986,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-authorizatio-b9991-in-stock-subscriptions-page-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -16843,7 +16843,7 @@
       "durationMs": 7540,
       "testTitle": "[TC-14] Guest is redirected to login from the back-in-stock subscriptions page",
       "file": "demo-web-shop/authorization.spec.ts",
-      "error": "Error: DEF-007: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
+      "error": "Error: DEF-006: guest is redirected to login like the other /customer/* pages  expect(page).toHaveURL(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-authorizatio-b9991-in-stock-subscriptions-page-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17467,7 +17467,7 @@
       "durationMs": 6066,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-0fef2-re-URL-and-removes-the-item-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17480,7 +17480,7 @@
       "durationMs": 10595,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-1765b-list-item-moves-to-the-cart-chromium/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17519,7 +17519,7 @@
       "durationMs": 7134,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-0fef2-re-URL-and-removes-the-item-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17532,7 +17532,7 @@
       "durationMs": 13780,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-1765b-list-item-moves-to-the-cart-firefox/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17571,7 +17571,7 @@
       "durationMs": 9282,
       "testTitle": "[TC-55] Guest wishlist shows the share URL and removes the item",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-003: the share URL uses https  expect(locator).toContainText(expected) failed ",
+      "error": "Error: DEF-002: the share URL uses https  expect(locator).toContainText(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-0fef2-re-URL-and-removes-the-item-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },
@@ -17584,7 +17584,7 @@
       "durationMs": 19768,
       "testTitle": "[TC-56] Wishlist item moves to the cart",
       "file": "demo-web-shop/wishlist.spec.ts",
-      "error": "Error: DEF-008: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
+      "error": "Error: DEF-007: the row thumbnail has a width (no layout shift)  expect(locator).toHaveAttribute(expected) failed ",
       "screenshot": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21/test-results/demo-web-shop-wishlist-Wis-1765b-list-item-moves-to-the-cart-webkit/test-failed-1.png",
       "runDirectory": "artifacts/demo-web-shop/runs/2026-11-11_15-16-21"
     },

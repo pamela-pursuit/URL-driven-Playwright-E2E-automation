@@ -2,7 +2,15 @@
 
 ## 2026-11-12
 
+### Changed
+
+- demo-web-shop defects renumbered after the six closed or rejected defects were removed:
+  old DEF-002 to DEF-008 are now DEF-001 to DEF-007 (each number moved down by one).
+  Older entries below keep the old numbers.
+
 ### Removed
+
+- demo-web-shop defects DEF-001 (Rejected) and DEF-009 to DEF-013 (Closed or Rejected; not linked to any failing test).
 
 - The demoqa-books project and everything related to it (tests, page objects,
   fixture, test data, test plans, workbook, defects and local run evidence),

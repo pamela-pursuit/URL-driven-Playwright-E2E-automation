@@ -85,7 +85,7 @@ export class DemoWebShopCartPage {
     return this.row(name).locator('input.qty-input');
   }
 
-  /** DEF-008: the row thumbnail (decorative product image, so located by tag). */
+  /** DEF-007: the row thumbnail (decorative product image, so located by tag). */
   rowImage(name: string): Locator {
     return this.row(name).locator('img');
   }

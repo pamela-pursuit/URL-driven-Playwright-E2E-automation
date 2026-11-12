@@ -64,3 +64,5 @@ Never touch the "14.1-inch Laptop" in the account cart. COD orders only as a gue
 **Run plan from now on:** guest pass (`--workers=3`), account pass with `--grep-invert @runs-last` (`--workers=1`), then the last pass `--grep @runs-last --workers=1`.
 
 | 2026-11-11 | **Approved** by the user ("ok") after the plain-language rewrite of test cases and defects, TC-13 rename and D8 (TC-02 on all three browsers, run last) | all test cases |
+
+| 2026-11-12 | Removed the six closed or rejected defects (old DEF-001, DEF-009 to DEF-013). Renumbered the 7 open defects: old DEF-002 to DEF-008 are now DEF-001 to DEF-007, in the test plan, tests, workbook and evidence file names. Earlier rows in this log keep the old numbers. | defects |
