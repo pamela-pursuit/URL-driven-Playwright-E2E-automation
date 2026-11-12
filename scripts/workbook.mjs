@@ -1182,11 +1182,20 @@ function addSummarySheet(wb, app, data) {
     const all = sum(t.steps);
     const wait = sum(t.steps.filter((s) => s.waiting));
     timeRow(['Total', '', dur(all), '', '', `${dur(all - wait)} agent work, ${dur(wait)} waiting`], true);
+    // Time per test case on each browser, from the last run
     const latest = data.executions.filter((e) => e.runAt === lastRun);
     if (latest.length) {
-      const per = BROWSERS.map((b) => latest.find((e) => e.browser === b)).filter(Boolean)
-        .map((e) => `${BROWSER_NAME[e.browser]} ${Math.round(e.durationMs / 1000)} seconds`);
-      line(`Last run, time per browser: ${per.join(', ')}. The browsers run at the same time.`);
+      const secs = (e) => (e ? `${(e.durationMs / 1000).toFixed(1)} s` : 'Not run');
+      ws.addRow([]);
+      headerRow(ws, ['Test case', 'What it checks', 'Chromium', 'Firefox', 'WebKit', 'Result']);
+      for (const s of data.scenarios) {
+        const runs = BROWSERS.map((b) => latest.find((e) => e.scenarioId === s.id && e.browser === b));
+        const statuses = [...new Set(runs.filter(Boolean).map((e) => e.status))];
+        bodyRow(ws, [s.id, s.journey, ...runs.map(secs), statuses.length === 1 ? statuses[0] : statuses.join(', ') || 'Not run'], widths);
+      }
+      const totals = BROWSERS.map((b) => latest.filter((e) => e.browser === b).reduce((a, e) => a + e.durationMs, 0));
+      const tr = bodyRow(ws, ['Total', 'Time per browser (the browsers run at the same time)', ...totals.map((ms) => `${(ms / 1000).toFixed(1)} s`), ''], widths);
+      tr.eachCell((c) => { c.font = { bold: true }; });
     }
   }
 

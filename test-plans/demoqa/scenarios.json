@@ -1,0 +1,373 @@
+{
+  "app": "demoqa",
+  "baseUrl": "https://demoqa.com/",
+  "timeTaken": {
+    "date": "2026-11-12",
+    "note": "Time to build these tests from nothing, live: from receiving the website address to finished, passing tests on three browsers.",
+    "steps": [
+      {
+        "step": "Intake and first look at the website",
+        "seconds": 51
+      },
+      {
+        "step": "Website explorer: reading the website",
+        "seconds": 89
+      },
+      {
+        "step": "Requirement analyst: scope, assumptions and risks",
+        "seconds": 44
+      },
+      {
+        "step": "Test case designer: writing the test cases and the workbook",
+        "seconds": 127
+      },
+      {
+        "step": "Waiting for approval of the test cases",
+        "seconds": 88,
+        "waiting": true
+      },
+      {
+        "step": "Test architect: planning the page objects",
+        "seconds": 59
+      },
+      {
+        "step": "Test writer: writing the test code",
+        "seconds": 120
+      },
+      {
+        "step": "Waiting for confirmation of the run",
+        "seconds": 61,
+        "waiting": true
+      },
+      {
+        "step": "Test runner: running 9 tests on three browsers",
+        "seconds": 141
+      },
+      {
+        "step": "Quality reviewer: independent check",
+        "seconds": 42
+      },
+      {
+        "step": "Saving the work and the time log",
+        "seconds": 45
+      }
+    ]
+  },
+  "code": "TC",
+  "scenarios": [
+    {
+      "id": "TC-01",
+      "feature": "Book list",
+      "journey": "A guest opens the Book Store and sees the list of books",
+      "testType": "Positive",
+      "priority": "High",
+      "preconditions": "Not signed in",
+      "testData": "None",
+      "steps": [
+        "Open the Book Store as a guest",
+        "Wait for the books to appear"
+      ],
+      "expected": "A table shows the columns \"Image\", \"Title\", \"Author\" and \"Publisher\". 8 books are listed, including \"Git Pocket Guide\" and \"Understanding ECMAScript 6\". The page reads \"Page 1 of 1\".",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "If the list does not show, a guest cannot browse any books",
+      "requirementRef": "REQ-01",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa/books.spec.ts",
+      "lastRun": "2026-11-12T14:19:32.914Z",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "TC-02",
+      "feature": "Search",
+      "journey": "A guest searches for a book and then clears the search",
+      "testType": "Positive",
+      "priority": "High",
+      "preconditions": "Not signed in; the Book Store is open and the books are shown",
+      "testData": "Search words \"Git\" and \"zzzz\"",
+      "steps": [
+        "Type \"Git\" in the \"Type to search\" box",
+        "Check the list",
+        "Clear the box and type \"zzzz\"",
+        "Check the list",
+        "Clear the box"
+      ],
+      "expected": "With \"Git\", only \"Git Pocket Guide\" is listed. With \"zzzz\", no books are listed and the page reads \"Page 1 of 0\". After clearing the box, all 8 books are listed again.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "If search is wrong, a guest cannot find a book",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa/books.spec.ts",
+      "lastRun": "2026-11-12T14:19:32.914Z",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "TC-03",
+      "feature": "Book details",
+      "journey": "A guest opens a book to see its details and goes back to the list",
+      "testType": "Navigation",
+      "priority": "High",
+      "preconditions": "Not signed in; the Book Store is open and the books are shown",
+      "testData": "Book \"Git Pocket Guide\"",
+      "steps": [
+        "Click the book \"Git Pocket Guide\"",
+        "Check the book details",
+        "Click \"Back To Book Store\""
+      ],
+      "expected": "The details show the title \"Git Pocket Guide\", the author \"Richard E. Silverman\" and the publisher \"O'Reilly Media\". After clicking \"Back To Book Store\", all 8 books are listed again.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaBookDetailPage",
+      "risk": "If book details do not open, a guest cannot learn about a book",
+      "requirementRef": "REQ-03",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa/books.spec.ts",
+      "lastRun": "2026-11-12T14:19:32.914Z",
+      "lastRunNotes": ""
+    }
+  ],
+  "testData": [
+    {
+      "key": "searchMatch",
+      "value": "Git",
+      "source": "static",
+      "usedBy": [
+        "TC-02"
+      ],
+      "notes": "Leaves only \"Git Pocket Guide\""
+    },
+    {
+      "key": "searchNoMatch",
+      "value": "zzzz",
+      "source": "static",
+      "usedBy": [
+        "TC-02"
+      ],
+      "notes": "Matches no book"
+    },
+    {
+      "key": "bookTitle",
+      "value": "Git Pocket Guide",
+      "source": "static",
+      "usedBy": [
+        "TC-01",
+        "TC-03"
+      ],
+      "notes": "Book seen on the public site"
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-01",
+      "type": "Risk",
+      "description": "Shared public practice site: the book list could change, or the site could be slow or down.",
+      "impact": "Medium",
+      "mitigation": "Check a few known titles; rerun before reporting a failure.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-02",
+      "type": "Risk",
+      "description": "Books appear about 2 seconds after the page opens.",
+      "impact": "Medium",
+      "mitigation": "Wait for a book title to show before checking anything.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-03",
+      "type": "Risk",
+      "description": "An ad panel sits on the right side and could load slowly or cover parts of the page.",
+      "impact": "Low",
+      "mitigation": "Use the default desktop window size, where it did not cover the table.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-04",
+      "type": "Ambiguity",
+      "description": "No message is shown when a search finds nothing; only \"Page 1 of 0\" appears. This is a gap in the requirements, not a defect.",
+      "impact": "Low",
+      "mitigation": "Check for an empty list and \"Page 1 of 0\" only. Ask whether a message is wanted.",
+      "scenarios": [
+        "TC-02"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-05",
+      "type": "Assumption",
+      "description": "The 8 books seen during discovery stay the same.",
+      "impact": "Medium",
+      "mitigation": "Check known titles such as \"Git Pocket Guide\" rather than the exact layout.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03"
+      ],
+      "status": "Open"
+    }
+  ],
+  "executions": [
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-01",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3434,
+      "testTitle": "[TC-01] A guest opens the Book Store and sees the list of books",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-99904--and-sees-the-list-of-books-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-02",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 3899,
+      "testTitle": "[TC-02] A guest searches for a book and then clears the search",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-0a7ac--and-then-clears-the-search-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-03",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6667,
+      "testTitle": "[TC-03] A guest opens a book to see its details and goes back to the list",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-ca619-s-and-goes-back-to-the-list-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-01",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 10368,
+      "testTitle": "[TC-01] A guest opens the Book Store and sees the list of books",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-99904--and-sees-the-list-of-books-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-02",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7468,
+      "testTitle": "[TC-02] A guest searches for a book and then clears the search",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-0a7ac--and-then-clears-the-search-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-03",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8296,
+      "testTitle": "[TC-03] A guest opens a book to see its details and goes back to the list",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-ca619-s-and-goes-back-to-the-list-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-01",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 12661,
+      "testTitle": "[TC-01] A guest opens the Book Store and sees the list of books",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-99904--and-sees-the-list-of-books-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-02",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8314,
+      "testTitle": "[TC-02] A guest searches for a book and then clears the search",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-0a7ac--and-then-clears-the-search-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    },
+    {
+      "runAt": "2026-11-12T14:19:32.914Z",
+      "scenarioId": "TC-03",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 15636,
+      "testTitle": "[TC-03] A guest opens a book to see its details and goes back to the list",
+      "file": "demoqa/books.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa/runs/2026-11-12_14-19-31/test-results/demoqa-books-Book-Store-gu-ca619-s-and-goes-back-to-the-list-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa/runs/2026-11-12_14-19-31"
+    }
+  ],
+  "defects": [],
+  "approval": {
+    "approvedAt": "2026-11-12T14:15:18.296Z",
+    "scenarios": {
+      "TC-01": "928ef21341f67257",
+      "TC-02": "2509952b36dfae87",
+      "TC-03": "22ae5598100b541a"
+    }
+  }
+}
