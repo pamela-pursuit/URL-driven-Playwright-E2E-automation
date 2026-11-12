@@ -1,6 +1,41 @@
 {
   "app": "demoqa-books",
   "baseUrl": "https://demoqa.com/",
+  "timeTaken": {
+    "date": "2026-11-12",
+    "note": "Time to build this test from nothing: from receiving the website address to the finished, passing test.",
+    "steps": [
+      {
+        "step": "Reading the website and trying out the pages",
+        "seconds": 286
+      },
+      {
+        "step": "Checking what was found",
+        "seconds": 47
+      },
+      {
+        "step": "Writing the test case",
+        "seconds": 3
+      },
+      {
+        "step": "Waiting for approval of the test case",
+        "seconds": 59,
+        "waiting": true
+      },
+      {
+        "step": "Writing the test code",
+        "seconds": 115
+      },
+      {
+        "step": "Running the test on all three browsers",
+        "seconds": 77
+      },
+      {
+        "step": "Final check and saving the work",
+        "seconds": 41
+      }
+    ]
+  },
   "code": "TC",
   "scenarios": [
     {

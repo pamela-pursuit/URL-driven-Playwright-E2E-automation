@@ -8,6 +8,12 @@
   "app": "demo-web-shop",
   "baseUrl": "https://demowebshop.tricentis.com/",
   "code": "TC",                       // scenario ID prefix
+  "timeTaken": {                       // optional: shown as "Time taken" on the Summary sheet
+    "date": "2026-11-12",
+    "note": "Time to build this test from nothing: from receiving the website address to the finished, passing test.",
+    "steps": [ { "step": "Reading the website and trying out the pages", "seconds": 286 },
+               { "step": "Waiting for approval of the test case", "seconds": 59, "waiting": true } ]  // plain words
+  },
   "scenarios": [
     {
       "id": "TC-01",                 // required, unique, stable: TC-NN

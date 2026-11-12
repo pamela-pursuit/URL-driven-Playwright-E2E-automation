@@ -1163,6 +1163,33 @@ function addSummarySheet(wb, app, data) {
     line('Website compatibility on these browsers is not verified for the test cases above.', { italic: true, color: { argb: 'FF595959' } });
   }
 
+  // Optional: how long it took to build the tests (recorded by the agent)
+  if (data.timeTaken?.steps?.length) {
+    const t = data.timeTaken;
+    const dur = (s) => (s >= 60 ? `${Math.floor(s / 60)} min ${s % 60} s` : `${s} s`);
+    const timeRow = (values, bold) => {
+      const row = bodyRow(ws, values, widths);
+      ws.mergeCells(row.number, 1, row.number, 2);
+      ws.mergeCells(row.number, 3, row.number, 5);
+      row.height = 20;
+      if (bold) row.eachCell((c) => { c.font = { bold: true }; });
+    };
+    section('Time taken');
+    if (t.note) line(t.note, { color: { argb: 'FF595959' } });
+    headerRow(ws, ['Step', '', 'Time', '', '', 'Who']);
+    for (const st of t.steps) timeRow([st.step, '', dur(st.seconds), '', '', st.waiting ? 'Waiting for the reviewer' : 'Agent']);
+    const sum = (list) => list.reduce((a, s) => a + s.seconds, 0);
+    const all = sum(t.steps);
+    const wait = sum(t.steps.filter((s) => s.waiting));
+    timeRow(['Total', '', dur(all), '', '', `${dur(all - wait)} agent work, ${dur(wait)} waiting`], true);
+    const latest = data.executions.filter((e) => e.runAt === lastRun);
+    if (latest.length) {
+      const per = BROWSERS.map((b) => latest.find((e) => e.browser === b)).filter(Boolean)
+        .map((e) => `${BROWSER_NAME[e.browser]} ${Math.round(e.durationMs / 1000)} seconds`);
+      line(`Last run, time per browser: ${per.join(', ')}. The browsers run at the same time.`);
+    }
+  }
+
   section('How to read this workbook');
   line('Test Cases: every test case with its steps, the expected result and the result on Chromium, Firefox and WebKit.');
   line('Defects: every problem found in the website, what happens, what should happen and why it counts as a defect.');
