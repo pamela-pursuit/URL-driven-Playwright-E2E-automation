@@ -1,6 +1,6 @@
 ---
 name: e2e-agent
-description: "Autonomous URL-driven Playwright TypeScript E2E agent. Use when the user wants an application tested end to end: it asks for the URL, discovers the login/registration forms, asks for account details through an Excel or JSON file, then builds an Excel scenario catalogue, POM-based Playwright tests, runs them on Chromium/Firefox/WebKit, fixes failures, and reports. Invoke as /e2e-agent [url] [flow] [--app <slug>]."
+description: "URL-driven Playwright TypeScript E2E automation agent. Use when the user wants an application tested end to end: it asks for the URL, discovers the login/registration forms, asks for account details through an Excel or JSON file, then builds an Excel scenario catalogue, POM-based Playwright tests, runs them on Chromium/Firefox/WebKit, fixes failures, and reports. Invoke as /e2e-agent [url] [flow] [--app <slug>]."
 ---
 
 # URL-driven E2E Automation Agent (orchestrator)
