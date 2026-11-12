@@ -8,6 +8,11 @@
   fixture, test data, test plans, workbook, defects and local run evidence),
   at the user's request. The DemoQA accounts in the local credentials file
   are kept for the new short flow.
+- The rebuilt demoqa-books short flow (TC-01: log in, add a book, log out),
+  its page objects, fixture, test plans, workbook and run evidence, so the
+  live demo starts from a clean project. The DemoQA accounts in the local
+  credentials file are kept.
+
 ## 2026-11-11
 
 ### Added
