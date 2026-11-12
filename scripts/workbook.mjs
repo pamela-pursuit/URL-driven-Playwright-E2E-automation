@@ -1024,7 +1024,7 @@ function openDefectsFor(data, scenarioId) {
 
 // One test case on one browser.
 function resultOf(data, s, b) {
-  if (s.automationStatus !== 'Automated') return { text: 'Not automated', fill: GREY, kind: 'notAutomated' };
+  if (s.automationStatus !== 'Automated') return { text: s.automationStatus === 'Planned' ? 'Not run yet' : 'Not automated', fill: GREY, kind: 'notAutomated' };
   if (!coverageOf(s).includes(b)) return { text: 'Not tested', fill: GREY, kind: 'notTested' };
   const r = latestPerBrowser(s, data.executions).get(b);
   if (!r) return { text: 'Not run yet', fill: GREY, kind: 'notRun' };
@@ -1097,7 +1097,7 @@ function addSummarySheet(wb, app, data) {
   const openDefects = (data.defects ?? []).filter(isOpen);
 
   line(`${appTitle(app)}: test summary`, { bold: true, size: 18, color: { argb: COLORS.header } });
-  line(`Website: ${data.baseUrl ?? ''}    Last test run: ${dateOf(lastRun)}    Test cases approved: ${dateOf(data.approval?.approvedAt)}`, { color: { argb: 'FF595959' } });
+  line(`Website: ${data.baseUrl ?? ''}    Last test run: ${dateOf(lastRun)}    Test cases approved: ${data.approval ? dateOf(data.approval.approvedAt) : 'not yet'}`, { color: { argb: 'FF595959' } });
 
   // Result per browser
   section('Result');
@@ -1123,7 +1123,8 @@ function addSummarySheet(wb, app, data) {
   const failedCases = [...new Map(failed.map((c) => [c.s.id, c.s])).values()];
   const withDefect = failedCases.filter((s) => openDefectsFor(data, s.id).length);
   const withoutDefect = failedCases.filter((s) => !openDefectsFor(data, s.id).length);
-  if (!failedCases.length) line('All tested test cases passed on every browser they were run on.', { bold: true, color: { argb: 'FF006100' } }, COLORS.Passed);
+  if (!tested) line('No tests have run yet.', { bold: true });
+  else if (!failedCases.length) line('All tested test cases passed on every browser they were run on.', { bold: true, color: { argb: 'FF006100' } }, COLORS.Passed);
   else {
     line(`${failedCases.length} of ${automated.length} test cases failed. ${withDefect.length} of them found a defect in the website (listed below and on the "Defects" sheet).` +
       (withoutDefect.length ? ` ${withoutDefect.length} failed without a logged defect and must be investigated.` : ''), { bold: true });
@@ -1154,7 +1155,7 @@ function addSummarySheet(wb, app, data) {
     headerRow(ws, ['Test case', 'What it checks', 'Not tested on', 'Why', '', '']);
     for (const s of gaps) {
       const missing = BROWSERS.filter((b) => ['notTested', 'notAutomated', 'notRun'].includes(resultOf(data, s, b).kind)).map((b) => BROWSER_NAME[b]);
-      const reason = s.automationStatus !== 'Automated' ? `Not automated: ${firstLine(s.failureNotes)}`
+      const reason = s.automationStatus !== 'Automated' ? notAutomatedNote(s)
         : !s.scopeReason ? 'Not run yet' : firstLine(s.scopeReason.replace(/^Test-safety limit \([^)]*\):\s*/i, ''));
       const row = bodyRow(ws, [s.id, s.journey, missing.length === 3 ? 'All 3 browsers' : missing.join(', '), reason, '', ''], widths);
       ws.mergeCells(row.number, 4, row.number, 6);
@@ -1210,6 +1211,13 @@ function addSummarySheet(wb, app, data) {
   return ws;
 }
 
+// Plain note for a test case without an automated test. "Planned" is the normal state before the code is written.
+function notAutomatedNote(s) {
+  if (s.automationStatus === 'Planned') return 'Planned: the test is not written yet.';
+  const why = firstLine(s.failureNotes);
+  return why ? `Not automated (${s.automationStatus}): ${why}` : `Not automated (${s.automationStatus}).`;
+}
+
 function addTestCasesSheet(wb, data) {
   const ws = wb.addWorksheet('Test Cases', { properties: { tabColor: { argb: 'FF2E75B6' } } });
   const widths = [9, 16, 36, 9, 50, 46, 11, 11, 11, 10, 40];
@@ -1220,7 +1228,7 @@ function addTestCasesSheet(wb, data) {
     // A defect is shown only next to a test case that actually failed; passing tests show none.
     const defects = results.some((r) => r.kind === 'failed') ? openDefectsFor(data, s.id) : [];
     const notes = [];
-    if (s.automationStatus !== 'Automated') notes.push(`Not automated: ${firstLine(s.failureNotes)}`);
+    if (s.automationStatus !== 'Automated') notes.push(notAutomatedNote(s));
     else if (results.some((r) => r.kind === 'notTested')) notes.push(`Not tested on ${BROWSERS.filter((b, i) => results[i].kind === 'notTested').map((b) => BROWSER_NAME[b]).join(', ')}: ${firstLine(s.scopeReason?.replace(/^Test-safety limit \([^)]*\):\s*/i, ''))}`);
     if (results.some((r) => r.kind === 'failed') && !defects.length) notes.push(`Failed, no defect logged yet: ${firstLine(results.find((r) => r.kind === 'failed').error)}`);
     const steps = (s.steps ?? []).map((st, i) => `${i + 1}. ${st}`).join('\n');
