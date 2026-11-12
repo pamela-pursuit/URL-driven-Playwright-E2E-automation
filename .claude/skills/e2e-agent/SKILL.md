@@ -175,8 +175,8 @@ brief is all the context it gets.
     3. **Adding or changing:** the user describes the scenario in chat (what
        to do, what should happen, priority if known). Never ask them to edit
        the `.xlsx`, because it is regenerated. Send the request to the
-       **scenario-designer** with the user's exact words. It adds
-       `DWS-NNN`-style IDs with `requirementRef: "USER-<date>"` and a risks
+       **scenario-designer** with the user's exact words. It adds the next
+       free `TC-NN` IDs with `requirementRef: "USER-<date>"` and a risks
        entry for any unobserved behaviour. If the behaviour has never been
        observed, run the **application-explorer** first to observe it, and
        never invent expected results. Then `validate`, `build`, and repeat

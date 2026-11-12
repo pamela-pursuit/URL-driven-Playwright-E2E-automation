@@ -164,7 +164,7 @@ async function validate(app, data) {
   for (const s of data.scenarios) {
     const where = s.id ?? '(missing id)';
     for (const key of required) if (s[key] === undefined || s[key] === '' || (Array.isArray(s[key]) && !s[key].length)) errors.push(`${where}: missing ${key}`);
-    if (s.id && !/^[A-Z][A-Z0-9]*-\d{2,}$/.test(s.id)) errors.push(`${where}: id must look like TC-01`);
+    if (s.id && !/^TC-\d{2,}$/.test(s.id)) errors.push(`${where}: id must look like TC-01 (always the TC prefix)`);
     if (ids.has(s.id)) errors.push(`${where}: duplicate id`);
     ids.add(s.id);
     if (s.priority && !PRIORITIES.includes(s.priority)) errors.push(`${where}: priority must be one of ${PRIORITIES.join(', ')}`);
@@ -1286,7 +1286,7 @@ async function build(app, data) {
 // Updates the catalogue (scenarios, executions, defects, risks, test data, stored report, approval) and the
 // app's code and plan files. Approval is carried over only for scenarios whose content did not change.
 async function renameIds(app, data, prefix, digits) {
-  if (!/^[A-Z][A-Z0-9]*$/.test(prefix)) throw new Error('--prefix must be upper-case letters/digits, e.g. TC');
+  if (prefix !== 'TC') throw new Error('Test case IDs always use the TC prefix (TC-01, TC-02, ...)');
   const map = new Map();
   for (const s of data.scenarios) {
     const m = s.id.match(/^([A-Z][A-Z0-9]*)-0*(\d+)$/);

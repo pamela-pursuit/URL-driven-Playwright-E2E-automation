@@ -7,7 +7,7 @@
 {
   "app": "demo-web-shop",
   "baseUrl": "https://demowebshop.tricentis.com/",
-  "code": "TC",                       // scenario ID prefix
+  "code": "TC",                       // always TC: test case IDs are TC-01, TC-02, ... in every project
   "timeTaken": {                       // optional: shown as "Time taken" on the Summary sheet
     "date": "2026-11-12",
     "note": "Time to build this test from nothing: from receiving the website address to the finished, passing test.",
