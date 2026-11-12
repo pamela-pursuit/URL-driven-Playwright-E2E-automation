@@ -1,0 +1,581 @@
+{
+  "app": "demoqa-login-books",
+  "baseUrl": "https://demoqa.com/",
+  "timeTaken": {
+    "date": "2026-11-12",
+    "note": "Time to build this flow from nothing: from the request to a reviewed suite, including the fix the review asked for and a re-check on all three browsers.",
+    "steps": [
+      {
+        "step": "Intake and first look, including your answer about folders and accounts",
+        "seconds": 193
+      },
+      {
+        "step": "Website explorer: trying the login flow",
+        "seconds": 103
+      },
+      {
+        "step": "Requirement analyst: scope, assumptions and risks",
+        "seconds": 42
+      },
+      {
+        "step": "Test case designer: writing the test cases and the workbook",
+        "seconds": 52
+      },
+      {
+        "step": "Waiting for approval of the test cases",
+        "seconds": 107,
+        "waiting": true
+      },
+      {
+        "step": "Test architect: planning the page objects",
+        "seconds": 60
+      },
+      {
+        "step": "Test writer: writing the test code",
+        "seconds": 126
+      },
+      {
+        "step": "Waiting for confirmation of the run",
+        "seconds": 39,
+        "waiting": true
+      },
+      {
+        "step": "Test runner: 12 tests on three browsers (all passed)",
+        "seconds": 154
+      },
+      {
+        "step": "Quality reviewer: found one check that could print the user name",
+        "seconds": 53
+      },
+      {
+        "step": "Fixing that check",
+        "seconds": 60
+      },
+      {
+        "step": "Questions and answers about the fix, and confirmation to re-run",
+        "seconds": 1180,
+        "waiting": true
+      },
+      {
+        "step": "Re-run of TC-03 on three browsers (Firefox timed out before starting)",
+        "seconds": 191
+      },
+      {
+        "step": "Failure investigator: the laptop stalled reading the account file",
+        "seconds": 194
+      },
+      {
+        "step": "Firefox re-run of TC-03 (passed) and saving the work",
+        "seconds": 120
+      }
+    ]
+  },
+  "code": "TC",
+  "scenarios": [
+    {
+      "id": "TC-01",
+      "feature": "Log in",
+      "journey": "A user logs in with the saved test account and sees their Profile page",
+      "testType": "Authentication",
+      "priority": "High",
+      "preconditions": "Not signed in; the saved test account for this browser is available",
+      "testData": "Saved test account for this browser (user name and password)",
+      "steps": [
+        "Open the Login page",
+        "Type the saved user name in the \"UserName\" box",
+        "Type the saved password in the \"Password\" box",
+        "Click \"Login\""
+      ],
+      "expected": "The Profile page opens. Next to \"User Name :\" it shows the user name of the saved account, and a \"Logout\" button is shown.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaLoginPage",
+      "risk": "If logging in fails, a user cannot reach their profile or their books",
+      "requirementRef": "REQ-01",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-login-books/login-flow.spec.ts",
+      "lastRun": "2026-11-12T14:38:22.437Z",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "TC-02",
+      "feature": "Book list and search while signed in",
+      "journey": "A signed-in user opens the Book Store, searches for a book and then clears the search",
+      "testType": "Positive",
+      "priority": "High",
+      "preconditions": "Signed in with the saved test account for this browser",
+      "testData": "Saved test account for this browser; search word \"Git\"",
+      "steps": [
+        "Open the Book Store",
+        "Wait for the books to appear",
+        "Type \"Git\" in the \"Type to search\" box",
+        "Check the list",
+        "Clear the box"
+      ],
+      "expected": "8 books are listed. Next to \"User Name :\" the page shows the user name of the saved account, and a \"Log out\" button is shown instead of \"Login\". With \"Git\", only \"Git Pocket Guide\" is listed. After clearing the box, all 8 books are listed again.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "If the list or search is wrong while signed in, a user cannot find a book",
+      "requirementRef": "REQ-02",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-login-books/login-flow.spec.ts",
+      "lastRun": "2026-11-12T14:38:22.437Z",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "TC-03",
+      "feature": "Log out",
+      "journey": "A signed-in user logs out from the Book Store",
+      "testType": "Session",
+      "priority": "High",
+      "preconditions": "Signed in with the saved test account for this browser; the Book Store is open",
+      "testData": "Saved test account for this browser",
+      "steps": [
+        "Click \"Log out\" on the Book Store",
+        "Check the Login page",
+        "Open the Book Store again"
+      ],
+      "expected": "The Login page opens with the \"Login\" button and an empty \"UserName\" box. The Book Store then shows the \"Login\" button again, no \"Log out\" button and no user name.",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaBooksPage",
+      "risk": "If logging out does not work, the next person on the same computer could use the account",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-login-books/login-flow.spec.ts",
+      "lastRun": "2026-11-12T15:10:31.599Z",
+      "lastRunNotes": ""
+    },
+    {
+      "id": "TC-04",
+      "feature": "Log out",
+      "journey": "A signed-in user logs out from the Profile page",
+      "testType": "Session",
+      "priority": "Medium",
+      "preconditions": "Signed in with the saved test account for this browser; the Profile page is open",
+      "testData": "Saved test account for this browser",
+      "steps": [
+        "Click \"Logout\" on the Profile page",
+        "Check the Login page",
+        "Open the Profile page again"
+      ],
+      "expected": "The Login page opens with the \"Login\" button. The Profile page then shows no user name and reads: \"Currently you are not logged into the Book Store application, please visit the login page to enter or register page to register yourself.\"",
+      "browsers": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "scopeReason": "",
+      "automationStatus": "Automated",
+      "pageObject": "DemoqaProfilePage",
+      "risk": "If logging out from the profile does not work, the account stays open",
+      "requirementRef": "REQ-04",
+      "executionStatus": "Passed",
+      "failureNotes": "",
+      "specFile": "tests/demoqa-login-books/login-flow.spec.ts",
+      "lastRun": "2026-11-12T14:38:22.437Z",
+      "lastRunNotes": ""
+    }
+  ],
+  "testData": [
+    {
+      "key": "account",
+      "source": "credentials:demoqa-books/existingUser (Chromium), firefoxUser (Firefox), webkitUser (WebKit)",
+      "usedBy": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "notes": "One saved account per browser (user name and password); values are never written down or shown"
+    },
+    {
+      "key": "searchMatch",
+      "value": "Git",
+      "source": "static",
+      "usedBy": [
+        "TC-02"
+      ],
+      "notes": "Leaves only \"Git Pocket Guide\""
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-01",
+      "type": "Risk",
+      "description": "Shared public practice site: its content and availability can change without notice.",
+      "impact": "Medium",
+      "mitigation": "Check a few known titles; rerun before reporting a failure.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-02",
+      "type": "Risk",
+      "description": "If two browsers used the same account at once, they could sign each other out.",
+      "impact": "High",
+      "mitigation": "Use one saved account per browser (Chromium, Firefox, WebKit).",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-03",
+      "type": "Risk",
+      "description": "The site loads slowly and shows adverts.",
+      "impact": "Medium",
+      "mitigation": "Wait for page content to show, never for a fixed time.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-04",
+      "type": "Risk",
+      "description": "Account details could leak into test names, logs, screenshots or reports.",
+      "impact": "High",
+      "mitigation": "Never print the account details; check the user name only as a match with the saved account.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-05",
+      "type": "Risk",
+      "description": "The login boxes are not linked to their labels.",
+      "impact": "Low",
+      "mitigation": "Find the boxes by their hints \"UserName\" and \"Password\".",
+      "scenarios": [
+        "TC-01"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-06",
+      "type": "Assumption",
+      "description": "Firefox and WebKit behave the same as Chromium; only Chromium was explored.",
+      "impact": "Medium",
+      "mitigation": "Any difference shows up on the first run on all three browsers.",
+      "scenarios": [
+        "TC-01",
+        "TC-02",
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-07",
+      "type": "Assumption",
+      "description": "The 8 books and the search result for \"Git\" stay as seen during exploration.",
+      "impact": "Medium",
+      "mitigation": "Check the number of books and the known title \"Git Pocket Guide\".",
+      "scenarios": [
+        "TC-02"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-08",
+      "type": "Ambiguity",
+      "description": "The two log-out buttons have different names: \"Log out\" on the Book Store and \"Logout\" on the Profile page. It is not stated whether both should be checked.",
+      "impact": "Low",
+      "mitigation": "Check the Book Store one as High (the requested flow) and the Profile one as Medium.",
+      "scenarios": [
+        "TC-03",
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-09",
+      "type": "Ambiguity",
+      "description": "After logging out, the Profile page does not send the visitor to the Login page; it shows a notice instead. It is not stated which is wanted.",
+      "impact": "Low",
+      "mitigation": "Check the notice as seen during exploration; ask whether a move to the Login page is wanted.",
+      "scenarios": [
+        "TC-04"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-10",
+      "type": "Ambiguity",
+      "description": "Not stated: how long a sign-in lasts, whether it survives a reload, and what Back shows after logging out. Wrong-login messages were not seen.",
+      "impact": "Low",
+      "mitigation": "Not covered by these test cases; ask if they are wanted.",
+      "scenarios": [
+        "TC-01",
+        "TC-03"
+      ],
+      "status": "Open"
+    },
+    {
+      "id": "R-11",
+      "type": "Blocker",
+      "description": "On the test laptop, reading the saved account details from the credentials file (inside the OneDrive-synced folder) sometimes stalled for more than 30 seconds, so a Firefox test timed out before it started. It passed when run again with no code change. This is the laptop, not the website or the test.",
+      "impact": "Medium",
+      "mitigation": "Keep the credentials file out of OneDrive sync, or point CREDENTIALS_FILE to a local copy outside the synced folder.",
+      "scenarios": [
+        "TC-03"
+      ],
+      "status": "Open"
+    }
+  ],
+  "executions": [
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-01",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8164,
+      "testTitle": "[TC-01] A user logs in with the saved test account and sees their Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-de70c-and-sees-their-Profile-page-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-02",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5348,
+      "testTitle": "[TC-02] A signed-in user opens the Book Store, searches for a book and then clears the search",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-f9fba--and-then-clears-the-search-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-03",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5581,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-04",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 5161,
+      "testTitle": "[TC-04] A signed-in user logs out from the Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-43aab-s-out-from-the-Profile-page-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-01",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 12083,
+      "testTitle": "[TC-01] A user logs in with the saved test account and sees their Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-de70c-and-sees-their-Profile-page-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-02",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 7992,
+      "testTitle": "[TC-02] A signed-in user opens the Book Store, searches for a book and then clears the search",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-f9fba--and-then-clears-the-search-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-03",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11089,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-04",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8248,
+      "testTitle": "[TC-04] A signed-in user logs out from the Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-43aab-s-out-from-the-Profile-page-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-01",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 8675,
+      "testTitle": "[TC-01] A user logs in with the saved test account and sees their Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-de70c-and-sees-their-Profile-page-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-02",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 12115,
+      "testTitle": "[TC-02] A signed-in user opens the Book Store, searches for a book and then clears the search",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-f9fba--and-then-clears-the-search-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-03",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 9849,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T14:38:22.437Z",
+      "scenarioId": "TC-04",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 6451,
+      "testTitle": "[TC-04] A signed-in user logs out from the Profile page",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20/test-results/demoqa-login-books-login-f-43aab-s-out-from-the-Profile-page-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_14-38-20"
+    },
+    {
+      "runAt": "2026-11-12T15:03:33.144Z",
+      "scenarioId": "TC-03",
+      "browser": "chromium",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 11840,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-chromium/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52"
+    },
+    {
+      "runAt": "2026-11-12T15:03:33.144Z",
+      "scenarioId": "TC-03",
+      "browser": "firefox",
+      "status": "Failed",
+      "attempts": 1,
+      "durationMs": 35748,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "Test timeout of 30000ms exceeded while setting up \"account\".",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-firefox/test-failed-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52"
+    },
+    {
+      "runAt": "2026-11-12T15:03:33.144Z",
+      "scenarioId": "TC-03",
+      "browser": "webkit",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 14856,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-webkit/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_15-02-52"
+    },
+    {
+      "runAt": "2026-11-12T15:10:31.599Z",
+      "scenarioId": "TC-03",
+      "browser": "firefox",
+      "status": "Passed",
+      "attempts": 1,
+      "durationMs": 25900,
+      "testTitle": "[TC-03] A signed-in user logs out from the Book Store",
+      "file": "demoqa-login-books/login-flow.spec.ts",
+      "error": "",
+      "screenshot": "artifacts/demoqa-login-books/runs/2026-11-12_15-09-51/test-results/demoqa-login-books-login-f-502a7-ogs-out-from-the-Book-Store-firefox/test-finished-1.png",
+      "runDirectory": "artifacts/demoqa-login-books/runs/2026-11-12_15-09-51"
+    }
+  ],
+  "defects": [],
+  "approval": {
+    "approvedAt": "2026-11-12T14:34:29.122Z",
+    "scenarios": {
+      "TC-01": "45b1e4df8ec92629",
+      "TC-02": "2278ead895f218c3",
+      "TC-03": "42136a2fc71474ab",
+      "TC-04": "e7302ab8058e1121"
+    }
+  }
+}

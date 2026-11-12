@@ -1182,8 +1182,13 @@ function addSummarySheet(wb, app, data) {
     const all = sum(t.steps);
     const wait = sum(t.steps.filter((s) => s.waiting));
     timeRow(['Total', '', dur(all), '', '', `${dur(all - wait)} agent work, ${dur(wait)} waiting`], true);
-    // Time per test case on each browser, from the last run
-    const latest = data.executions.filter((e) => e.runAt === lastRun);
+    // Time per test case on each browser, from each one's most recent result
+    const newest = new Map();
+    for (const e of data.executions) {
+      const key = `${e.scenarioId}/${e.browser}`;
+      if (!newest.has(key) || e.runAt > newest.get(key).runAt) newest.set(key, e);
+    }
+    const latest = [...newest.values()];
     if (latest.length) {
       const secs = (e) => (e ? `${(e.durationMs / 1000).toFixed(1)} s` : 'Not run');
       ws.addRow([]);
