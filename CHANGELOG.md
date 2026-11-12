@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-12
+
+### Removed
+
+- The demoqa-books project and everything related to it (tests, page objects,
+  fixture, test data, test plans, workbook, defects and local run evidence),
+  at the user's request. The DemoQA accounts in the local credentials file
+  are kept for the new short flow.
 ## 2026-11-11
 
 ### Added
